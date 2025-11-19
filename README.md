@@ -47,7 +47,13 @@ Agrega estos valores en la pestaña **Variables**:
 | `AWS_S3_BUCKET` | El nombre de tu bucket de S3 (ej. `sinergia-web`). |
 | `CLOUDFRONT_DISTRIBUTION_ID` | El ID de tu distribución de CloudFront. |
 
-## 📂 Estructura de Archivos
+### Nota sobre `GITHUB_TOKEN`
+En el archivo de flujo de trabajo verás una referencia a `${{ secrets.GITHUB_TOKEN }}`. **No necesitas crear este secreto manualmente**. GitHub lo genera automáticamente para cada ejecución.
+
+Sin embargo, para que el sistema pueda crear Releases, asegúrate de que tu repositorio tenga los permisos habilitados:
+1.  Ve a `Settings` > `Actions` > `General`.
+2.  En "Workflow permissions", selecciona **Read and write permissions**.
+3.  Haz clic en **Save**.
 
 - `index.html`: Página principal.
 - `styles.css`: Hoja de estilos global.

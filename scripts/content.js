@@ -272,8 +272,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Set current year
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    // Set current year (defensive against missing element)
+    const yearEl = document.getElementById('current-year');
+    if (yearEl) {
+        yearEl.textContent = new Date().getFullYear();
+    }
 
     // Initial placeholders
     populateNavigation(defaultSiteContent.navigation);

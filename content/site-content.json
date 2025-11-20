@@ -1,0 +1,144 @@
+{
+  "sections": {
+    "hero": true,
+    "about": true,
+    "statistics": false,
+    "partners": false,
+    "testimonials": false,
+    "team": true,
+    "join": true,
+    "contact": true
+  },
+  "navigation": [
+    { "label": "Inicio", "target": "#inicio" },
+    { "label": "Nosotros", "target": "#nosotros" },
+    { "label": "El Equipo", "target": "#equipo" },
+    { "label": "Contacto", "target": "#contacto" }
+  ],
+  "hero": {
+    "ctaText": "Contáctanos",
+    "ctaLink": "#contacto",
+    "floatingItems": [
+      { "image": "assets/dogs/brie.png", "alt": "Brie", "type": "dog" },
+      { "image": "assets/dogs/duke.png", "alt": "Duke", "type": "dog" },
+      { "image": "assets/dogs/fontina.png", "alt": "Fontina", "type": "dog" },
+      { "image": "assets/dogs/gaia.png", "alt": "Gaia", "type": "dog" },
+      { "image": "assets/dogs/ginger.png", "alt": "Ginger", "type": "dog" },
+      { "image": "assets/dogs/lena.png", "alt": "Lena", "type": "dog" },
+      { "image": "assets/dogs/mohana.png", "alt": "Mohana", "type": "dog" },
+      { "image": "assets/dogs/pinata.png", "alt": "Piñata", "type": "dog" },
+      { "image": "assets/activities/WhatsApp Image 2025-09-16 at 11.01.16.jpeg", "alt": "Visita 16 de septiembre", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-09-25 at 19.16.08.jpeg", "alt": "Visita 25 de septiembre", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 12.26.44.jpeg", "alt": "Visita 29 de septiembre", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 12.26.46.jpeg", "alt": "Visita 29 de septiembre (2)", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 14.18.45.jpeg", "alt": "Visita 29 de septiembre (3)", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 18.00.27.jpeg", "alt": "Visita 29 de septiembre (4)", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 18.00.35.jpeg", "alt": "Visita 29 de septiembre (5)", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-10-08 at 19.31.24.jpeg", "alt": "Visita 8 de octubre", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.22.52.jpeg", "alt": "Visita 8 de octubre (2)", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.28.00.jpeg", "alt": "Visita 8 de octubre (3)", "type": "activity" },
+      { "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.58.03.jpeg", "alt": "Visita 8 de octubre (4)", "type": "activity" }
+    ]
+  },
+  "about": {
+    "mission": "Creemos en el poder curativo de los animales. Nuestro equipo está formado por voluntarios apasionados y sus perros entrenados para brindar apoyo emocional y terapia a hospitales, centros de rehabilitación y entornos corporativos.",
+    "vision": "Ser la organización referente en Guatemala en terapia asistida por perros, expandiendo nuestro alcance para tocar más vidas y fomentar una cultura de empatía y bienestar a través del vínculo humano-animal.",
+    "values": [
+      "Amor incondicional",
+      "Empatía",
+      "Servicio",
+      "Alegría",
+      "Respeto",
+      "Confianza"
+    ],
+    "wordCloud": [
+      ["Amor incondicional", 50],
+      ["Empatía", 45],
+      ["Servicio", 40],
+      ["Alegría", 35],
+      ["Respeto", 45],
+      ["Conexión humano-animal", 38],
+      ["Confianza", 35],
+      ["Bienestar animal", 40],
+      ["Inclusión", 35]
+    ]
+  },
+  "statistics": [
+    { "label": "Visitas Completadas", "value": 95 },
+    { "label": "Personas Impactadas", "value": 500 },
+    { "label": "Instituciones Aliadas", "value": 25 }
+  ],
+  "partners": [
+    { "name": "Partner 1", "logo": "assets/partners/logo1.png", "url": "https://partner1.example.com" },
+    { "name": "Partner 2", "logo": "assets/partners/logo2.png", "url": "https://partner2.example.com" },
+    { "name": "Partner 3", "logo": "assets/partners/logo3.png" },
+    { "name": "Partner 4", "logo": "assets/partners/logo4.png", "url": "https://partner4.example.com" },
+    { "name": "Partner 5", "logo": "assets/partners/logo5.png" },
+    { "name": "Partner 6", "logo": "assets/partners/logo6.png", "url": "https://partner6.example.com" },
+    { "name": "Partner 7", "logo": "assets/partners/logo7.png" },
+    { "name": "Partner 8", "logo": "assets/partners/logo8.png", "url": "https://partner8.example.com" }
+  ],
+  "testimonials": [
+    {
+      "quote": "La visita de Sinergia Dorada a nuestro hospital fue increíble. Los pacientes se iluminaron al ver a los perros, y el ambiente se llenó de alegría y esperanza.",
+      "author": "María González",
+      "role": "Directora, Hospital San Juan",
+      "photo": "assets/testimonials/person1.jpg"
+    },
+    {
+      "quote": "Nuestros empleados esperan con ansias las visitas de Sinergia Dorada. El estrés laboral disminuye notablemente y el ambiente de trabajo mejora.",
+      "author": "Carlos Méndez",
+      "role": "Gerente de RRHH, Empresa Tech",
+      "photo": "assets/testimonials/person2.jpg",
+      "featured": true
+    },
+    {
+      "quote": "Los niños en nuestro centro han mostrado avances increíbles desde que comenzaron las sesiones con los perros de terapia. Es hermoso ver cómo se conectan.",
+      "author": "Ana Rodríguez",
+      "role": "Terapeuta, Centro Infantil",
+      "photo": "assets/testimonials/person3.jpg"
+    },
+    {
+      "quote": "La terapia asistida con perros ha transformado la vida de muchos de nuestros pacientes. El equipo de Sinergia Dorada es excepcional y muy profesional.",
+      "author": "Dr. Roberto Pérez",
+      "role": "Médico, Clínica de Rehabilitación",
+      "photo": "assets/testimonials/person1.jpg"
+    },
+    {
+      "quote": "Como institución educativa, valoramos enormemente las visitas de Sinergia Dorada. Los estudiantes aprenden sobre empatía y responsabilidad de manera práctica.",
+      "author": "Lic. Patricia Morales",
+      "role": "Directora, Colegio Internacional",
+      "photo": "assets/testimonials/person2.jpg"
+    },
+    {
+      "quote": "El impacto positivo en nuestros adultos mayores es innegable. Los perros traen alegría y compañía que mejora significativamente su calidad de vida.",
+      "author": "Enf. Laura Castillo",
+      "role": "Coordinadora, Hogar de Ancianos",
+      "photo": "assets/testimonials/person3.jpg"
+    }
+  ],
+  "sectionsContent": {
+    "partners": {
+      "title": "Lugares que Hemos Visitado",
+      "subtitle": "Instituciones y organizaciones que han confiado en nosotros"
+    },
+    "testimonials": {
+      "label": "TESTIMONIOS",
+      "titleHtml": "Historias que <span class=\"highlight\">Inspiran</span> Nuestro Trabajo"
+    },
+    "team": {
+      "title": "Nuestro Equipo Peludo",
+      "subtitle": "Conoce a los héroes de cuatro patas"
+    },
+    "join": {
+      "title": "Únete a Sinergia Dorada",
+      "text": "¿Tienes un perro y te gustaría ser parte de nuestro voluntariado? ¡Nos encantaría conocerte!",
+      "buttonText": "Llenar Formulario",
+      "buttonLink": "https://forms.gle/1CtC5LUgSz7rVSKX9"
+    },
+    "contact": {
+      "title": "Únete a la Sinergia",
+      "text": "¿Te gustaría que visitemos tu institución o quieres saber más sobre nosotros? ¡Síguenos en nuestras redes!"
+    }
+  }
+}

@@ -1,0 +1,145 @@
+/* Hero Section */
+.hero {
+    height: 100vh;
+    background-color: var(--bg-cream);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: 0;
+}
+
+.hero-collage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-center-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.hero-center-logo {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    background: white;
+    padding: 15px;
+    box-shadow: 0 15px 50px rgba(212, 175, 55, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.hero-center-logo:hover {
+    transform: scale(1.02);
+}
+
+.hero-center-logo img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
+
+.hero-floating-btn {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    animation: floatBtn 3s ease-in-out infinite;
+}
+
+@keyframes floatBtn {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.floating-dog {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    /* Combine entrance and continuous animation */
+    animation: floatIn 1s ease forwards, floatHover 6s ease-in-out infinite;
+}
+
+.floating-dog.activity {
+    width: 150px;
+    height: 150px;
+    border-radius: 15px;
+}
+
+.floating-dog img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Random positions handled by JS */
+.floating-dog {
+    /* Base styles remain, positions removed */
+    transition: all 0.5s ease;
+}
+
+@keyframes floatIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5) translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes floatHover {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-20px) scale(1.02);
+    }
+}
+
+.hero-title {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+    text-shadow: none;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    opacity: 0.9;
+    color: var(--text-dark);
+    /* Ensure subtitle color is dark */
+}
+

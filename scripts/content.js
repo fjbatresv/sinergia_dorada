@@ -735,7 +735,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // If width is 0 (hidden), don't draw
         if (canvas.width === 0) return;
 
-        WordCloud(canvas, {
+        if (typeof window.WordCloud !== 'function') {
+            console.warn('WordCloud library no disponible. Se omite el wordcloud.');
+            return;
+        }
+
+        window.WordCloud(canvas, {
             list: wordCloudWords.length ? wordCloudWords : defaultWordCloudWords,
             gridSize: 8,
             weightFactor: function (size) {

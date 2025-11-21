@@ -21,7 +21,7 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --registry=https://registry.npmjs.org
 
       - name: Download Sentry bundle fallback
         run: |
@@ -52,7 +52,7 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --registry=https://registry.npmjs.org
 
       - name: Download Sentry bundle fallback
         run: |

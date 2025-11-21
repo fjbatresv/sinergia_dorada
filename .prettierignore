@@ -3,3 +3,4 @@ coverage
 .git
 lighthouse-report.html
 index.html
+assets/sentry.bundle.tracing.replay.min.js

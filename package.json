@@ -12,13 +12,14 @@
     "format": "prettier --write \"**/*.{js,json,css,md,html}\"",
     "check:links": "sh -c 'python3 -m http.server 4173 >/dev/null 2>&1 & PID=$!; npx linkinator http://localhost:4173 --recurse --timeout 60000 --silent --skip \"https://.*\"; RC=$?; kill $PID; exit $RC'",
     "validate:html": "html-validate index.html",
-    "build": "esbuild scripts/ui.js scripts/dogs.js scripts/content.js scripts/sentry.js --bundle --format=iife --minify --sourcemap --outdir=dist",
+    "build": "node scripts/copy-vendor.js && esbuild scripts/ui.js scripts/dogs.js scripts/content.js scripts/sentry.js --bundle --format=iife --minify --sourcemap --outdir=dist",
     "prepare": "husky install"
   },
   "engines": {
     "node": ">=18"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.2",
     "@eslint/js": "^9.13.0",
     "@sentry/browser": "^7.120.1",
     "@testing-library/dom": "^9.3.4",
@@ -36,6 +37,7 @@
     "linkinator": "^4.0.3",
     "prettier": "^3.3.3",
     "request": "^2.88.2",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "wordcloud": "^1.2.2"
   }
 }

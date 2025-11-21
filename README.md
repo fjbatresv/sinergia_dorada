@@ -30,10 +30,13 @@ scripts/
   ├─ ui.js               # Menú móvil, header sticky
   ├─ content.js          # Carga del JSON, render dinámico de secciones
   └─ dogs.js             # Carrusel y modal del equipo
+  └─ copy-vendor.js      # Copia vendors (Font Awesome, wordcloud) a assets/vendor
 styles/
   ├─ base.css            # Variables, reset, header, utilidades
   ├─ hero.css            # Estilos del collage principal
   └─ sections.css        # Resto de secciones y responsive
+dist/vendor/             # Font Awesome + wordcloud servidos localmente (sin cookies 3rd-party)
+dist/                    # Bundles minificados (IIFE) + sourcemaps generados por build
 .github/workflows/       # CI/CD (deploy a S3 + CloudFront)
 index.html               # Layout principal
 ```
@@ -76,6 +79,7 @@ index.html               # Layout principal
 - `npm run test` — suite de Vitest.
 - `npm run test:coverage` — cobertura (actualmente 100% en JS).
 - `npm run test:axe` — smoke de accesibilidad (axe-core) sobre `index.html`.
+- `npm run build` — copia vendors a `assets/vendor` y genera bundles en `dist/` (IIFE + sourcemaps).
 
 ## 📦 Despliegue (CI/CD)
 
@@ -84,6 +88,7 @@ El flujo definido en `.github/workflows/deploy.yml`:
 1. Sube la versión compilada al bucket de **AWS S3**.
 2. Ejecuta una invalidación en **CloudFront** para propagar los cambios.
 3. Publica release en GitHub (tag auto-incremental) y sube sourcemaps a Sentry.
+4. Solo se publican `dist/*.js|*.map`, `assets/*`, `styles/*`, `content/*.json`; los HTML van con cache corto.
 
 El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación de HTML, chequeo de links, tests con cobertura y un smoke de accesibilidad.
 
@@ -106,14 +111,15 @@ El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación d
 ### Sentry
 
 - El DSN se fija en `index.html` (`data-sentry-dsn`).
-- El release se inyecta en CI con el SHA y sourcemaps se suben a Sentry.
-- Se descarga un bundle local de Sentry (`assets/sentry.bundle.tracing.replay.min.js`) para evitar bloqueadores; asegúrate de tenerlo disponible en hosting si no usas el CDN.
+- El release se inyecta en CI con el SHA y sourcemaps (dist/\*.map) se suben a Sentry.
+- Sentry y vendors externos (Font Awesome, WordCloud) se sirven de `assets/vendor` para evitar cookies/terceros.
 - En tests se omite Sentry para que no afecte la cobertura ni el runtime.
 
 ## ℹ️ Notas
 
 - `check:links` levanta un servidor en `localhost:4173`; si tu entorno bloquea la apertura de puertos (p. ej. con restricciones de SO), ejecuta un server manual (`npx serve -l 4173`) antes de correr el comando.
-- El build de CI genera sourcemaps y minifica; los archivos de origen se sobrescriben en `/tmp/site` durante el pipeline.
+- El build genera bundles IIFE en `dist/`; los scripts fuente quedan sin tocar para desarrollo y tests.
+- Si usas un registry privado en local, forzar el público: `npm ci --registry=https://registry.npmjs.org`.
 
 ## ❤️ Créditos
 

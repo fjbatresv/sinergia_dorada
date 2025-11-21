@@ -96,11 +96,10 @@ async function initSentry() {
       tracesSampleRate: 1.0,
       replaysSessionSampleRate: 0.1,
       replaysOnErrorSampleRate: 1.0,
-      debug: true
+      debug: false
     });
     if (typeof window !== 'undefined') {
       window.SENTRY_READY = true;
-      console.info('Sentry inicializado');
     }
   } catch (err) {
     console.warn('Sentry no se inicializó', err);

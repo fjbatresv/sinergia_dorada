@@ -1,0 +1,40 @@
+{
+  "name": "sinergia_dorada",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "vitest --no-watch",
+    "test:coverage": "vitest --no-watch --coverage",
+    "test:axe": "vitest --no-watch tests/accessibility.test.js",
+    "lint": "eslint scripts/**/*.js",
+    "format:check": "prettier --check \"**/*.{js,json,css,md,html}\"",
+    "format": "prettier --write \"**/*.{js,json,css,md,html}\"",
+    "check:links": "sh -c 'python3 -m http.server 4173 >/dev/null 2>&1 & PID=$!; npx linkinator http://localhost:4173 --recurse --timeout 60000 --silent --skip \"https://.*\"; RC=$?; kill $PID; exit $RC'",
+    "validate:html": "html-validate index.html",
+    "build": "esbuild scripts/ui.js scripts/dogs.js scripts/content.js --format=esm --minify --outdir=scripts",
+    "prepare": "husky install"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@testing-library/dom": "^9.3.4",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@vitest/coverage-v8": "^1.6.0",
+    "axe-core": "^4.9.1",
+    "esbuild": "^0.23.1",
+    "eslint": "^9.13.0",
+    "eslint-plugin-import": "^2.31.0",
+    "html-validate": "^9.4.0",
+    "jsdom": "^24.1.1",
+    "husky": "^9.1.3",
+    "lint-staged": "^15.2.10",
+    "lighthouse": "^12.8.2",
+    "linkinator": "^4.0.3",
+    "prettier": "^3.3.3",
+    "request": "^2.88.2",
+    "vitest": "^1.6.0"
+  }
+}

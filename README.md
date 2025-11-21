@@ -7,7 +7,8 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?logo=amazonaws&logoColor=white)
 ![CloudFront](https://img.shields.io/badge/CloudFront-8C4FFF?logo=amazonaws&logoColor=white)
-
+![Tests](https://img.shields.io/badge/tests-vitest-green)
+![Coverage](https://img.shields.io/badge/coverage-87%25-blue)
 
 Sitio oficial de **Sinergia Dorada**, una iniciativa sin fines de lucro que lleva terapia asistida con perros a hospitales, centros educativos y empresas en Guatemala.
 
@@ -53,6 +54,7 @@ index.html               # Layout principal
    cd sinergia_dorada
    ```
 2. Levanta un servidor estático (para que `fetch` lea los JSON):
+
    ```bash
    # Opción 1
    python3 -m http.server 8000
@@ -60,6 +62,7 @@ index.html               # Layout principal
    # Opción 2
    npx serve
    ```
+
 3. Abre `http://localhost:8000` (o el puerto que corresponda).
 
 > ⚠️ Abrir `index.html` con `file://` bloqueará la carga del contenido dinámico por CORS. Usa siempre un servidor local.
@@ -67,8 +70,11 @@ index.html               # Layout principal
 ## 📦 Despliegue (CI/CD)
 
 El flujo definido en `.github/workflows/deploy.yml`:
+
 1. Sube la versión compilada al bucket de **AWS S3**.
 2. Ejecuta una invalidación en **CloudFront** para propagar los cambios.
+
+El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación de HTML, chequeo de links, tests con cobertura y un smoke de accesibilidad.
 
 ### Configuración en GitHub
 

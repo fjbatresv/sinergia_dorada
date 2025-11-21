@@ -13,9 +13,45 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Prepare temp workspace
+        run: |
+          mkdir -p /tmp/site
+          rsync -a --delete --exclude '.git' --exclude 'node_modules' --exclude '.github' --exclude '.DS_Store' ./ /tmp/site/
+
+      - name: Optimize images before deploy
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y imagemagick
+          cd /tmp/site
+          if [ -d assets ]; then
+            find assets -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) -exec mogrify -strip -interlace Plane -quality 82 {} +
+            find assets -type f -iname '*.png' -exec mogrify -strip -define png:compression-level=9 -define png:compression-filter=5 -define png:exclude-chunk=all {} +
+            find assets -type f -iname '*.webp' -exec mogrify -strip -quality 82 {} +
+          fi
+
+      - name: Install dependencies
+        working-directory: /tmp/site
+        run: npm ci
+
+      - name: Build (minify JS)
+        working-directory: /tmp/site
+        run: npm run build
+
+      - name: Validate HTML
+        working-directory: /tmp/site
+        run: npm run validate:html
+
+      - name: Check links
+        working-directory: /tmp/site
+        run: npm run check:links
+
+      - name: Run tests
+        working-directory: /tmp/site
+        run: npm test
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -24,13 +60,32 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Deploy to S3
+      - name: Validate HTML
+        run: npm run validate:html
+
+      - name: Check links
+        run: npm run check:links
+
+      - name: Run tests
+        run: npm test
+
+      - name: Deploy to S3 (long cache for assets)
         run: |
-          aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete --exclude ".git/*" --exclude ".github/*" --exclude ".DS_Store"
+          cd /tmp/site
+          aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
+            --exclude ".git/*" --exclude ".github/*" --exclude ".DS_Store" --exclude "*.html" \
+            --cache-control "public,max-age=31536000,immutable"
+
+      - name: Deploy HTML with short cache
+        run: |
+          cd /tmp/site
+          aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
+            --exclude "*" --include "*.html" \
+            --cache-control "public,max-age=60"
 
       - name: Invalidate CloudFront Cache
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*.html" "/assets/*" "/styles/*" "/scripts/*"
 
       - name: Generate Next Version
         id: version
@@ -38,17 +93,17 @@ jobs:
           # Get the latest tag, default to v0.0.0 if none exists
           latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           echo "Latest tag: $latest_tag"
-          
+
           # Remove 'v' prefix
           version=${latest_tag#v}
-          
+
           # Split into parts (assuming X.Y.Z)
           IFS='.' read -r major minor patch <<< "$version"
-          
+
           # Increment patch version
           new_patch=$((patch + 1))
           new_tag="v$major.$minor.$new_patch"
-          
+
           echo "New version: $new_tag"
           echo "NEW_TAG=$new_tag" >> $GITHUB_ENV
 

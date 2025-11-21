@@ -2,9 +2,9 @@
   "sections": {
     "hero": true,
     "about": true,
-    "statistics": false,
-    "partners": false,
-    "testimonials": false,
+    "statistics": true,
+    "partners": true,
+    "testimonials": true,
     "team": true,
     "join": true,
     "contact": true
@@ -27,17 +27,61 @@
       { "image": "assets/dogs/lena.png", "alt": "Lena", "type": "dog" },
       { "image": "assets/dogs/mohana.png", "alt": "Mohana", "type": "dog" },
       { "image": "assets/dogs/pinata.png", "alt": "Piñata", "type": "dog" },
-      { "image": "assets/activities/WhatsApp Image 2025-09-16 at 11.01.16.jpeg", "alt": "Visita 16 de septiembre", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-09-25 at 19.16.08.jpeg", "alt": "Visita 25 de septiembre", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 12.26.44.jpeg", "alt": "Visita 29 de septiembre", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 12.26.46.jpeg", "alt": "Visita 29 de septiembre (2)", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 14.18.45.jpeg", "alt": "Visita 29 de septiembre (3)", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 18.00.27.jpeg", "alt": "Visita 29 de septiembre (4)", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-09-29 at 18.00.35.jpeg", "alt": "Visita 29 de septiembre (5)", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-10-08 at 19.31.24.jpeg", "alt": "Visita 8 de octubre", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.22.52.jpeg", "alt": "Visita 8 de octubre (2)", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.28.00.jpeg", "alt": "Visita 8 de octubre (3)", "type": "activity" },
-      { "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.58.03.jpeg", "alt": "Visita 8 de octubre (4)", "type": "activity" }
+      {
+        "image": "assets/activities/WhatsApp Image 2025-09-16 at 11.01.16.jpeg",
+        "alt": "Visita 16 de septiembre",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-09-25 at 19.16.08.jpeg",
+        "alt": "Visita 25 de septiembre",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-09-29 at 12.26.44.jpeg",
+        "alt": "Visita 29 de septiembre",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-09-29 at 12.26.46.jpeg",
+        "alt": "Visita 29 de septiembre (2)",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-09-29 at 14.18.45.jpeg",
+        "alt": "Visita 29 de septiembre (3)",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-09-29 at 18.00.27.jpeg",
+        "alt": "Visita 29 de septiembre (4)",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-09-29 at 18.00.35.jpeg",
+        "alt": "Visita 29 de septiembre (5)",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-10-08 at 19.31.24.jpeg",
+        "alt": "Visita 8 de octubre",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.22.52.jpeg",
+        "alt": "Visita 8 de octubre (2)",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.28.00.jpeg",
+        "alt": "Visita 8 de octubre (3)",
+        "type": "activity"
+      },
+      {
+        "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.58.03.jpeg",
+        "alt": "Visita 8 de octubre (4)",
+        "type": "activity"
+      }
     ]
   },
   "about": {
@@ -69,14 +113,34 @@
     { "label": "Instituciones Aliadas", "value": 25 }
   ],
   "partners": [
-    { "name": "Partner 1", "logo": "assets/partners/logo1.png", "url": "https://partner1.example.com" },
-    { "name": "Partner 2", "logo": "assets/partners/logo2.png", "url": "https://partner2.example.com" },
+    {
+      "name": "Partner 1",
+      "logo": "assets/partners/logo1.png",
+      "url": "https://partner1.example.com"
+    },
+    {
+      "name": "Partner 2",
+      "logo": "assets/partners/logo2.png",
+      "url": "https://partner2.example.com"
+    },
     { "name": "Partner 3", "logo": "assets/partners/logo3.png" },
-    { "name": "Partner 4", "logo": "assets/partners/logo4.png", "url": "https://partner4.example.com" },
+    {
+      "name": "Partner 4",
+      "logo": "assets/partners/logo4.png",
+      "url": "https://partner4.example.com"
+    },
     { "name": "Partner 5", "logo": "assets/partners/logo5.png" },
-    { "name": "Partner 6", "logo": "assets/partners/logo6.png", "url": "https://partner6.example.com" },
+    {
+      "name": "Partner 6",
+      "logo": "assets/partners/logo6.png",
+      "url": "https://partner6.example.com"
+    },
     { "name": "Partner 7", "logo": "assets/partners/logo7.png" },
-    { "name": "Partner 8", "logo": "assets/partners/logo8.png", "url": "https://partner8.example.com" }
+    {
+      "name": "Partner 8",
+      "logo": "assets/partners/logo8.png",
+      "url": "https://partner8.example.com"
+    }
   ],
   "testimonials": [
     {

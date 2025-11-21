@@ -1,228 +1,339 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sinergia Dorada - Perros de Servicio y Terapia</title>
-    <meta name="description"
-        content="Grupo sin fines de lucro de perros de servicio y terapia en Guatemala. Visitas a hospitales y áreas de trabajo.">
+    <meta
+      name="description"
+      content="Grupo sin fines de lucro de perros de servicio y terapia en Guatemala. Visitas a hospitales y áreas de trabajo."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Sinergia Dorada - Perros de Servicio y Terapia"
+    />
+    <meta
+      property="og:description"
+      content="Grupo sin fines de lucro de perros de servicio y terapia en Guatemala. Visitas a hospitales y áreas de trabajo."
+    />
+    <meta property="og:url" content="https://sinergiadorada.gt/" />
+    <meta
+      property="og:image"
+      content="https://sinergiadorada.gt/assets/logo.jpg"
+    />
+    <meta property="og:locale" content="es_GT" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Sinergia Dorada - Perros de Servicio y Terapia"
+    />
+    <meta
+      name="twitter:description"
+      content="Grupo sin fines de lucro de perros de servicio y terapia en Guatemala. Visitas a hospitales y áreas de trabajo."
+    />
+    <meta
+      name="twitter:image"
+      content="https://sinergiadorada.gt/assets/logo.jpg"
+    />
 
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Favicon -->
-    <link rel="icon" href="assets/icono.jpg" type="image/jpeg">
+    <link rel="icon" href="assets/icono.jpg" type="image/jpeg" />
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles/base.css">
-    <link rel="stylesheet" href="styles/hero.css">
-    <link rel="stylesheet" href="styles/sections.css">
-</head>
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/hero.css" />
+    <link rel="stylesheet" href="styles/sections.css" />
+  </head>
 
-<body>
-
+  <body>
     <!-- Header -->
     <header class="header">
-        <div class="container header-container">
-            <a href="#" class="logo">
-                <span class="text-gold">Sinergia Dorada</span>
-            </a>
-            <button class="mobile-menu-btn" aria-label="Menu">
-                <i class="fas fa-bars"></i>
-            </button>
-            <nav class="nav">
-                <ul class="nav-list" id="nav-list">
-                    <li><a href="#inicio" class="nav-link">Inicio</a></li>
-                    <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
-                    <li><a href="#equipo" class="nav-link">El Equipo</a></li>
-                    <li><a href="#contacto" class="nav-link">Contacto</a></li>
-                </ul>
-            </nav>
-        </div>
+      <div class="container header-container">
+        <a href="#" class="logo">
+          <span class="text-gold">Sinergia Dorada</span>
+        </a>
+        <button class="mobile-menu-btn" type="button" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+        <nav class="nav">
+          <ul class="nav-list" id="nav-list">
+            <li><a href="#inicio" class="nav-link">Inicio</a></li>
+            <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
+            <li><a href="#equipo" class="nav-link">El Equipo</a></li>
+            <li><a href="#contacto" class="nav-link">Contacto</a></li>
+          </ul>
+        </nav>
+      </div>
     </header>
 
     <main>
-        <!-- Hero Section -->
-        <section id="inicio" class="hero">
-            <div class="hero-collage" id="hero-collage">
-                <!-- Center Container (Logo + Button) -->
-                <div class="hero-center-container fade-in-scale">
-                    <div class="hero-center-logo">
-                        <img src="assets/logo.jpg" alt="Sinergia Dorada Logo">
-                    </div>
-                    <a href="#contacto" class="btn btn-primary hero-floating-btn" id="hero-cta">Contáctanos</a>
-                </div>
+      <!-- Hero Section -->
+      <section id="inicio" class="hero">
+        <div class="hero-collage" id="hero-collage">
+          <!-- Center Container (Logo + Button) -->
+          <div class="hero-center-container fade-in-scale">
+            <div class="hero-center-logo">
+              <img src="assets/logo.jpg" alt="Sinergia Dorada Logo" />
             </div>
+            <a
+              href="#contacto"
+              class="btn btn-primary hero-floating-btn"
+              id="hero-cta"
+              >Contáctanos</a
+            >
+          </div>
+        </div>
+      </section>
 
-
-        </section>
-
-        <!-- About Section -->
-        <section id="nosotros" class="section about">
-            <div class="container about-container">
-                <div class="about-text fade-in-left">
-                    <div class="mvv-cards-container" id="mvv-cards">
-                        <!-- Contenido dinámico cargado desde content/site-content.json -->
-                    </div>
-                </div>
+      <!-- About Section -->
+      <section id="nosotros" class="section about">
+        <div class="container about-container">
+          <div class="about-text fade-in-left">
+            <div class="mvv-cards-container" id="mvv-cards">
+              <!-- Contenido dinámico cargado desde content/site-content.json -->
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <!-- WordCloud Library -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.min.js"></script>
+      <!-- WordCloud Library -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.min.js"></script>
 
-        <!-- Statistics Section -->
-        <section class="section statistics">
-            <div class="container">
-                <div class="stats-container" id="stats-container">
-                    <!-- Estadísticas cargadas desde content/site-content.json -->
-                </div>
+      <!-- Statistics Section -->
+      <section class="section statistics">
+        <div class="container">
+          <div class="stats-container" id="stats-container">
+            <!-- Estadísticas cargadas desde content/site-content.json -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Partners Section -->
+      <section class="section partners">
+        <div class="container">
+          <h2 class="section-title text-center" id="partners-title">
+            Lugares que Hemos Visitado
+          </h2>
+          <p class="section-subtitle text-center" id="partners-subtitle">
+            Instituciones y organizaciones que han confiado en nosotros
+          </p>
+
+          <div class="partners-slider">
+            <div class="partners-track" id="partners-track">
+              <!-- Aliados cargados desde content/site-content.json -->
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <!-- Partners Section -->
-        <section class="section partners">
-            <div class="container">
-                <h2 class="section-title text-center" id="partners-title">Lugares que Hemos Visitado</h2>
-                <p class="section-subtitle text-center" id="partners-subtitle">Instituciones y organizaciones que han confiado en nosotros</p>
-                
-                <div class="partners-slider">
-                    <div class="partners-track" id="partners-track">
-                        <!-- Aliados cargados desde content/site-content.json -->
-                    </div>
-                </div>
+      <!-- Testimonials Section -->
+      <section class="section testimonials">
+        <div class="container">
+          <div class="testimonials-header">
+            <div>
+              <p class="section-label" id="testimonials-label">TESTIMONIOS</p>
+              <h2 class="section-title" id="testimonials-title">
+                Historias que <span class="highlight">Inspiran</span> Nuestro
+                Trabajo
+              </h2>
             </div>
-        </section>
-
-        <!-- Testimonials Section -->
-        <section class="section testimonials">
-            <div class="container">
-                <div class="testimonials-header">
-                    <div>
-                        <p class="section-label" id="testimonials-label">TESTIMONIOS</p>
-                        <h2 class="section-title" id="testimonials-title">Historias que <span class="highlight">Inspiran</span> Nuestro Trabajo</h2>
-                    </div>
-                    <div class="testimonial-nav">
-                        <button class="testimonial-nav-btn" id="prev-testimonial">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="testimonial-nav-btn" id="next-testimonial">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="testimonials-grid">
-                    <div class="testimonials-track" id="testimonials-track">
-                        <!-- Testimonios cargados dinámicamente -->
-                    </div>
-                </div>
-                
-                <div class="testimonial-progress">
-                    <div class="testimonial-progress-bar active" id="testimonial-progress-bar"></div>
-                </div>
-                
-                <div class="testimonial-dots" id="testimonial-dots"></div>
+            <div class="testimonial-nav">
+              <button
+                class="testimonial-nav-btn"
+                type="button"
+                id="prev-testimonial"
+                aria-label="Ver testimonio anterior"
+              >
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button
+                class="testimonial-nav-btn"
+                type="button"
+                id="next-testimonial"
+                aria-label="Ver siguiente testimonio"
+              >
+                <i class="fas fa-chevron-right"></i>
+              </button>
             </div>
-        </section>
+          </div>
 
-        <!-- Team Section -->
-        <section id="equipo" class="section team">
-            <div class="container">
-                <h2 class="section-title text-center" id="team-title">Nuestro Equipo Peludo</h2>
-                <p class="section-subtitle text-center" id="team-subtitle">Conoce a los héroes de cuatro patas</p>
+          <div class="testimonials-grid">
+            <div class="testimonials-track" id="testimonials-track">
+              <!-- Testimonios cargados dinámicamente -->
+            </div>
+          </div>
 
-                <div class="carousel-container">
-                    <button class="carousel-btn prev-btn" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="carousel-btn next-btn" id="next-btn"><i class="fas fa-chevron-right"></i></button>
-                    <div class="carousel-track" id="carousel-track">
-                        <!-- Cards will be inserted here by JavaScript -->
-                    </div>
+          <div class="testimonial-dots" id="testimonial-dots"></div>
+        </div>
+      </section>
+
+      <!-- Team Section -->
+      <section id="equipo" class="section team">
+        <div class="container">
+          <h2 class="section-title text-center" id="team-title">
+            Nuestro Equipo Peludo
+          </h2>
+          <p class="section-subtitle text-center" id="team-subtitle">
+            Conoce a los héroes de cuatro patas
+          </p>
+
+          <div class="carousel-container">
+            <button
+              class="carousel-btn prev-btn"
+              type="button"
+              id="prev-btn"
+              aria-label="Ver perros anteriores"
+            >
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button
+              class="carousel-btn next-btn"
+              type="button"
+              id="next-btn"
+              aria-label="Ver siguientes perros"
+            >
+              <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="carousel-track" id="carousel-track">
+              <!-- Cards will be inserted here by JavaScript -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dog Modal -->
+      <div id="dog-modal" class="modal">
+        <div class="modal-content">
+          <span class="close-modal">&times;</span>
+          <div class="modal-body">
+            <div class="modal-image">
+              <img id="modal-img" src="assets/logo.jpg" alt="Dog Image" />
+            </div>
+            <div class="modal-info">
+              <div class="modal-header-fixed">
+                <h3 id="modal-name">Nombre</h3>
+                <p class="breed" id="modal-breed">Raza</p>
+              </div>
+              <div class="modal-scrollable-content">
+                <p id="modal-color-container">
+                  <strong>Color:</strong> <span id="modal-color">Color</span>
+                </p>
+                <p id="modal-birthdate-container">
+                  <strong>Cumpleaños:</strong>
+                  <span id="modal-birthdate">Fecha</span>
+                </p>
+                <div class="modal-description" id="modal-desc">
+                  Descripción...
                 </div>
+              </div>
+              <div class="modal-footer-fixed">
+                <a
+                  id="modal-insta"
+                  href="#"
+                  target="_blank"
+                  class="social-btn instagram modal-btn"
+                >
+                  <i class="fab fa-instagram"></i> Ver en Instagram
+                </a>
+              </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </div>
 
-        <!-- Dog Modal -->
-        <div id="dog-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal">&times;</span>
-                <div class="modal-body">
-                    <div class="modal-image">
-                        <img id="modal-img" src="" alt="Dog Image">
-                    </div>
-                    <div class="modal-info">
-                        <div class="modal-header-fixed">
-                            <h3 id="modal-name">Nombre</h3>
-                            <p class="breed" id="modal-breed">Raza</p>
-                        </div>
-                        <div class="modal-scrollable-content">
-                            <p id="modal-color-container"><strong>Color:</strong> <span id="modal-color">Color</span></p>
-                            <p id="modal-birthdate-container"><strong>Cumpleaños:</strong> <span id="modal-birthdate">Fecha</span></p>
-                            <div class="modal-description" id="modal-desc">Descripción...</div>
-                        </div>
-                        <div class="modal-footer-fixed">
-                            <a id="modal-insta" href="#" target="_blank" class="social-btn instagram modal-btn">
-                                <i class="fab fa-instagram"></i> Ver en Instagram
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </section>
+      <!-- Join Us Section -->
+      <section class="section join-us">
+        <div class="container join-content fade-up">
+          <h2 class="section-title" id="join-title">Únete a Sinergia Dorada</h2>
+          <p id="join-text">
+            ¿Tienes un perro y te gustaría ser parte de nuestro voluntariado?
+            ¡Nos encantaría conocerte!
+          </p>
+          <a
+            href="https://forms.gle/1CtC5LUgSz7rVSKX9"
+            target="_blank"
+            class="btn btn-white"
+            id="join-button"
+            >Llenar Formulario</a
+          >
+        </div>
+      </section>
 
-        <!-- Join Us Section -->
-        <section class="section join-us">
-            <div class="container join-content fade-up">
-                <h2 class="section-title" id="join-title">Únete a Sinergia Dorada</h2>
-                <p id="join-text">¿Tienes un perro y te gustaría ser parte de nuestro voluntariado? ¡Nos encantaría conocerte!</p>
-                <a href="https://forms.gle/1CtC5LUgSz7rVSKX9" target="_blank" class="btn btn-white" id="join-button">Llenar
-                    Formulario</a>
-            </div>
-        </section>
+      <!-- Contact/Social Section -->
+      <section id="contacto" class="section contact">
+        <div class="container contact-container">
+          <div class="contact-info fade-in">
+            <h2 class="section-title" id="contact-title">
+              Únete a la Sinergia
+            </h2>
+            <p id="contact-text">
+              ¿Te gustaría que visitemos tu institución o quieres saber más
+              sobre nosotros? ¡Síguenos en nuestras redes!
+            </p>
 
-        <!-- Contact/Social Section -->
-        <section id="contacto" class="section contact">
-            <div class="container contact-container">
-                <div class="contact-info fade-in">
-                    <h2 class="section-title" id="contact-title">Únete a la Sinergia</h2>
-                    <p id="contact-text">¿Te gustaría que visitemos tu institución o quieres saber más sobre nosotros? ¡Síguenos en
-                        nuestras redes!</p>
-
-                    <div class="social-links">
-                        <a href="https://www.instagram.com/sinergiadoradagt/" target="_blank"
-                            class="social-btn instagram">
-                            <i class="fab fa-instagram"></i> Instagram
-                        </a>
-                        <a href="https://www.tiktok.com/@sinergiadoradagt" target="_blank" class="social-btn tiktok">
-                            <i class="fab fa-tiktok"></i> TikTok
-                        </a>
-                        <a href="https://www.facebook.com/396690473535208" target="_blank" class="social-btn facebook">
-                            <i class="fab fa-facebook-f"></i> Facebook
-                        </a>
-                    </div>
-                </div>
+            <div class="social-links">
+              <a
+                href="https://www.instagram.com/sinergiadoradagt/"
+                target="_blank"
+                class="social-btn instagram"
+              >
+                <i class="fab fa-instagram"></i> Instagram
+              </a>
+              <a
+                href="https://www.tiktok.com/@sinergiadoradagt"
+                target="_blank"
+                class="social-btn tiktok"
+              >
+                <i class="fab fa-tiktok"></i> TikTok
+              </a>
+              <a
+                href="https://www.facebook.com/396690473535208"
+                target="_blank"
+                class="social-btn facebook"
+              >
+                <i class="fab fa-facebook-f"></i> Facebook
+              </a>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
-        <div class="container">
-            <p>&copy; <span id="current-year"></span> Sinergia Dorada. Todos los derechos reservados.</p>
-            <p class="made-with">Hecho con <i class="fas fa-heart text-gold"></i> para nuestros amigos peludos por <a
-                    href="https://fjbatresv.com" target="_blank">Javier Batres</a>.</p>
-        </div>
+      <div class="container">
+        <p>
+          &copy; <span id="current-year"></span> Sinergia Dorada. Todos los
+          derechos reservados.
+        </p>
+        <p class="made-with">
+          Hecho con <i class="fas fa-heart text-gold"></i> para nuestros amigos
+          peludos por
+          <a href="https://fjbatresv.com" target="_blank">Javier Batres</a>.
+        </p>
+      </div>
     </footer>
 
-    <script src="scripts/ui.js" defer></script>
-    <script src="scripts/content.js" defer></script>
-    <script src="scripts/dogs.js" defer></script>
-</body>
-
+    <script type="module" src="scripts/ui.js" defer></script>
+    <script type="module" src="scripts/content.js" defer></script>
+    <script type="module" src="scripts/dogs.js" defer></script>
+  </body>
 </html>

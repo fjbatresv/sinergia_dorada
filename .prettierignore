@@ -2,3 +2,4 @@ node_modules
 coverage
 .git
 lighthouse-report.html
+index.html

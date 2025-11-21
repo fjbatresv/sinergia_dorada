@@ -12,7 +12,7 @@
     "format": "prettier --write \"**/*.{js,json,css,md,html}\"",
     "check:links": "sh -c 'python3 -m http.server 4173 >/dev/null 2>&1 & PID=$!; npx linkinator http://localhost:4173 --recurse --timeout 60000 --silent --skip \"https://.*\"; RC=$?; kill $PID; exit $RC'",
     "validate:html": "html-validate index.html",
-    "build": "esbuild scripts/ui.js scripts/dogs.js scripts/content.js --bundle --format=iife --minify --sourcemap --outdir=dist",
+    "build": "esbuild scripts/ui.js scripts/dogs.js scripts/content.js scripts/sentry.js --bundle --format=iife --minify --sourcemap --outdir=dist",
     "prepare": "husky install"
   },
   "engines": {

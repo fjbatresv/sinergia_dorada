@@ -129,6 +129,7 @@ jobs:
             --include "styles/*" \
             --include "dist/*.js" \
             --include "dist/*.map" \
+            --include "scripts/sentry.js" \
             --include "content/*.json" \
             --cache-control "public,max-age=31536000,immutable"
 
@@ -144,7 +145,7 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*.html" "/assets/*" "/styles/*" "/scripts/*" "/dist/*"
+            --paths "/*"
 
       - name: Generate Next Version
         id: version

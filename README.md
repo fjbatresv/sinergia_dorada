@@ -1,65 +1,90 @@
 # Sinergia Dorada Website
 
-Este es el repositorio del sitio web oficial de **Sinergia Dorada**, un grupo sin fines de lucro dedicado a la terapia asistida con perros en Guatemala.
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/fjbatresv/sinergia_dorada?utm_source=oss&utm_medium=github&utm_campaign=fjbatresv%2Fsinergia_dorada&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
-## 🛠 Tecnologías
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?logo=amazonaws&logoColor=white)
+![CloudFront](https://img.shields.io/badge/CloudFront-8C4FFF?logo=amazonaws&logoColor=white)
 
-- **HTML5**: Estructura semántica.
-- **CSS3**: Estilos personalizados, diseño responsivo y animaciones (sin frameworks pesados).
-- **JavaScript (Vanilla)**: Lógica para el menú móvil, animaciones de scroll y posicionamiento aleatorio en el hero.
-- **Google Fonts**: Tipografía *Nunito*.
-- **Font Awesome**: Iconos.
 
-## 🚀 Instalación y Uso Local
+Sitio oficial de **Sinergia Dorada**, una iniciativa sin fines de lucro que lleva terapia asistida con perros a hospitales, centros educativos y empresas en Guatemala.
 
-1.  **Clonar el repositorio:**
-    ```bash
-    git clone https://github.com/tu-usuario/sinergia_dorada.git
-    ```
-2.  **Abrir el proyecto:**
-    Navega a la carpeta del proyecto y abre el archivo `index.html` en tu navegador web favorito.
+## ✨ Características Clave
 
-## 📦 Despliegue Automático (CI/CD)
+- **Contenido dinámico**: todos los textos, métricas, testimonios, aliados y el collage del hero se controlan desde archivos JSON en `content/`.
+- **Componentización ligera**: CSS y JS divididos por responsabilidad (`styles/` y `scripts/`) para escalar fácilmente.
+- **Experiencias interactivas**: collage animado, carrusel infinito del equipo canino, testimonios, contadores y modal con detalles.
+- **Sin dependencias pesadas**: HTML + CSS + JavaScript vanilla, ideal para hosting estático (S3, Netlify, GH Pages, etc.).
 
-El proyecto cuenta con un flujo de trabajo de **GitHub Actions** configurado en `.github/workflows/deploy.yml`. Este flujo se encarga de:
+## 🗂 Estructura del Proyecto
 
-1.  Subir los archivos modificados a un bucket de **AWS S3**.
-2.  Invalidar la caché de **AWS CloudFront** para que los cambios se reflejen inmediatamente.
+```
+content/
+  ├─ site-content.json   # Textos, menús, banderas de secciones, héroe, testimonios, etc.
+  └─ dogs.json           # Información del equipo canino (carrusel + modal)
+assets/                  # Logos, fotos de perros y actividades
+scripts/
+  ├─ ui.js               # Menú móvil, header sticky
+  ├─ content.js          # Carga del JSON, render dinámico de secciones
+  └─ dogs.js             # Carrusel y modal del equipo
+styles/
+  ├─ base.css            # Variables, reset, header, utilidades
+  ├─ hero.css            # Estilos del collage principal
+  └─ sections.css        # Resto de secciones y responsive
+.github/workflows/       # CI/CD (deploy a S3 + CloudFront)
+index.html               # Layout principal
+```
 
-### Configuración de GitHub
+## 🔧 Personalización de Contenido
 
-Ve a la configuración de tu repositorio en GitHub (`Settings` > `Secrets and variables` > `Actions`).
+1. **Menú, títulos y CTA** se gestionan en `content/site-content.json` (`navigation`, `sectionsContent`, `hero.ctaText/ctaLink`).
+2. **Banderas**: en `sections` puedes activar/desactivar bloques completos sin tocar el HTML (`true` / `false`).
+3. **Hero collage**: agrega/quita objetos dentro de `hero.floatingItems` (`image`, `alt`, `type: "dog" | "activity"`).
+4. **Estadísticas, aliados, testimonios y redes** también viven en `site-content.json`.
+5. **Equipo canino**: edita `content/dogs.json` (nombre, raza, foto, descripción, IG, etc.).
 
-#### Repository Secrets
-Agrega estos valores en la pestaña **Secrets**:
+## 🚀 Ejecución Local
 
-| Nombre | Descripción |
-| :--- | :--- |
-| `AWS_ACCESS_KEY_ID` | Tu ID de clave de acceso de AWS. |
-| `AWS_SECRET_ACCESS_KEY` | Tu clave de acceso secreta de AWS. |
-| `AWS_REGION` | La región de AWS (ej. `us-east-1`). |
+1. Clona el repositorio y entra a la carpeta:
+   ```bash
+   git clone https://github.com/fjbatresv/sinergia_dorada.git
+   cd sinergia_dorada
+   ```
+2. Levanta un servidor estático (para que `fetch` lea los JSON):
+   ```bash
+   # Opción 1
+   python3 -m http.server 8000
 
-#### Repository Variables
-Agrega estos valores en la pestaña **Variables**:
+   # Opción 2
+   npx serve
+   ```
+3. Abre `http://localhost:8000` (o el puerto que corresponda).
 
-| Nombre | Descripción |
-| :--- | :--- |
-| `AWS_S3_BUCKET` | El nombre de tu bucket de S3 (ej. `sinergia-web`). |
-| `CLOUDFRONT_DISTRIBUTION_ID` | El ID de tu distribución de CloudFront. |
+> ⚠️ Abrir `index.html` con `file://` bloqueará la carga del contenido dinámico por CORS. Usa siempre un servidor local.
 
-### Nota sobre `GITHUB_TOKEN`
-En el archivo de flujo de trabajo verás una referencia a `${{ secrets.GITHUB_TOKEN }}`. **No necesitas crear este secreto manualmente**. GitHub lo genera automáticamente para cada ejecución.
+## 📦 Despliegue (CI/CD)
 
-Sin embargo, para que el sistema pueda crear Releases, asegúrate de que tu repositorio tenga los permisos habilitados:
-1.  Ve a `Settings` > `Actions` > `General`.
-2.  En "Workflow permissions", selecciona **Read and write permissions**.
-3.  Haz clic en **Save**.
+El flujo definido en `.github/workflows/deploy.yml`:
+1. Sube la versión compilada al bucket de **AWS S3**.
+2. Ejecuta una invalidación en **CloudFront** para propagar los cambios.
 
-- `index.html`: Página principal.
-- `styles.css`: Hoja de estilos global.
-- `script.js`: Lógica de interacción y animaciones.
-- `assets/`: Carpeta de imágenes (logos, fotos de perros, actividades).
-- `.github/workflows/`: Configuración de CI/CD.
+### Configuración en GitHub
 
----
-Hecho con ❤️ para Sinergia Dorada.
+1. Ve a `Settings > Secrets and variables > Actions`.
+2. Crea los siguientes **Secrets**:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `AWS_REGION`
+3. Agrega las **Variables**:
+   - `AWS_S3_BUCKET`
+   - `CLOUDFRONT_DISTRIBUTION_ID`
+4. En `Settings > Actions > General`, habilita **Workflow permissions → Read and write** para que `GITHUB_TOKEN` pueda crear releases.
+
+## ❤️ Créditos
+
+- Diseño y desarrollo: **Javier Batres**.
+- Ilustraciones/Fotografía: equipo de Sinergia Dorada.
+
+Hecho con amor por y para los amigos peludos de **Sinergia Dorada**.

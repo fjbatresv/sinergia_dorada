@@ -20,7 +20,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/hero.css">
+    <link rel="stylesheet" href="styles/sections.css">
 </head>
 
 <body>
@@ -35,7 +37,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             <nav class="nav">
-                <ul class="nav-list">
+                <ul class="nav-list" id="nav-list">
                     <li><a href="#inicio" class="nav-link">Inicio</a></li>
                     <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
                     <li><a href="#equipo" class="nav-link">El Equipo</a></li>
@@ -48,48 +50,14 @@
     <main>
         <!-- Hero Section -->
         <section id="inicio" class="hero">
-            <div class="hero-collage">
+            <div class="hero-collage" id="hero-collage">
                 <!-- Center Container (Logo + Button) -->
                 <div class="hero-center-container fade-in-scale">
                     <div class="hero-center-logo">
                         <img src="assets/logo.jpg" alt="Sinergia Dorada Logo">
                     </div>
-                    <a href="#contacto" class="btn btn-primary hero-floating-btn">Contáctanos</a>
+                    <a href="#contacto" class="btn btn-primary hero-floating-btn" id="hero-cta">Contáctanos</a>
                 </div>
-
-                <!-- Floating Dog Images -->
-                <div class="floating-dog dog-1"><img src="assets/dogs/brie.png" alt="Dog"></div>
-                <div class="floating-dog dog-2"><img src="assets/dogs/duke.png" alt="Dog"></div>
-                <div class="floating-dog dog-3"><img src="assets/dogs/fontina.png" alt="Dog"></div>
-                <div class="floating-dog dog-4"><img src="assets/dogs/gaia.png" alt="Dog"></div>
-                <div class="floating-dog dog-5"><img src="assets/dogs/ginger.png" alt="Dog"></div>
-                <div class="floating-dog dog-6"><img src="assets/dogs/lena.png" alt="Dog"></div>
-                <div class="floating-dog dog-7"><img src="assets/dogs/mohana.png" alt="Dog"></div>
-                <div class="floating-dog dog-8"><img src="assets/dogs/pinata.png" alt="Dog"></div>
-
-                <!-- Activities -->
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-09-16 at 11.01.16.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-09-25 at 19.16.08.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-09-29 at 12.26.44.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-09-29 at 12.26.46.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-09-29 at 14.18.45.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-09-29 at 18.00.27.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-09-29 at 18.00.35.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-10-08 at 19.31.24.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-10-08 at 20.22.52.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-10-08 at 20.28.00.jpeg" alt="Activity"></div>
-                <div class="floating-dog activity"><img
-                        src="assets/activities/WhatsApp Image 2025-10-08 at 20.58.03.jpeg" alt="Activity"></div>
             </div>
 
 
@@ -99,29 +67,8 @@
         <section id="nosotros" class="section about">
             <div class="container about-container">
                 <div class="about-text fade-in-left">
-                    <!-- Mission, Vision, Values Cards -->
-                    <div class="mvv-cards-container">
-                        <div class="mvv-card fade-up">
-                            <h3>Nuestra Misión</h3>
-                            <p>Creemos en el poder curativo de los animales. Nuestro equipo está formado por voluntarios apasionados y sus perros entrenados para brindar apoyo emocional y terapia a hospitales, centros de rehabilitación y entornos corporativos.</p>
-                        </div>
-
-                        <div class="mvv-card fade-up">
-                            <h3>Nuestra Visión</h3>
-                            <p>Ser la organización referente en Guatemala en terapia asistida por perros, expandiendo nuestro alcance para tocar más vidas y fomentar una cultura de empatía y bienestar a través del vínculo humano-animal.</p>
-                        </div>
-
-                        <div class="mvv-card fade-up">
-                            <h3>Nuestros Valores</h3>
-                            <div class="values-list-compact">
-                                <span class="value-tag">Amor incondicional</span>
-                                <span class="value-tag">Empatía</span>
-                                <span class="value-tag">Servicio</span>
-                                <span class="value-tag">Alegría</span>
-                                <span class="value-tag">Respeto</span>
-                                <span class="value-tag">Confianza</span>
-                            </div>
-                        </div>
+                    <div class="mvv-cards-container" id="mvv-cards">
+                        <!-- Contenido dinámico cargado desde content/site-content.json -->
                     </div>
                 </div>
             </div>
@@ -133,19 +80,8 @@
         <!-- Statistics Section -->
         <section class="section statistics">
             <div class="container">
-                <div class="stats-container">
-                    <div class="stat-item">
-                        <h3 class="stat-number" data-target="95">0</h3>
-                        <p class="stat-label">Visitas Completadas</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3 class="stat-number" data-target="500">0</h3>
-                        <p class="stat-label">Personas Impactadas</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3 class="stat-number" data-target="25">0</h3>
-                        <p class="stat-label">Instituciones Aliadas</p>
-                    </div>
+                <div class="stats-container" id="stats-container">
+                    <!-- Estadísticas cargadas desde content/site-content.json -->
                 </div>
             </div>
         </section>
@@ -153,62 +89,12 @@
         <!-- Partners Section -->
         <section class="section partners">
             <div class="container">
-                <h2 class="section-title text-center">Lugares que Hemos Visitado</h2>
-                <p class="section-subtitle text-center">Instituciones y organizaciones que han confiado en nosotros</p>
+                <h2 class="section-title text-center" id="partners-title">Lugares que Hemos Visitado</h2>
+                <p class="section-subtitle text-center" id="partners-subtitle">Instituciones y organizaciones que han confiado en nosotros</p>
                 
                 <div class="partners-slider">
-                    <div class="partners-track">
-                        <!-- First set of logos -->
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo1.png" alt="Partner 1">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo2.png" alt="Partner 2">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo3.png" alt="Partner 3">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo4.png" alt="Partner 4">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo5.png" alt="Partner 5">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo6.png" alt="Partner 6">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo7.png" alt="Partner 7">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo8.png" alt="Partner 8">
-                        </div>
-                        
-                        <!-- Duplicate set for infinite scroll -->
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo1.png" alt="Partner 1">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo2.png" alt="Partner 2">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo3.png" alt="Partner 3">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo4.png" alt="Partner 4">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo5.png" alt="Partner 5">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo6.png" alt="Partner 6">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo7.png" alt="Partner 7">
-                        </div>
-                        <div class="partner-logo">
-                            <img src="assets/partners/logo8.png" alt="Partner 8">
-                        </div>
+                    <div class="partners-track" id="partners-track">
+                        <!-- Aliados cargados desde content/site-content.json -->
                     </div>
                 </div>
             </div>
@@ -219,8 +105,8 @@
             <div class="container">
                 <div class="testimonials-header">
                     <div>
-                        <p class="section-label">TESTIMONIOS</p>
-                        <h2 class="section-title">Historias que <span class="highlight">Inspiran</span> Nuestro Trabajo</h2>
+                        <p class="section-label" id="testimonials-label">TESTIMONIOS</p>
+                        <h2 class="section-title" id="testimonials-title">Historias que <span class="highlight">Inspiran</span> Nuestro Trabajo</h2>
                     </div>
                     <div class="testimonial-nav">
                         <button class="testimonial-nav-btn" id="prev-testimonial">
@@ -234,90 +120,7 @@
                 
                 <div class="testimonials-grid">
                     <div class="testimonials-track" id="testimonials-track">
-                        <div class="testimonial-card">
-                            <div class="quote-icon">
-                                <i class="fas fa-quote-left"></i>
-                            </div>
-                            <p class="testimonial-text">"La visita de Sinergia Dorada a nuestro hospital fue increíble. Los pacientes se iluminaron al ver a los perros, y el ambiente se llenó de alegría y esperanza."</p>
-                            <div class="testimonial-author">
-                                <img src="assets/testimonials/person1.jpg" alt="María González">
-                                <div>
-                                    <h4>María González</h4>
-                                    <p>Directora, Hospital San Juan</p>
-                                </div>
-                            </div>
-                        </div>
-    
-                        <div class="testimonial-card featured">
-                            <div class="quote-icon">
-                                <i class="fas fa-quote-left"></i>
-                            </div>
-                            <p class="testimonial-text">"Nuestros empleados esperan con ansias las visitas de Sinergia Dorada. El estrés laboral disminuye notablemente y el ambiente de trabajo mejora."</p>
-                            <div class="testimonial-author">
-                                <img src="assets/testimonials/person2.jpg" alt="Carlos Méndez">
-                                <div>
-                                    <h4>Carlos Méndez</h4>
-                                    <p>Gerente de RRHH, Empresa Tech</p>
-                                </div>
-                            </div>
-                        </div>
-    
-                        <div class="testimonial-card">
-                            <div class="quote-icon">
-                                <i class="fas fa-quote-left"></i>
-                            </div>
-                            <p class="testimonial-text">"Los niños en nuestro centro han mostrado avances increíbles desde que comenzaron las sesiones con los perros de terapia. Es hermoso ver cómo se conectan."</p>
-                            <div class="testimonial-author">
-                                <img src="assets/testimonials/person3.jpg" alt="Ana Rodríguez">
-                                <div>
-                                    <h4>Ana Rodríguez</h4>
-                                    <p>Terapeuta, Centro Infantil</p>
-                                </div>
-                            </div>
-                        </div>
-    
-                        <!-- Second Set of Testimonials -->
-                        <div class="testimonial-card">
-                            <div class="quote-icon">
-                                <i class="fas fa-quote-left"></i>
-                            </div>
-                            <p class="testimonial-text">"La terapia asistida con perros ha transformado la vida de muchos de nuestros pacientes. El equipo de Sinergia Dorada es excepcional y muy profesional."</p>
-                            <div class="testimonial-author">
-                                <img src="assets/testimonials/person1.jpg" alt="Dr. Roberto Pérez">
-                                <div>
-                                    <h4>Dr. Roberto Pérez</h4>
-                                    <p>Médico, Clínica de Rehabilitación</p>
-                                </div>
-                            </div>
-                        </div>
-    
-                        <div class="testimonial-card">
-                            <div class="quote-icon">
-                                <i class="fas fa-quote-left"></i>
-                            </div>
-                            <p class="testimonial-text">"Como institución educativa, valoramos enormemente las visitas de Sinergia Dorada. Los estudiantes aprenden sobre empatía y responsabilidad de manera práctica."</p>
-                            <div class="testimonial-author">
-                                <img src="assets/testimonials/person2.jpg" alt="Lic. Patricia Morales">
-                                <div>
-                                    <h4>Lic. Patricia Morales</h4>
-                                    <p>Directora, Colegio Internacional</p>
-                                </div>
-                            </div>
-                        </div>
-    
-                        <div class="testimonial-card">
-                            <div class="quote-icon">
-                                <i class="fas fa-quote-left"></i>
-                            </div>
-                            <p class="testimonial-text">"El impacto positivo en nuestros adultos mayores es innegable. Los perros traen alegría y compañía que mejora significativamente su calidad de vida."</p>
-                            <div class="testimonial-author">
-                                <img src="assets/testimonials/person3.jpg" alt="Enf. Laura Castillo">
-                                <div>
-                                    <h4>Enf. Laura Castillo</h4>
-                                    <p>Coordinadora, Hogar de Ancianos</p>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Testimonios cargados dinámicamente -->
                     </div>
                 </div>
                 
@@ -325,20 +128,15 @@
                     <div class="testimonial-progress-bar active" id="testimonial-progress-bar"></div>
                 </div>
                 
-                <div class="testimonial-dots">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
+                <div class="testimonial-dots" id="testimonial-dots"></div>
             </div>
         </section>
 
         <!-- Team Section -->
         <section id="equipo" class="section team">
             <div class="container">
-                <h2 class="section-title text-center">Nuestro Equipo Peludo</h2>
-                <p class="section-subtitle text-center">Conoce a los héroes de cuatro patas</p>
+                <h2 class="section-title text-center" id="team-title">Nuestro Equipo Peludo</h2>
+                <p class="section-subtitle text-center" id="team-subtitle">Conoce a los héroes de cuatro patas</p>
 
                 <div class="carousel-container">
                     <button class="carousel-btn prev-btn" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
@@ -382,9 +180,9 @@
         <!-- Join Us Section -->
         <section class="section join-us">
             <div class="container join-content fade-up">
-                <h2 class="section-title">Únete a Sinergia Dorada</h2>
-                <p>¿Tienes un perro y te gustaría ser parte de nuestro voluntariado? ¡Nos encantaría conocerte!</p>
-                <a href="https://forms.gle/1CtC5LUgSz7rVSKX9" target="_blank" class="btn btn-white">Llenar
+                <h2 class="section-title" id="join-title">Únete a Sinergia Dorada</h2>
+                <p id="join-text">¿Tienes un perro y te gustaría ser parte de nuestro voluntariado? ¡Nos encantaría conocerte!</p>
+                <a href="https://forms.gle/1CtC5LUgSz7rVSKX9" target="_blank" class="btn btn-white" id="join-button">Llenar
                     Formulario</a>
             </div>
         </section>
@@ -393,8 +191,8 @@
         <section id="contacto" class="section contact">
             <div class="container contact-container">
                 <div class="contact-info fade-in">
-                    <h2 class="section-title">Únete a la Sinergia</h2>
-                    <p>¿Te gustaría que visitemos tu institución o quieres saber más sobre nosotros? ¡Síguenos en
+                    <h2 class="section-title" id="contact-title">Únete a la Sinergia</h2>
+                    <p id="contact-text">¿Te gustaría que visitemos tu institución o quieres saber más sobre nosotros? ¡Síguenos en
                         nuestras redes!</p>
 
                     <div class="social-links">
@@ -422,7 +220,9 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="scripts/ui.js" defer></script>
+    <script src="scripts/content.js" defer></script>
+    <script src="scripts/dogs.js" defer></script>
 </body>
 
 </html>

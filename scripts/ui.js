@@ -1,63 +1,53 @@
-export function toggleNav(nav, icon) {
-  nav.classList.toggle('active');
-  if (!icon) return;
-  const isOpen = nav.classList.contains('active');
-  icon.classList.remove(isOpen ? 'fa-bars' : 'fa-times');
-  icon.classList.add(isOpen ? 'fa-times' : 'fa-bars');
+function r(e, t) {
+  if ((e.classList.toggle('active'), !t)) return;
+  const o = e.classList.contains('active');
+  (t.classList.remove(o ? 'fa-bars' : 'fa-times'),
+    t.classList.add(o ? 'fa-times' : 'fa-bars'));
 }
-
-export function closeNav(nav, icon) {
-  nav.classList.remove('active');
-  if (!icon) return;
-  icon.classList.remove('fa-times');
-  icon.classList.add('fa-bars');
+function c(e, t) {
+  (e.classList.remove('active'),
+    t && (t.classList.remove('fa-times'), t.classList.add('fa-bars')));
 }
-
-export function setupNavMenu({ menuBtn, nav, navList }) {
-  if (menuBtn && nav) {
-    menuBtn.addEventListener('click', () => {
-      const icon = menuBtn.querySelector('i');
-      toggleNav(nav, icon);
+function a({ menuBtn: e, nav: t, navList: o }) {
+  (e &&
+    t &&
+    e.addEventListener('click', () => {
+      const s = e.querySelector('i');
+      r(t, s);
+    }),
+    o &&
+      o.addEventListener('click', (s) => {
+        if (!s.target.closest('.nav-link') || !t || !e) return;
+        const i = e.querySelector('i');
+        c(t, i);
+      }));
+}
+function l(e) {
+  e &&
+    window.addEventListener('scroll', () => {
+      window.scrollY > 50
+        ? ((e.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)'),
+          (e.style.backgroundColor = 'rgba(255, 255, 255, 0.98)'))
+        : ((e.style.boxShadow = '0 2px 20px rgba(0,0,0,0.05)'),
+          (e.style.backgroundColor = 'rgba(255, 255, 255, 0.95)'));
     });
-  }
-
-  if (navList) {
-    navList.addEventListener('click', (event) => {
-      const link = event.target.closest('.nav-link');
-      if (!link || !nav || !menuBtn) return;
-      const icon = menuBtn.querySelector('i');
-      closeNav(nav, icon);
-    });
-  }
 }
-
-export function setupHeaderShadow(header) {
-  if (!header) return;
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
-      header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
-    } else {
-      header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.05)';
-      header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-    }
-  });
+function n() {
+  const e = document.querySelector('.mobile-menu-btn'),
+    t = document.querySelector('.nav'),
+    o = document.querySelector('.nav-list'),
+    s = document.querySelector('.header');
+  (a({ menuBtn: e, nav: t, navList: o }), l(s));
 }
-
-export function initUI() {
-  const menuBtn = document.querySelector('.mobile-menu-btn');
-  const nav = document.querySelector('.nav');
-  const navList = document.querySelector('.nav-list');
-  const header = document.querySelector('.header');
-
-  setupNavMenu({ menuBtn, nav, navList });
-  setupHeaderShadow(header);
-}
-
-if (typeof document !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initUI);
-  } else {
-    initUI();
-  }
-}
+typeof document < 'u' &&
+  (document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded', n)
+    : n());
+export {
+  c as closeNav,
+  n as initUI,
+  l as setupHeaderShadow,
+  a as setupNavMenu,
+  r as toggleNav
+};
+//# sourceMappingURL=ui.js.map

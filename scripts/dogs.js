@@ -1,295 +1,220 @@
-const DOGS_ENDPOINT = 'content/dogs.json';
-
-export function createDogCard(dog, onOpen = () => {}) {
-  const card = document.createElement('div');
-  card.classList.add('team-card');
-  card.innerHTML = `
+const b = 'content/dogs.json';
+function v(e, n = () => {}) {
+  const o = document.createElement('div');
+  return (
+    o.classList.add('team-card'),
+    (o.innerHTML = `
     <div class="card-image">
-      <img src="${dog.image}" alt="${dog.name}" loading="lazy" width="320" height="320">
+      <img src="${e.image}" alt="${e.name}" loading="lazy" width="320" height="320">
     </div>
     <div class="card-content">
-      <h3>${dog.name}</h3>
-      <span class="breed">${dog.breed}</span>
+      <h3>${e.name}</h3>
+      <span class="breed">${e.breed}</span>
     </div>
-  `;
-  card.addEventListener('click', () => onOpen(dog));
-  return card;
+  `),
+    o.addEventListener('click', () => n(e)),
+    o
+  );
 }
-
-export function getModalElements(doc = document) {
+function g(e = document) {
   return {
-    modal: doc.getElementById('dog-modal'),
-    closeModalBtn: doc.querySelector('.close-modal'),
-    modalImg: doc.getElementById('modal-img'),
-    modalName: doc.getElementById('modal-name'),
-    modalBreed: doc.getElementById('modal-breed'),
-    modalColor: doc.getElementById('modal-color'),
-    modalColorContainer: doc.getElementById('modal-color-container'),
-    modalBirthdate: doc.getElementById('modal-birthdate'),
-    modalBirthdateContainer: doc.getElementById('modal-birthdate-container'),
-    modalDesc: doc.getElementById('modal-desc'),
-    modalInsta: doc.getElementById('modal-insta')
+    modal: e.getElementById('dog-modal'),
+    closeModalBtn: e.querySelector('.close-modal'),
+    modalImg: e.getElementById('modal-img'),
+    modalName: e.getElementById('modal-name'),
+    modalBreed: e.getElementById('modal-breed'),
+    modalColor: e.getElementById('modal-color'),
+    modalColorContainer: e.getElementById('modal-color-container'),
+    modalBirthdate: e.getElementById('modal-birthdate'),
+    modalBirthdateContainer: e.getElementById('modal-birthdate-container'),
+    modalDesc: e.getElementById('modal-desc'),
+    modalInsta: e.getElementById('modal-insta')
   };
 }
-
-export function showDogModal(dog, elements, doc = document) {
-  if (!elements?.modal) return;
+function B(e, n, o = document) {
+  if (!n?.modal) return;
   const {
-    modal,
-    modalImg,
-    modalName,
-    modalBreed,
-    modalColor,
-    modalColorContainer,
-    modalBirthdate,
-    modalBirthdateContainer,
-    modalDesc,
-    modalInsta
-  } = elements;
-
-  if (modalImg) {
-    modalImg.src = dog.image;
-    modalImg.width = 640;
-    modalImg.height = 640;
-    modalImg.loading = 'lazy';
-  }
-  if (modalName) modalName.textContent = dog.name;
-  if (modalBreed) modalBreed.textContent = dog.breed;
-
-  if (modalColorContainer) {
-    if (dog.color) {
-      modalColorContainer.style.display = 'block';
-      if (modalColor) modalColor.textContent = dog.color;
-    } else {
-      modalColorContainer.style.display = 'none';
-    }
-  }
-
-  if (modalBirthdateContainer) {
-    if (dog.birthdate) {
-      modalBirthdateContainer.style.display = 'block';
-      if (modalBirthdate) modalBirthdate.textContent = dog.birthdate;
-    } else {
-      modalBirthdateContainer.style.display = 'none';
-    }
-  }
-
-  if (modalDesc) {
-    if (Array.isArray(dog.description)) {
-      modalDesc.innerHTML = dog.description.join('<br><br>');
-    } else if (dog.description) {
-      modalDesc.textContent = dog.description;
-    } else {
-      modalDesc.textContent = 'Sin descripción disponible.';
-    }
-  }
-
-  if (modalInsta) {
-    if (dog.instagram) {
-      modalInsta.href = dog.instagram;
-      modalInsta.style.display = 'inline-flex';
-    } else {
-      modalInsta.style.display = 'none';
-    }
-  }
-
-  modal.classList.add('show');
-  if (doc?.body) {
-    doc.body.style.overflow = 'hidden';
-  }
+    modal: l,
+    modalImg: t,
+    modalName: c,
+    modalBreed: m,
+    modalColor: h,
+    modalColorContainer: r,
+    modalBirthdate: f,
+    modalBirthdateContainer: d,
+    modalDesc: s,
+    modalInsta: a
+  } = n;
+  (t &&
+    ((t.src = e.image),
+    (t.width = 640),
+    (t.height = 640),
+    (t.loading = 'lazy')),
+    c && (c.textContent = e.name),
+    m && (m.textContent = e.breed),
+    r &&
+      (e.color
+        ? ((r.style.display = 'block'), h && (h.textContent = e.color))
+        : (r.style.display = 'none')),
+    d &&
+      (e.birthdate
+        ? ((d.style.display = 'block'), f && (f.textContent = e.birthdate))
+        : (d.style.display = 'none')),
+    s &&
+      (Array.isArray(e.description)
+        ? (s.innerHTML = e.description.join('<br><br>'))
+        : e.description
+          ? (s.textContent = e.description)
+          : (s.textContent = 'Sin descripci\xF3n disponible.')),
+    a &&
+      (e.instagram
+        ? ((a.href = e.instagram), (a.style.display = 'inline-flex'))
+        : (a.style.display = 'none')),
+    l.classList.add('show'),
+    o?.body && (o.body.style.overflow = 'hidden'));
 }
-
-export function hideDogModal(elements, doc = document) {
-  if (elements?.modal) {
-    elements.modal.classList.remove('show');
-  }
-  if (doc?.body) {
-    doc.body.style.overflow = 'auto';
-  }
+function E(e, n = document) {
+  (e?.modal && e.modal.classList.remove('show'),
+    n?.body && (n.body.style.overflow = 'auto'));
 }
-
-export function updateDimensions(track, dogCount, gap = 32) {
-  const firstCard = track?.querySelector('.team-card');
-  if (!firstCard) {
-    return { cardWidth: undefined, singleSetWidth: undefined };
-  }
-  const cardWidth = firstCard.offsetWidth + gap;
-  return { cardWidth, singleSetWidth: cardWidth * dogCount };
+function C(e, n, o = 32) {
+  const l = e?.querySelector('.team-card');
+  if (!l) return { cardWidth: void 0, singleSetWidth: void 0 };
+  const t = l.offsetWidth + o;
+  return { cardWidth: t, singleSetWidth: t * n };
 }
-
-export function checkInfiniteScroll(track, singleSetWidth) {
-  if (!track || !singleSetWidth) {
-    return track?.scrollLeft ?? 0;
-  }
-  if (track.scrollLeft >= singleSetWidth * 2) {
-    track.scrollLeft -= singleSetWidth;
-  } else if (track.scrollLeft <= 0) {
-    track.scrollLeft += singleSetWidth;
-  }
-  return track.scrollLeft;
+function x(e, n) {
+  return !e || !n
+    ? (e?.scrollLeft ?? 0)
+    : (e.scrollLeft >= n * 2
+        ? (e.scrollLeft -= n)
+        : e.scrollLeft <= 0 && (e.scrollLeft += n),
+      e.scrollLeft);
 }
-
-export function startAutoScroll(
-  track,
-  singleSetWidthGetter,
-  isHoveredGetter,
-  scrollSpeed
-) {
-  let autoScrollId;
-  const restart = () => {
-    if (autoScrollId) clearInterval(autoScrollId);
-    autoScrollId = setInterval(() => {
-      if (!isHoveredGetter() && singleSetWidthGetter()) {
-        track.scrollLeft += scrollSpeed;
-        checkInfiniteScroll(track, singleSetWidthGetter());
-      }
-    }, 20);
-  };
-  restart();
-  return () => autoScrollId && clearInterval(autoScrollId);
+function L(e, n, o, l) {
+  let t;
+  return (
+    (() => {
+      (t && clearInterval(t),
+        (t = setInterval(() => {
+          !o() && n() && ((e.scrollLeft += l), x(e, n()));
+        }, 20)));
+    })(),
+    () => t && clearInterval(t)
+  );
 }
-
-export function initDogs() {
-  const track = document.getElementById('carousel-track');
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-
-  if (!track) return;
-
-  const modalElements = getModalElements(document);
-  fetch(DOGS_ENDPOINT)
-    .then((response) => response.json())
-    .then((dogs) =>
-      setupDogsCarousel({
-        track,
-        prevBtn,
-        nextBtn,
-        dogs,
-        modalElements,
-        startAutoScrollFn: startAutoScroll
+function I() {
+  const e = document.getElementById('carousel-track'),
+    n = document.getElementById('prev-btn'),
+    o = document.getElementById('next-btn');
+  if (!e) return;
+  const l = g(document);
+  fetch(b)
+    .then((t) => t.json())
+    .then((t) =>
+      D({
+        track: e,
+        prevBtn: n,
+        nextBtn: o,
+        dogs: t,
+        modalElements: l,
+        startAutoScrollFn: L
       })
     )
-    .catch((error) => console.error('Error loading dogs:', error));
+    .catch((t) => console.error('Error loading dogs:', t));
 }
-
-export function setupDogsCarousel({
-  track,
-  prevBtn,
-  nextBtn,
-  dogs,
-  modalElements,
-  startAutoScrollFn = startAutoScroll
+function D({
+  track: e,
+  prevBtn: n,
+  nextBtn: o,
+  dogs: l,
+  modalElements: t,
+  startAutoScrollFn: c = L
 }) {
-  if (!track || !Array.isArray(dogs) || dogs.length === 0) return;
-
-  const onOpenDog = (dog) => showDogModal(dog, modalElements, document);
-
-  dogs.forEach((dog) => {
-    track.appendChild(createDogCard(dog, onOpenDog));
-  });
-
-  dogs.forEach((dog) => {
-    track.appendChild(createDogCard(dog, onOpenDog));
-  });
-
-  [...dogs].reverse().forEach((dog) => {
-    track.insertBefore(createDogCard(dog, onOpenDog), track.firstChild);
-  });
-
-  const scrollSpeed = 1;
-  let isHovered = false;
-  let cardWidth;
-  let singleSetWidth;
-
-  const recalcDimensions = () => {
-    const sizes = updateDimensions(track, dogs.length);
-    if (sizes.cardWidth) cardWidth = sizes.cardWidth;
-    if (sizes.singleSetWidth) singleSetWidth = sizes.singleSetWidth;
+  if (!e || !Array.isArray(l) || l.length === 0) return;
+  const m = (i) => B(i, t, document);
+  (l.forEach((i) => {
+    e.appendChild(v(i, m));
+  }),
+    l.forEach((i) => {
+      e.appendChild(v(i, m));
+    }),
+    [...l].reverse().forEach((i) => {
+      e.insertBefore(v(i, m), e.firstChild);
+    }));
+  const h = 1;
+  let r = !1,
+    f,
+    d;
+  const s = () => {
+    const i = C(e, l.length);
+    (i.cardWidth && (f = i.cardWidth),
+      i.singleSetWidth && (d = i.singleSetWidth));
   };
-
-  setTimeout(() => {
-    recalcDimensions();
-    if (singleSetWidth) {
-      track.scrollLeft = singleSetWidth;
-    }
-  }, 100);
-
-  window.addEventListener('resize', () => {
-    recalcDimensions();
-    if (singleSetWidth) {
-      track.scrollLeft = singleSetWidth;
-    }
-  });
-
-  let stopAutoScroll = startAutoScrollFn(
-    track,
-    () => singleSetWidth,
-    () => isHovered,
-    scrollSpeed
+  (setTimeout(() => {
+    (s(), d && (e.scrollLeft = d));
+  }, 100),
+    window.addEventListener('resize', () => {
+      (s(), d && (e.scrollLeft = d));
+    }));
+  let a = c(
+    e,
+    () => d,
+    () => r,
+    h
   );
-
-  const hoverHandlers = {
+  const u = {
     mouseenter: () => {
-      isHovered = true;
+      r = !0;
     },
     mouseleave: () => {
-      isHovered = false;
+      r = !1;
     }
   };
-
-  track.addEventListener('mouseenter', hoverHandlers.mouseenter);
-  track.addEventListener('mouseleave', hoverHandlers.mouseleave);
-
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      track.scrollBy({ left: cardWidth, behavior: 'smooth' });
-    });
-    nextBtn.addEventListener('mouseenter', hoverHandlers.mouseenter);
-    nextBtn.addEventListener('mouseleave', hoverHandlers.mouseleave);
-  }
-
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      track.scrollBy({ left: -cardWidth, behavior: 'smooth' });
-    });
-    prevBtn.addEventListener('mouseenter', hoverHandlers.mouseenter);
-    prevBtn.addEventListener('mouseleave', hoverHandlers.mouseleave);
-  }
-
-  const modal = modalElements.modal;
-  const closeModalBtn = modalElements.closeModalBtn;
-
-  if (closeModalBtn && modal) {
-    closeModalBtn.addEventListener('click', () =>
-      hideDogModal(modalElements, document)
-    );
-  }
-
-  window.addEventListener('click', (e) => {
-    if (modal && e.target === modal) {
-      hideDogModal(modalElements, document);
-    }
-  });
-
-  // Stop auto scroll if the tab is hidden to avoid running intervals unnecessarily.
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      stopAutoScroll();
-    } else {
-      stopAutoScroll = startAutoScrollFn(
-        track,
-        () => singleSetWidth,
-        () => isHovered,
-        scrollSpeed
-      );
-    }
-  });
+  (e.addEventListener('mouseenter', u.mouseenter),
+    e.addEventListener('mouseleave', u.mouseleave),
+    o &&
+      (o.addEventListener('click', () => {
+        e.scrollBy({ left: f, behavior: 'smooth' });
+      }),
+      o.addEventListener('mouseenter', u.mouseenter),
+      o.addEventListener('mouseleave', u.mouseleave)),
+    n &&
+      (n.addEventListener('click', () => {
+        e.scrollBy({ left: -f, behavior: 'smooth' });
+      }),
+      n.addEventListener('mouseenter', u.mouseenter),
+      n.addEventListener('mouseleave', u.mouseleave)));
+  const y = t.modal,
+    p = t.closeModalBtn;
+  (p && y && p.addEventListener('click', () => E(t, document)),
+    window.addEventListener('click', (i) => {
+      y && i.target === y && E(t, document);
+    }),
+    document.addEventListener('visibilitychange', () => {
+      document.hidden
+        ? a()
+        : (a = c(
+            e,
+            () => d,
+            () => r,
+            h
+          ));
+    }));
 }
-
-if (typeof document !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDogs);
-  } else {
-    initDogs();
-  }
-}
+typeof document < 'u' &&
+  (document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded', I)
+    : I());
+export {
+  x as checkInfiniteScroll,
+  v as createDogCard,
+  g as getModalElements,
+  E as hideDogModal,
+  I as initDogs,
+  D as setupDogsCarousel,
+  B as showDogModal,
+  L as startAutoScroll,
+  C as updateDimensions
+};
+//# sourceMappingURL=dogs.js.map

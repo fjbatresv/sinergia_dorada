@@ -20,12 +20,25 @@ jobs:
       - name: Prepare temp workspace
         run: |
           mkdir -p /tmp/site
-          rsync -a --delete --exclude '.git' --exclude 'node_modules' --exclude '.github' --exclude '.DS_Store' ./ /tmp/site/
+          rsync -a --delete \
+            --exclude '.git' \
+            --exclude 'node_modules' \
+            --exclude '.github' \
+            --exclude '.DS_Store' \
+            ./ /tmp/site/
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: |
+            /tmp/site/package-lock.json
 
       - name: Optimize images before deploy
         run: |
           sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y imagemagick
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends imagemagick
           cd /tmp/site
           if [ -d assets ]; then
             find assets -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) -exec mogrify -strip -interlace Plane -quality 82 {} +
@@ -37,10 +50,41 @@ jobs:
         working-directory: /tmp/site
         run: npm ci
 
+      - name: Download Sentry bundle fallback
+        working-directory: /tmp/site
+        run: |
+          mkdir -p assets
+          curl -sfL https://browser.sentry-cdn.com/7.120.1/bundle.tracing.replay.min.js -o assets/sentry.bundle.tracing.replay.min.js
+
       - name: Build (minify JS)
         working-directory: /tmp/site
         run: npm run build
 
+      - name: Inject Sentry release
+        working-directory: /tmp/site
+        env:
+          SENTRY_RELEASE: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          import sys
+
+          release = os.environ.get("SENTRY_RELEASE", "").strip()
+          if not release:
+              print("SENTRY_RELEASE no definido", file=sys.stderr)
+              sys.exit(1)
+
+          js = Path("scripts/sentry.js")
+          if not js.is_file():
+              print(f"No se encontró {js.resolve()}. Verifica la ruta del archivo.", file=sys.stderr)
+              sys.exit(1)
+
+          content = js.read_text(encoding="utf-8")
+          content = content.replace("__SENTRY_RELEASE__", release)
+          js.write_text(content, encoding="utf-8")
+          print(f"SENTRY_RELEASE inyectado en {js}")
+          PY
       - name: Validate HTML
         working-directory: /tmp/site
         run: npm run validate:html
@@ -58,34 +102,47 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Validate HTML
-        run: npm run validate:html
+      - name: Create Sentry release and upload sourcemaps
+        # Se ejecuta desde el root del repo para que .git esté disponible para set_commits
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+        with:
+          version: ${{ github.sha }}
+          projects: ${{ vars.SENTRY_PROJECT }}
+          sourcemaps: /tmp/site/scripts
+          url_prefix: '~/scripts'
+          finalize: true
+          set_commits: auto
+          environment: ${{ vars.SENTRY_ENVIRONMENT }}
 
-      - name: Check links
-        run: npm run check:links
-
-      - name: Run tests
-        run: npm test
-
-      - name: Deploy to S3 (long cache for assets)
+      - name: Deploy assets to S3 (long cache)
         run: |
           cd /tmp/site
           aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
-            --exclude ".git/*" --exclude ".github/*" --exclude ".DS_Store" --exclude "*.html" \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude ".DS_Store" \
+            --exclude "*.html" \
             --cache-control "public,max-age=31536000,immutable"
 
       - name: Deploy HTML with short cache
         run: |
           cd /tmp/site
           aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
-            --exclude "*" --include "*.html" \
+            --exclude "*" \
+            --include "*.html" \
             --cache-control "public,max-age=60"
 
       - name: Invalidate CloudFront Cache
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*.html" "/assets/*" "/styles/*" "/scripts/*"
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*.html" "/assets/*" "/styles/*" "/scripts/*"
 
       - name: Generate Next Version
         id: version
@@ -105,13 +162,13 @@ jobs:
           new_tag="v$major.$minor.$new_patch"
 
           echo "New version: $new_tag"
-          echo "NEW_TAG=$new_tag" >> $GITHUB_ENV
+          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ env.NEW_TAG }}
-          name: Release ${{ env.NEW_TAG }}
+          tag_name: ${{ steps.version.outputs.new_tag }}
+          name: Release ${{ steps.version.outputs.new_tag }}
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

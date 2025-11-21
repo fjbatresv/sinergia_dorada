@@ -988,7 +988,6 @@
   display: flex;
   gap: 2rem;
   margin-bottom: 1.5rem;
-  overflow-x: hidden;
   position: relative;
   padding: 24px 0;
 }
@@ -1185,11 +1184,16 @@
     max-width: 100%;
   }
 
+  .testimonials-track {
+    gap: 1rem;
+    padding: 16px;
+  }
+
   .testimonial-card {
     padding: 2rem 1.5rem;
-    flex: 0 0 90%;
-    min-width: 90%;
-    max-width: none;
+    flex: 0 0 min(90vw, 320px);
+    min-width: min(90vw, 320px);
+    max-width: min(90vw, 360px);
   }
 
   .testimonial-text {

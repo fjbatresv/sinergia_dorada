@@ -4,7 +4,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['node_modules', 'dist', 'assets']
+    ignores: ['node_modules', 'dist', 'assets', 'scripts/sentry.js']
   },
   {
     languageOptions: {

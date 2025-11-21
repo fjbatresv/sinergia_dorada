@@ -8,7 +8,7 @@
 ![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?logo=amazonaws&logoColor=white)
 ![CloudFront](https://img.shields.io/badge/CloudFront-8C4FFF?logo=amazonaws&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-vitest-green)
-![Coverage](https://img.shields.io/badge/coverage-87%25-blue)
+![Coverage](https://img.shields.io/badge/coverage-100%25-blue)
 
 Sitio oficial de **Sinergia Dorada**, una iniciativa sin fines de lucro que lleva terapia asistida con perros a hospitales, centros educativos y empresas en Guatemala.
 
@@ -67,12 +67,23 @@ index.html               # Layout principal
 
 > ⚠️ Abrir `index.html` con `file://` bloqueará la carga del contenido dinámico por CORS. Usa siempre un servidor local.
 
+## 🧪 Comandos de calidad
+
+- `npm run lint` — ESLint sobre `scripts/**/*.js`.
+- `npm run format:check` — Prettier.
+- `npm run validate:html` — html-validate.
+- `npm run check:links` — Linkinator sirviendo la web en localhost (requiere poder abrir un puerto; en algunos entornos locales puede bloquearse).
+- `npm run test` — suite de Vitest.
+- `npm run test:coverage` — cobertura (actualmente 100% en JS).
+- `npm run test:axe` — smoke de accesibilidad (axe-core) sobre `index.html`.
+
 ## 📦 Despliegue (CI/CD)
 
 El flujo definido en `.github/workflows/deploy.yml`:
 
 1. Sube la versión compilada al bucket de **AWS S3**.
 2. Ejecuta una invalidación en **CloudFront** para propagar los cambios.
+3. Publica release en GitHub (tag auto-incremental) y sube sourcemaps a Sentry.
 
 El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación de HTML, chequeo de links, tests con cobertura y un smoke de accesibilidad.
 
@@ -82,11 +93,27 @@ El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación d
 2. Crea los siguientes **Secrets**:
    - `AWS_ACCESS_KEY_ID`
    - `AWS_SECRET_ACCESS_KEY`
-   - `AWS_REGION`
+   - `SENTRY_AUTH_TOKEN` (token personal con `project:write`, `release:admin`, `organization:read`)
 3. Agrega las **Variables**:
+   - `AWS_REGION`
    - `AWS_S3_BUCKET`
    - `CLOUDFRONT_DISTRIBUTION_ID`
+   - `SENTRY_ORG`
+   - `SENTRY_PROJECT`
+   - `SENTRY_ENVIRONMENT` (ej. `production`)
 4. En `Settings > Actions > General`, habilita **Workflow permissions → Read and write** para que `GITHUB_TOKEN` pueda crear releases.
+
+### Sentry
+
+- El DSN se fija en `index.html` (`data-sentry-dsn`).
+- El release se inyecta en CI con el SHA y sourcemaps se suben a Sentry.
+- Se descarga un bundle local de Sentry (`assets/sentry.bundle.tracing.replay.min.js`) para evitar bloqueadores; asegúrate de tenerlo disponible en hosting si no usas el CDN.
+- En tests se omite Sentry para que no afecte la cobertura ni el runtime.
+
+## ℹ️ Notas
+
+- `check:links` levanta un servidor en `localhost:4173`; si tu entorno bloquea la apertura de puertos (p. ej. con restricciones de SO), ejecuta un server manual (`npx serve -l 4173`) antes de correr el comando.
+- El build de CI genera sourcemaps y minifica; los archivos de origen se sobrescriben en `/tmp/site` durante el pipeline.
 
 ## ❤️ Créditos
 

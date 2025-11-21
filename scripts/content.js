@@ -212,7 +212,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Randomize Hero Dog Positions
+    /**
+     * Places and staggers floating dog elements around the hero area.
+     *
+     * Positions each element with the `.floating-dog` class using percentage `left`/`top` values within the visible hero bounds, avoiding a centered exclusion zone and keeping elements a minimum distance apart, and assigns randomized animation delays for entrance/hover timing.
+     */
     function randomizeDogs() {
         const dogs = document.querySelectorAll('.floating-dog');
         if (!dogs.length) return;
@@ -283,6 +287,12 @@ document.addEventListener('DOMContentLoaded', () => {
     applySectionTexts(defaultSiteContent.sectionsContent);
     populateHero(defaultSiteContent.hero);
     loadSiteContent();
+    /**
+     * Loads the site's content JSON and applies it to the page, falling back to built-in defaults on failure.
+     *
+     * If running from the file: protocol, attempts a file-compatible XHR fetch; otherwise uses the standard fetch path.
+     * On failure it logs a warning and informative hint (when on file:) and applies the default site content.
+     */
     function loadSiteContent() {
         const loader = window.location.protocol === 'file:'
             ? fetchSiteContentViaXHR()
@@ -299,6 +309,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    /**
+     * Load site content from content/site-content.json and parse it as JSON.
+     * @returns {Promise<Object>} The parsed site content object.
+     * @throws {Error} If the HTTP response has a non-OK status (error message includes the status code).
+     */
     function fetchSiteContentViaFetch() {
         return fetch('content/site-content.json', { cache: 'no-store' })
             .then(response => {
@@ -309,6 +324,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    /**
+     * Load and parse the site's content JSON from content/site-content.json.
+     *
+     * @returns {Promise<Object>} The parsed site content object. Rejection occurs for non-200 HTTP statuses, network errors, or JSON parse errors.
+     */
     function fetchSiteContentViaXHR() {
         return new Promise((resolve, reject) => {
             try {
@@ -336,6 +356,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Apply a site content payload to the page, updating visibility, navigation and all major sections.
+     *
+     * Applies section visibility flags, renders the navigation, updates section texts, and repopulates
+     * the hero, about (MVV), statistics, partners, and testimonials areas from the provided content object.
+     *
+     * @param {Object} content - Site content payload. Expected shape includes keys: `sections` (visibility flags), `navigation` (nav items), `sectionsContent` (titles/subtitles/text for sections), `hero`, `about`, `statistics`, `partners`, and `testimonials`. Missing keys will result in their respective sections remaining unchanged or using defaults.
+     */
     function applySiteContent(content = {}) {
         applySectionVisibility(content.sections);
         populateNavigation(content.navigation);
@@ -347,6 +375,15 @@ document.addEventListener('DOMContentLoaded', () => {
         initTestimonials(content.testimonials);
     }
 
+    /**
+     * Apply visibility settings to page sections based on a key→boolean config.
+     *
+     * For each entry in the internal sectionSelectors map, show the matching elements
+     * when the config value is truthy and hide them when falsy. Keys not present in
+     * `sectionConfig` are treated as visible.
+     *
+     * @param {Object<string, any>} [sectionConfig={}] - Map of section keys to visibility values; truthy means visible, falsy means hidden.
+     */
     function applySectionVisibility(sectionConfig = {}) {
         Object.entries(sectionSelectors).forEach(([key, selector]) => {
             const isVisible = sectionConfig.hasOwnProperty(key) ? !!sectionConfig[key] : true;
@@ -354,6 +391,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Toggle visibility of elements matched by a CSS selector by adding or removing the `section-hidden` class.
+     * @param {string} selector - CSS selector for target elements; if falsy, the function does nothing.
+     * @param {boolean} isVisible - `true` to show matched elements (remove `section-hidden`), `false` to hide them (add `section-hidden`).
+     */
     function setSectionVisibility(selector, isVisible) {
         if (!selector) return;
         document.querySelectorAll(selector).forEach(element => {
@@ -365,6 +407,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Populate the global navigation list element with entries built from the provided items.
+     *
+     * Clears any existing navigation content and appends an <li> containing an <a> for each item.
+     * If the cached `navList` element is not present or `items` is empty or not an array, the function does nothing.
+     *
+     * @param {Array<{label?: string, target?: string}>} items - Array of navigation entries. Each entry may include:
+     *   - label: visible text for the link.
+     *   - target: href for the link (e.g., a URL or hash). When absent, `'#'` is used.
+     */
     function populateNavigation(items = []) {
         if (!navList || !Array.isArray(items) || !items.length) return;
         navList.innerHTML = '';
@@ -380,6 +432,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Update section headings, subtitles, labels, and join/contact texts from the provided content object.
+     *
+     * Applies values (when present) to cached DOM nodes for: partners, testimonials, team, join, and contact sections.
+     *
+     * @param {Object} sectionsContent - Partial mapping of section content.
+     * @param {Object} [sectionsContent.partners] - Partners section content.
+     * @param {string} [sectionsContent.partners.title] - Partners section title.
+     * @param {string} [sectionsContent.partners.subtitle] - Partners section subtitle.
+     * @param {Object} [sectionsContent.testimonials] - Testimonials section content.
+     * @param {string} [sectionsContent.testimonials.label] - Small label/eyebrow for testimonials.
+     * @param {string} [sectionsContent.testimonials.title] - Plain-text testimonials title (used when `titleHtml` absent).
+     * @param {string} [sectionsContent.testimonials.titleHtml] - HTML testimonials title (preferred over `title` when present).
+     * @param {Object} [sectionsContent.team] - Team section content.
+     * @param {string} [sectionsContent.team.title] - Team section title.
+     * @param {string} [sectionsContent.team.subtitle] - Team section subtitle.
+     * @param {Object} [sectionsContent.join] - Join section content.
+     * @param {string} [sectionsContent.join.title] - Join section title.
+     * @param {string} [sectionsContent.join.text] - Join section descriptive text.
+     * @param {string} [sectionsContent.join.buttonLink] - URL for the join CTA button.
+     * @param {string} [sectionsContent.join.buttonText] - Text for the join CTA button.
+     * @param {Object} [sectionsContent.contact] - Contact section content.
+     * @param {string} [sectionsContent.contact.title] - Contact section title.
+     * @param {string} [sectionsContent.contact.text] - Contact section descriptive text.
+     */
     function applySectionTexts(sectionsContent = {}) {
         const partners = sectionsContent.partners || {};
         if (partnersTitle && partners.title) partnersTitle.textContent = partners.title;
@@ -412,6 +489,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (contactText && 'text' in contact) contactText.textContent = contact.text || '';
     }
 
+    /**
+     * Update the hero section call-to-action button's label and destination from the provided configuration.
+     *
+     * If the CTA button element is not present in the DOM, the function does nothing.
+     * @param {Object} [heroConfig] - Configuration for the hero CTA.
+     * @param {string} [heroConfig.ctaText] - Text to display on the CTA button; defaults to "Contáctanos".
+     * @param {string} [heroConfig.ctaLink] - URL or fragment the CTA should link to; defaults to "#contacto".
+     */
     function updateHeroCTA(heroConfig) {
         if (!heroCTAButton) return;
         const text = heroConfig && heroConfig.ctaText ? heroConfig.ctaText : 'Contáctanos';
@@ -420,6 +505,20 @@ document.addEventListener('DOMContentLoaded', () => {
         heroCTAButton.href = link;
     }
 
+    /**
+     * Populate the hero collage with floating items and update the hero call-to-action.
+     *
+     * Iterates `heroConfig.floatingItems` (or default items) to create `.floating-dog` elements
+     * (image, optional `activity` class, and any additional classes), replaces existing items
+     * in the collage, and schedules position randomization.
+     *
+     * @param {Object} heroConfig - Configuration for the hero area.
+     * @param {Array<Object>} [heroConfig.floatingItems] - Array of items to render. Each item may include:
+     *   - {string} image - URL for the item's image.
+     *   - {string} [alt] - Alt text for the image.
+     *   - {string} [type] - If equal to `"activity"`, adds the `activity` class.
+     *   - {Array<string>} [classes] - Additional CSS classes to apply to the wrapper.
+     */
     function populateHero(heroConfig) {
         if (!heroCollage) return;
         updateHeroCTA(heroConfig);
@@ -458,6 +557,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Render the Mission/Vision/Values (MVV) cards and configure the word cloud source.
+     *
+     * Uses the provided `about` content to populate the MVV container with three cards (mission, vision, values), attaches an observer to new cards for scroll animations when available, updates the internal `wordCloudWords` source with `about.wordCloud` or a default list, and triggers a redraw of the word cloud if the currently active tab is the values tab.
+     *
+     * @param {Object} about - Content for the MVV section.
+     * @param {string} [about.mission] - Text for the Mission card.
+     * @param {string} [about.vision] - Text for the Vision card.
+     * @param {string[]} [about.values] - List of value labels for the Values card.
+     * @param {Array} [about.wordCloud] - Words to use for the word cloud; if absent or empty, defaults are used.
+     */
     function populateAbout(about) {
         if (!mvvContainer) return;
 
@@ -514,6 +624,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Render statistic tiles into the statistics container and start the animation observer for their numeric counts.
+     * @param {{label?: string, value?: number}[]} stats - Array of statistic entries; each object may provide `label` (string) and `value` (number). If omitted or empty, no tiles are rendered.
+     */
     function populateStatistics(stats = []) {
         if (!statsContainer) return;
 
@@ -539,6 +653,14 @@ document.addEventListener('DOMContentLoaded', () => {
         setupStatisticsObserver();
     }
 
+    /**
+     * Render partner logo elements into the partners track container.
+     *
+     * If a non-empty list is provided, it is duplicated to allow seamless/continuous display.
+     * If the partners track element is not present in the DOM, the function does nothing.
+     *
+     * @param {Array<Object>} partners - Array of partner descriptors (e.g., objects containing a logo source and optional link).
+     */
     function populatePartners(partners = []) {
         if (!partnersTrack) return;
 
@@ -550,6 +672,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Create a DOM element representing a partner logo, optionally wrapped in an external link.
+     * @param {Object} partner - Partner descriptor.
+     * @param {string} partner.logo - URL of the partner logo image.
+     * @param {string} [partner.name] - Accessible name for the partner; used as image alt text.
+     * @param {string} [partner.url] - External URL to open when the logo is clicked; when present the logo is wrapped in a link that opens in a new tab.
+     * @returns {HTMLElement} A `.partner-logo` element containing the partner image (and a link wrapper when `partner.url` is provided).
+     */
     function createPartnerLogo(partner) {
         const logo = document.createElement('div');
         logo.className = 'partner-logo';
@@ -574,6 +704,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return logo;
     }
 
+    /**
+     * Initialize the testimonials carousel: render provided testimonials, reset to the first item, update the carousel view, and restart automatic rotation.
+     * @param {Array<Object>} [testimonials=[]] - Array of testimonial objects used to render testimonial cards; if omitted or not an array, an empty list is used.
+     * Notes: If the testimonials track element is not present in the DOM, the function does nothing.
+     */
     function initTestimonials(testimonials = []) {
         if (!testimonialsTrack) return;
 
@@ -583,6 +718,16 @@ document.addEventListener('DOMContentLoaded', () => {
         resetAutoRotate();
     }
 
+    /**
+     * Populate the testimonials carousel track with the provided testimonial entries.
+     *
+     * @param {Array<Object>} testimonials - Array of testimonial objects.
+     * @param {string} testimonials[].quote - Quote text to display.
+     * @param {string} testimonials[].author - Author's name.
+     * @param {string} testimonials[].role - Author's role or title.
+     * @param {string} testimonials[].photo - URL to the author's photo.
+     * @param {boolean} [testimonials[].featured] - If true, mark this testimonial as featured.
+     */
     function renderTestimonials(testimonials) {
         testimonialsTrack.innerHTML = '';
 
@@ -615,6 +760,15 @@ document.addEventListener('DOMContentLoaded', () => {
         buildTestimonialDots(Math.max(totalCards - 2, 0));
     }
 
+    /**
+     * Render the testimonial navigation dots and wire their click behavior.
+     *
+     * Creates `count` dot elements inside the testimonial dots container, marks the first dot active,
+     * updates the shared `testimonialDots` list, and attaches click handlers that switch the visible
+     * testimonial and restart the auto-rotate when a dot is clicked (clicks are ignored while a
+     * transition is in progress or when there are fewer than three testimonial cards).
+     * @param {number} count - Number of dots to create inside the testimonial dots container.
+     */
     function buildTestimonialDots(count) {
         if (!testimonialDotsContainer) return;
 
@@ -645,7 +799,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let progressInterval;
     let progress = 0;
     const switchTime = 8000; // 8 seconds
-    const updateFreq = 100; // Update progress every 100ms
+    const updateFreq = 100; /**
+     * Activate the given MVV tab, update related UI state, and reset the tab progress.
+     *
+     * Updates the container's active-tab data attribute, toggles the active class on tab buttons
+     * and content panels, resets per-button progress bars, and sets the internal progress counter to 0.
+     * If the `values` tab is activated, schedules a word cloud redraw shortly after activation.
+     *
+     * @param {string} tabId - The id of the tab to activate (e.g., "mission", "vision", "values").
+     */
 
     function switchTab(tabId) {
         currentTab = tabId;
@@ -685,6 +847,13 @@ document.addEventListener('DOMContentLoaded', () => {
         progress = 0;
     }
 
+    /**
+     * Start automatic cycling through the Mission/Vision/Values tabs and drive the per-tab progress bar.
+     *
+     * Clears any existing tab and progress timers, then:
+     * - sets a timer that advances the active tab in the order mission → vision → values → mission at intervals defined by `switchTime` by calling `switchTab`.
+     * - sets a progress timer that increments an internal `progress` value every `updateFreq`, updates the `.progress-bar` width inside the currently active `.mv-tab-btn`, and resets `progress` to 0 when it exceeds 100.
+     */
     function startTabCycle() {
         clearInterval(tabInterval);
         clearInterval(progressInterval);
@@ -725,6 +894,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('values-canvas');
     const container = document.getElementById('canvas-container');
 
+    /**
+     * Renders a responsive word cloud into the configured canvas element.
+     *
+     * Resizes the canvas to match its container, then draws a word cloud using the current
+     * word list (falls back to defaults). If the canvas or container is missing, the canvas
+     * is hidden (width 0), or the WordCloud library is not available, the function does nothing.
+     *
+     * The visual output is horizontal words arranged in a circular layout with responsive sizing.
+     */
     function drawWordCloud() {
         if (!canvas || !container) return;
         
@@ -767,7 +945,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200);
     });
 
-    // --- Testimonials Carousel Logic ---
+    /**
+     * Repositions the testimonial carousel and updates visual states (featured card, dots, and progress).
+     *
+     * Updates the track translation to show the testimonial at `currentIndex`, toggles the `featured`
+     * class on cards, activates the corresponding dot, and restarts the progress bar animation.
+     *
+     * @param {boolean} [skipTransitionLock=false] - If true, force-updates the carousel even while a transition is in progress.
+     */
     function updateCarousel(skipTransitionLock = false) {
         if (!testimonialsTrack || !testimonialCards.length) return;
         if (isTransitioning && !skipTransitionLock) return;
@@ -824,6 +1009,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Starts the automatic rotation of the testimonials carousel.
+     *
+     * Clears any existing auto-rotate timer, then if a testimonials track exists and there are more than three cards,
+     * begins a 6-second interval that advances the visible carousel index, wraps to the start when reaching the end,
+     * and calls updateCarousel on each tick. Stores the timer in `autoRotateInterval` and updates `currentIndex`.
+     */
     function startAutoRotate() {
         if (autoRotateInterval) clearInterval(autoRotateInterval);
         if (!testimonialsTrack || totalCards <= 3) return;
@@ -835,6 +1027,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 6000);
     }
 
+    /**
+     * Restart the testimonials auto-rotation timer.
+     *
+     * Stops any existing auto-rotation interval (if present) and starts a new one.
+     */
     function resetAutoRotate() {
         if (autoRotateInterval) {
             clearInterval(autoRotateInterval);
@@ -842,6 +1039,11 @@ document.addEventListener('DOMContentLoaded', () => {
         startAutoRotate();
     }
 
+    /**
+     * Initializes an IntersectionObserver that triggers the statistics counters to animate once when the statistics section enters the viewport.
+     *
+     * If a previous observer exists it is disconnected. The observer watches the `.statistics` section (threshold 0.5) and, on first intersection, starts each `.stat-number` counter with a 100ms stagger between items.
+     */
     function setupStatisticsObserver() {
         if (!statsContainer) return;
 
@@ -872,6 +1074,12 @@ document.addEventListener('DOMContentLoaded', () => {
         statsObserver.observe(statsSection);
     }
 
+    /**
+     * Animates a numeric counter on an element from 0 up to the integer in its `data-target` attribute over ~2000ms.
+     *
+     * The element's `textContent` is updated each frame with the current integer value; when finished the `textContent` equals the parsed `data-target`.
+     * @param {Element} element - DOM element with a `data-target` attribute containing the desired integer end value.
+     */
     function animateCounter(element) {
         const target = parseInt(element.getAttribute('data-target'), 10) || 0;
         const duration = 2000;

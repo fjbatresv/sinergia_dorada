@@ -114,8 +114,8 @@ jobs:
         with:
           version: ${{ github.sha }}
           projects: ${{ vars.SENTRY_PROJECT }}
-          sourcemaps: /tmp/site/scripts
-          url_prefix: '~/scripts'
+          sourcemaps: /tmp/site/dist
+          url_prefix: '~/dist'
           finalize: true
           set_commits: auto
           environment: ${{ vars.SENTRY_ENVIRONMENT }}
@@ -127,8 +127,8 @@ jobs:
             --exclude "*" \
             --include "assets/*" \
             --include "styles/*" \
-            --include "scripts/*.js" \
-            --include "scripts/*.map" \
+            --include "dist/*.js" \
+            --include "dist/*.map" \
             --include "content/*.json" \
             --cache-control "public,max-age=31536000,immutable"
 

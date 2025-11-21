@@ -140,6 +140,8 @@ jobs:
             --exclude "eslint.config.js" \
             --exclude "lint-staged.config.mjs" \
             --exclude "vitest.config.js" \
+            --exclude "lighthouse-report.hml" \
+            --exclude "tests/*" \
             --exclude "*.html" \
             --cache-control "public,max-age=31536000,immutable"
 

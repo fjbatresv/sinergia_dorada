@@ -2,9 +2,9 @@
   "sections": {
     "hero": true,
     "about": true,
-    "statistics": true,
-    "partners": true,
-    "testimonials": true,
+    "statistics": false,
+    "partners": false,
+    "testimonials": false,
     "team": true,
     "join": true,
     "contact": true

@@ -9,7 +9,11 @@ export default {
       provider: 'v8',
       reporter: ['text', 'lcov'],
       reportsDirectory: './coverage',
-      exclude: ['**/lint-staged.config.mjs', 'scripts/sentry.js']
+      exclude: [
+        '**/lint-staged.config.mjs',
+        'scripts/sentry.js',
+        'assets/sentry.bundle.tracing.replay.min.js'
+      ]
     }
   }
 };

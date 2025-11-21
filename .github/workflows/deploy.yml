@@ -144,7 +144,7 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*.html" "/assets/*" "/styles/*" "/scripts/*"
+            --paths "/*.html" "/assets/*" "/styles/*" "/scripts/*" "/dist/*"
 
       - name: Generate Next Version
         id: version

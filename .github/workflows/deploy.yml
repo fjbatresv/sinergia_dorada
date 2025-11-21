@@ -48,7 +48,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: /tmp/site
-        run: npm ci
+        run: npm ci --registry=https://registry.npmjs.org
 
       - name: Download Sentry bundle fallback
         working-directory: /tmp/site

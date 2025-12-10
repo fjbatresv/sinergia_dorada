@@ -1,3 +1,5 @@
+import fallbackDogs from '../content/dogs.json';
+
 const b = 'content/dogs.json';
 function w(e) {
   if (!e) return '';
@@ -144,25 +146,46 @@ function L(e, n, o, l) {
     () => t && clearInterval(t)
   );
 }
+function A(e, n = 'No pudimos cargar el equipo en este momento.') {
+  if (!e) return;
+  e.innerHTML = '';
+  const o = document.createElement('div');
+  o.className = 'team-error';
+  o.setAttribute('role', 'status');
+  o.textContent = n;
+  e.appendChild(o);
+}
 function I() {
   const e = document.getElementById('carousel-track'),
     n = document.getElementById('prev-btn'),
     o = document.getElementById('next-btn');
   if (!e) return;
   const l = g(document);
+  const t = Array.isArray(fallbackDogs) ? fallbackDogs : [];
+  const c = (d) =>
+    D({
+      track: e,
+      prevBtn: n,
+      nextBtn: o,
+      dogs: d,
+      modalElements: l,
+      startAutoScrollFn: L
+    });
   fetch(b)
-    .then((t) => t.json())
-    .then((t) =>
-      D({
-        track: e,
-        prevBtn: n,
-        nextBtn: o,
-        dogs: t,
-        modalElements: l,
-        startAutoScrollFn: L
-      })
-    )
-    .catch((t) => console.error('Error loading dogs:', t));
+    .then((r) => {
+      if (!r?.ok) throw new Error(`HTTP ${r?.status ?? 'error'}`);
+      return r.json();
+    })
+    .then((r) => c(r))
+    .catch((r) => {
+      console.error('Error loading dogs:', r);
+      if (t.length) {
+        console.info('Usando fallback local para dogs.json');
+        c(t);
+        return;
+      }
+      A(e);
+    });
 }
 function D({
   track: e,

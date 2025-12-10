@@ -99,6 +99,7 @@ El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación d
    - `AWS_ACCESS_KEY_ID`
    - `AWS_SECRET_ACCESS_KEY`
    - `SENTRY_AUTH_TOKEN` (token personal con `project:write`, `release:admin`, `organization:read`)
+   - `SENTRY_DSN` (se inyecta en el deploy para no versionarlo)
 3. Agrega las **Variables**:
    - `AWS_REGION`
    - `AWS_S3_BUCKET`
@@ -110,7 +111,7 @@ El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación d
 
 ### Sentry
 
-- El DSN se fija en `index.html` (`data-sentry-dsn`).
+- El DSN se deja como placeholder en `index.html` y se inyecta en CI desde `SENTRY_DSN`.
 - El release se inyecta en CI con el SHA y sourcemaps (dist/\*.map) se suben a Sentry.
 - Sentry y vendors externos (Font Awesome, WordCloud) se sirven de `assets/vendor` para evitar cookies/terceros.
 - En tests se omite Sentry para que no afecte la cobertura ni el runtime.

@@ -85,6 +85,34 @@ jobs:
           js.write_text(content, encoding="utf-8")
           print(f"SENTRY_RELEASE inyectado en {js}")
           PY
+      - name: Inject Sentry DSN
+        working-directory: /tmp/site
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          import sys
+
+          dsn = os.environ.get("SENTRY_DSN", "").strip()
+          if not dsn:
+              print("SENTRY_DSN no definido", file=sys.stderr)
+              sys.exit(1)
+
+          html = Path("index.html")
+          if not html.is_file():
+              print(f"No se encontró {html.resolve()}. Verifica la ruta del archivo.", file=sys.stderr)
+              sys.exit(1)
+
+          content = html.read_text(encoding="utf-8")
+          if "__SENTRY_DSN__" not in content:
+              print("Placeholder __SENTRY_DSN__ no encontrado en index.html", file=sys.stderr)
+              sys.exit(1)
+
+          html.write_text(content.replace("__SENTRY_DSN__", dsn), encoding="utf-8")
+          print("SENTRY_DSN inyectado en index.html")
+          PY
       - name: Validate HTML
         working-directory: /tmp/site
         run: npm run validate:html

@@ -1,17 +1,37 @@
 const b = 'content/dogs.json';
+function w(e) {
+  if (!e) return '';
+  try {
+    const n = new URL(e, window.location.origin);
+    return n.protocol === 'http:' || n.protocol === 'https:' ? n.href : '';
+  } catch {
+    return '';
+  }
+}
 function v(e, n = () => {}) {
   const o = document.createElement('div');
+  o.classList.add('team-card');
+  const l = document.createElement('div');
+  l.classList.add('card-image');
+  const t = document.createElement('img');
+  const c = typeof e?.name === 'string' ? e.name : '';
+  ((t.loading = 'lazy'),
+    (t.width = 320),
+    (t.height = 320),
+    (t.alt = c || 'Perro'),
+    (t.src = w(e?.image)),
+    l.appendChild(t));
+  const m = document.createElement('div');
+  m.classList.add('card-content');
+  const h = document.createElement('h3');
+  ((h.textContent = c), m.appendChild(h));
+  const r = document.createElement('span');
+  (r.classList.add('breed'),
+    (r.textContent = typeof e?.breed === 'string' ? e.breed : ''),
+    m.appendChild(r));
   return (
-    o.classList.add('team-card'),
-    (o.innerHTML = `
-    <div class="card-image">
-      <img src="${e.image}" alt="${e.name}" loading="lazy" width="320" height="320">
-    </div>
-    <div class="card-content">
-      <h3>${e.name}</h3>
-      <span class="breed">${e.breed}</span>
-    </div>
-  `),
+    o.appendChild(l),
+    o.appendChild(m),
     o.addEventListener('click', () => n(e)),
     o
   );
@@ -46,7 +66,7 @@ function B(e, n, o = document) {
     modalInsta: a
   } = n;
   (t &&
-    ((t.src = e.image),
+    ((t.src = w(e.image)),
     (t.width = 640),
     (t.height = 640),
     (t.loading = 'lazy')),
@@ -61,14 +81,35 @@ function B(e, n, o = document) {
         ? ((d.style.display = 'block'), f && (f.textContent = e.birthdate))
         : (d.style.display = 'none')),
     s &&
-      (Array.isArray(e.description)
-        ? (s.innerHTML = e.description.join('<br><br>'))
-        : e.description
-          ? (s.textContent = e.description)
-          : (s.textContent = 'Sin descripci\xF3n disponible.')),
+      (() => {
+        for (; s.firstChild; ) s.removeChild(s.firstChild);
+        if (Array.isArray(e.description) && e.description.length > 0) {
+          e.description.forEach((p, y) => {
+            s.appendChild(
+              document.createTextNode(typeof p === 'string' ? p : '')
+            );
+            y < e.description.length - 1 &&
+              (s.appendChild(document.createElement('br')),
+              s.appendChild(document.createElement('br')));
+          });
+          return;
+        }
+        if (typeof e.description === 'string' && e.description) {
+          s.textContent = e.description;
+          return;
+        }
+        s.textContent = 'Sin descripci\xF3n disponible.';
+      })(),
     a &&
       (e.instagram
-        ? ((a.href = e.instagram), (a.style.display = 'inline-flex'))
+        ? (() => {
+            const p = w(e.instagram);
+            p
+              ? ((a.href = p),
+                (a.rel = 'noopener noreferrer'),
+                (a.style.display = 'inline-flex'))
+              : (a.style.display = 'none');
+          })()
         : (a.style.display = 'none')),
     l.classList.add('show'),
     o?.body && (o.body.style.overflow = 'hidden'));

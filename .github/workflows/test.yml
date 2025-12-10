@@ -34,6 +34,9 @@ jobs:
       - name: Validate HTML
         run: npm run validate:html
 
+      - name: Build assets for link check
+        run: npm run build
+
       - name: Check links
         run: npm run check:links
 

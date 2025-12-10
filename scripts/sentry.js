@@ -16,10 +16,12 @@ const metaRelease =
     ? document.querySelector('meta[name="sentry-release"]')?.content
     : null;
 
-const dsn =
+const rawDsn =
   (scriptWithDsn && scriptWithDsn.dataset.sentryDsn) ||
   (typeof window !== 'undefined' && window.SENTRY_DSN) ||
   metaDsn;
+const dsn = typeof rawDsn === 'string' ? rawDsn.trim() : rawDsn;
+const hasValidDsn = dsn && dsn !== '__SENTRY_DSN__';
 const environment =
   (scriptWithDsn && scriptWithDsn.dataset.sentryEnv) ||
   (typeof window !== 'undefined' && window.SENTRY_ENVIRONMENT) ||
@@ -75,7 +77,7 @@ function loadSentrySdk() {
 }
 
 async function initSentry() {
-  if (!dsn || isTestEnv) return;
+  if (!hasValidDsn || isTestEnv) return;
   try {
     const Sentry = await loadSentrySdk();
     if (!Sentry) return;

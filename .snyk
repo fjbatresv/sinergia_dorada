@@ -1,0 +1,13 @@
+# Archivo de política para Snyk (ignores/patches)
+# Ajusta la severidad con --severity-threshold y define la organización con --org al ejecutar snyk test/monitor.
+version: v1.29.0
+ignore: {}
+patch: {}
+
+# Ejemplo para ignorar una vulnerabilidad concreta:
+# ignore:
+#   SNYK-JS-EJEMPLO-12345:
+#     - reason: "Aún sin fix disponible"
+#       expires: "2025-12-31T23:59:59.000Z"
+#       path:
+#         - sinergia_dorada

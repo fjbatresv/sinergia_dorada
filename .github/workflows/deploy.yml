@@ -153,13 +153,11 @@ jobs:
           cd /tmp/site
           aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
             --exclude "*" \
-            --include "assets/*" \
-            --include "styles/*" \
-            --include "dist/*.js" \
-            --include "dist/*.map" \
-            --include "dist/vendor/**" \
+            --include "assets/**" \
+            --include "styles/**" \
+            --include "dist/**" \
             --include "scripts/sentry.js" \
-            --include "content/*.json" \
+            --include "content/**" \
             --cache-control "public,max-age=31536000,immutable"
 
       - name: Deploy HTML with short cache

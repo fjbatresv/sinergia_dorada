@@ -1,3 +1,5 @@
+import fallbackContent from '../content/site-content.json';
+
 const b = {
   hero: '#inicio',
   about: '#nosotros',
@@ -342,9 +344,10 @@ function V() {
   });
 }
 function j(
-  t,
+  t = fallbackContent,
   { fetchFn: n = O, xhrFn: e = V, applyFn: o = E, protocol: s } = {}
 ) {
+  const r = t || fallbackContent;
   return ((s || window.location.protocol) === 'file:' ? e() : n())
     .then(o)
     .catch((a) => {
@@ -356,7 +359,7 @@ function j(
           console.info(
             'Levanta la web con un servidor local para cargar el JSON din\xE1micamente.'
           ),
-        o(t));
+        r && o(r));
     });
 }
 function R(t = document) {
@@ -420,7 +423,7 @@ function P(t) {
   );
   s.observe(t);
 }
-function v(t) {
+function v(t = fallbackContent) {
   const n =
     (typeof window < 'u' && window.__VITEST__) ||
     (typeof globalThis < 'u' && globalThis.process?.env?.VITEST);
@@ -431,12 +434,12 @@ function v(t) {
       window.location &&
       window.location.protocol !== 'about:' &&
       !n &&
-      j(t || {}));
+      j(t));
 }
 typeof document < 'u' &&
   (document.readyState === 'loading'
-    ? document.addEventListener('DOMContentLoaded', () => v({}))
-    : v({}));
+    ? document.addEventListener('DOMContentLoaded', () => v())
+    : v());
 export {
   B as applyAboutContent,
   M as applyHeroContent,

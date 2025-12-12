@@ -24,6 +24,12 @@ describe('createDogCard', () => {
     card.click();
     expect(onOpen).toHaveBeenCalledWith(dog);
   });
+
+  it('devuelve src vacío cuando no hay imagen disponible', () => {
+    const card = createDogCard({ name: 'Brie', breed: 'Labrador' }, () => {});
+
+    expect(card.querySelector('img').getAttribute('src')).toBe('');
+  });
 });
 
 describe('updateDimensions', () => {

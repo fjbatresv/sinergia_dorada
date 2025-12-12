@@ -1,83 +1,84 @@
-const scriptWithDsn =
-  typeof document !== 'undefined'
-    ? document.currentScript ||
-      document.querySelector('script[data-sentry-dsn][src*="sentry.js"]')
-    : null;
-const metaDsn =
-  typeof document !== 'undefined'
-    ? document.querySelector('meta[name="sentry-dsn"]')?.content
-    : null;
-const metaEnv =
-  typeof document !== 'undefined'
-    ? document.querySelector('meta[name="sentry-environment"]')?.content
-    : null;
-const metaRelease =
-  typeof document !== 'undefined'
-    ? document.querySelector('meta[name="sentry-release"]')?.content
-    : null;
+const globalScope = typeof globalThis !== 'undefined' ? globalThis : undefined;
+const doc = globalScope?.document;
+const win = globalScope?.window ?? globalScope;
 
-const rawDsn =
-  (scriptWithDsn && scriptWithDsn.dataset.sentryDsn) ||
-  (typeof window !== 'undefined' && window.SENTRY_DSN) ||
-  metaDsn;
+const scriptWithDsn =
+  doc?.currentScript ||
+  doc?.querySelector('script[data-sentry-dsn][src*="sentry.js"]') ||
+  null;
+const metaDsn = doc?.querySelector('meta[name="sentry-dsn"]')?.content ?? null;
+const metaEnv =
+  doc?.querySelector('meta[name="sentry-environment"]')?.content ?? null;
+const metaRelease =
+  doc?.querySelector('meta[name="sentry-release"]')?.content ?? null;
+
+const rawDsn = scriptWithDsn?.dataset?.sentryDsn ?? win?.SENTRY_DSN ?? metaDsn;
 const dsn = typeof rawDsn === 'string' ? rawDsn.trim() : rawDsn;
-const hasValidDsn = dsn && dsn !== '__SENTRY_DSN__';
+const hasValidDsn = Boolean(dsn && dsn !== '__SENTRY_DSN__');
 const environment =
-  (scriptWithDsn && scriptWithDsn.dataset.sentryEnv) ||
-  (typeof window !== 'undefined' && window.SENTRY_ENVIRONMENT) ||
-  metaEnv ||
+  scriptWithDsn?.dataset?.sentryEnv ??
+  win?.SENTRY_ENVIRONMENT ??
+  metaEnv ??
   'production';
 const release =
-  (scriptWithDsn && scriptWithDsn.dataset.sentryRelease) ||
-  (typeof window !== 'undefined' && window.SENTRY_RELEASE) ||
-  metaRelease ||
+  scriptWithDsn?.dataset?.sentryRelease ??
+  win?.SENTRY_RELEASE ??
+  metaRelease ??
   '__SENTRY_RELEASE__';
 
-const isTestEnv =
-  (typeof window !== 'undefined' && window.__VITEST__) ||
-  (typeof globalThis !== 'undefined' && globalThis.process?.env?.VITEST);
+const isTestEnv = Boolean(win?.__VITEST__ || globalScope?.process?.env?.VITEST);
 
 let loadingSdk;
 const defaultSources = [
-  (scriptWithDsn && scriptWithDsn.dataset.sentrySrc) ||
+  scriptWithDsn?.dataset?.sentrySrc ||
     'assets/sentry.bundle.tracing.replay.min.js',
   'https://browser.sentry-cdn.com/7.120.1/bundle.tracing.replay.min.js'
 ];
 
 function loadSentrySdk() {
-  if (typeof window === 'undefined') return Promise.reject();
-  if (window.Sentry) return Promise.resolve(window.Sentry);
+  if (!win || !doc) {
+    return Promise.reject(new Error('No window/document available for Sentry'));
+  }
+  if (win.Sentry) return Promise.resolve(win.Sentry);
   if (loadingSdk) return loadingSdk;
 
   loadingSdk = new Promise((resolve, reject) => {
     const tryNext = (sources, lastError) => {
-      if (!sources.length) {
-        reject(lastError || new Error('No se pudo cargar Sentry'));
+      if (sources.length === 0) {
+        reject(lastError ?? new Error('No se pudo cargar Sentry'));
         return;
       }
+
       const [src, ...rest] = sources;
-      const script = document.createElement('script');
+      const script = doc.createElement('script');
+      if (!script) {
+        reject(new Error('No se pudo crear el script de Sentry'));
+        return;
+      }
+
       script.src = src;
       script.async = true;
       script.crossOrigin = 'anonymous';
       script.onload = () => {
-        if (window.Sentry) {
-          resolve(window.Sentry);
+        if (win?.Sentry) {
+          resolve(win.Sentry);
         } else {
           tryNext(rest, new Error('Sentry no se inicializó'));
         }
       };
-      script.onerror = (err) => tryNext(rest, err);
-      document.head.appendChild(script);
+      script.onerror = (error_) => tryNext(rest, error_);
+      doc.head?.appendChild(script);
     };
 
     tryNext([...defaultSources]);
   });
+
   return loadingSdk;
 }
 
 async function initSentry() {
   if (!hasValidDsn || isTestEnv) return;
+
   try {
     const Sentry = await loadSentrySdk();
     if (!Sentry) return;
@@ -100,11 +101,12 @@ async function initSentry() {
       replaysOnErrorSampleRate: 1.0,
       debug: false
     });
-    if (typeof window !== 'undefined') {
-      window.SENTRY_READY = true;
+
+    if (win) {
+      win.SENTRY_READY = true;
     }
-  } catch (err) {
-    console.warn('Sentry no se inicializó', err);
+  } catch (error_) {
+    console.warn('Sentry no se inicializó', error_);
   }
 }
 

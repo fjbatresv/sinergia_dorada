@@ -1,10 +1,13 @@
 import fallbackDogs from '../content/dogs.json';
 
+const globalScope = typeof globalThis !== 'undefined' ? globalThis : undefined;
 const b = 'content/dogs.json';
 function w(e) {
   if (!e) return '';
+  const origin = globalScope?.location?.origin ?? null;
+  if (!origin) return '';
   try {
-    const n = new URL(e, window.location.origin);
+    const n = new URL(e, origin);
     return n.protocol === 'http:' || n.protocol === 'https:' ? n.href : '';
   } catch {
     return '';
@@ -17,26 +20,25 @@ function v(e, n = () => {}) {
   l.classList.add('card-image');
   const t = document.createElement('img');
   const c = typeof e?.name === 'string' ? e.name : '';
-  ((t.loading = 'lazy'),
-    (t.width = 320),
-    (t.height = 320),
-    (t.alt = c || 'Perro'),
-    (t.src = w(e?.image)),
-    l.appendChild(t));
+  t.loading = 'lazy';
+  t.width = 320;
+  t.height = 320;
+  t.alt = c || 'Perro';
+  t.src = w(e?.image);
+  l.appendChild(t);
   const m = document.createElement('div');
   m.classList.add('card-content');
   const h = document.createElement('h3');
-  ((h.textContent = c), m.appendChild(h));
+  h.textContent = c;
+  m.appendChild(h);
   const r = document.createElement('span');
-  (r.classList.add('breed'),
-    (r.textContent = typeof e?.breed === 'string' ? e.breed : ''),
-    m.appendChild(r));
-  return (
-    o.appendChild(l),
-    o.appendChild(m),
-    o.addEventListener('click', () => n(e)),
-    o
-  );
+  r.classList.add('breed');
+  r.textContent = typeof e?.breed === 'string' ? e.breed : '';
+  m.appendChild(r);
+  o.appendChild(l);
+  o.appendChild(m);
+  o.addEventListener('click', () => n(e));
+  return o;
 }
 function g(e = document) {
   return {
@@ -67,58 +69,68 @@ function B(e, n, o = document) {
     modalDesc: s,
     modalInsta: a
   } = n;
-  (t &&
-    ((t.src = w(e.image)),
-    (t.width = 640),
-    (t.height = 640),
-    (t.loading = 'lazy')),
-    c && (c.textContent = e.name),
-    m && (m.textContent = e.breed),
-    r &&
-      (e.color
-        ? ((r.style.display = 'block'), h && (h.textContent = e.color))
-        : (r.style.display = 'none')),
-    d &&
-      (e.birthdate
-        ? ((d.style.display = 'block'), f && (f.textContent = e.birthdate))
-        : (d.style.display = 'none')),
-    s &&
-      (() => {
-        for (; s.firstChild; ) s.removeChild(s.firstChild);
-        if (Array.isArray(e.description) && e.description.length > 0) {
-          e.description.forEach((p, y) => {
-            s.appendChild(
-              document.createTextNode(typeof p === 'string' ? p : '')
-            );
-            y < e.description.length - 1 &&
-              (s.appendChild(document.createElement('br')),
-              s.appendChild(document.createElement('br')));
-          });
-          return;
+  if (t) {
+    t.src = w(e.image);
+    t.width = 640;
+    t.height = 640;
+    t.loading = 'lazy';
+  }
+  if (c) c.textContent = e.name;
+  if (m) m.textContent = e.breed;
+  if (r) {
+    if (e.color) {
+      r.style.display = 'block';
+      if (h) h.textContent = e.color;
+    } else {
+      r.style.display = 'none';
+    }
+  }
+  if (d) {
+    if (e.birthdate) {
+      d.style.display = 'block';
+      if (f) f.textContent = e.birthdate;
+    } else {
+      d.style.display = 'none';
+    }
+  }
+  if (s) {
+    while (s.firstChild) {
+      s.firstChild.remove();
+    }
+    if (Array.isArray(e.description) && e.description.length > 0) {
+      e.description.forEach((p, y) => {
+        s.appendChild(document.createTextNode(typeof p === 'string' ? p : ''));
+        if (y < e.description.length - 1) {
+          s.appendChild(document.createElement('br'));
+          s.appendChild(document.createElement('br'));
         }
-        if (typeof e.description === 'string' && e.description) {
-          s.textContent = e.description;
-          return;
-        }
-        s.textContent = 'Sin descripci\xF3n disponible.';
-      })(),
-    a &&
-      (e.instagram
-        ? (() => {
-            const p = w(e.instagram);
-            p
-              ? ((a.href = p),
-                (a.rel = 'noopener noreferrer'),
-                (a.style.display = 'inline-flex'))
-              : (a.style.display = 'none');
-          })()
-        : (a.style.display = 'none')),
-    l.classList.add('show'),
-    o?.body && (o.body.style.overflow = 'hidden'));
+      });
+    } else if (typeof e.description === 'string' && e.description) {
+      s.textContent = e.description;
+    } else {
+      s.textContent = 'Sin descripci\xF3n disponible.';
+    }
+  }
+  if (a) {
+    if (e.instagram) {
+      const p = w(e.instagram);
+      if (p) {
+        a.href = p;
+        a.rel = 'noopener noreferrer';
+        a.style.display = 'inline-flex';
+      } else {
+        a.style.display = 'none';
+      }
+    } else {
+      a.style.display = 'none';
+    }
+  }
+  l.classList.add('show');
+  if (o?.body) o.body.style.overflow = 'hidden';
 }
 function E(e, n = document) {
-  (e?.modal && e.modal.classList.remove('show'),
-    n?.body && (n.body.style.overflow = 'auto'));
+  if (e?.modal) e.modal.classList.remove('show');
+  if (n?.body) n.body.style.overflow = 'auto';
 }
 function C(e, n, o = 32) {
   const l = e?.querySelector('.team-card');
@@ -136,15 +148,19 @@ function x(e, n) {
 }
 function L(e, n, o, l) {
   let t;
-  return (
-    (() => {
-      (t && clearInterval(t),
-        (t = setInterval(() => {
-          !o() && n() && ((e.scrollLeft += l), x(e, n()));
-        }, 20)));
-    })(),
-    () => t && clearInterval(t)
-  );
+  const start = () => {
+    if (t) clearInterval(t);
+    t = setInterval(() => {
+      if (!o() && n()) {
+        e.scrollLeft += l;
+        x(e, n());
+      }
+    }, 20);
+  };
+  start();
+  return () => {
+    if (t) clearInterval(t);
+  };
 }
 function A(e, n = 'No pudimos cargar el equipo en este momento.') {
   if (!e) return;
@@ -177,8 +193,8 @@ function I() {
       return r.json();
     })
     .then((r) => c(r))
-    .catch((r) => {
-      console.error('Error loading dogs:', r);
+    .catch((error_) => {
+      console.error('Error loading dogs:', error_);
       if (t.length) {
         console.info('Usando fallback local para dogs.json');
         c(t);
@@ -197,30 +213,34 @@ function D({
 }) {
   if (!e || !Array.isArray(l) || l.length === 0) return;
   const m = (i) => B(i, t, document);
-  (l.forEach((i) => {
+  l.forEach((i) => {
     e.appendChild(v(i, m));
-  }),
-    l.forEach((i) => {
-      e.appendChild(v(i, m));
-    }),
-    [...l].reverse().forEach((i) => {
-      e.insertBefore(v(i, m), e.firstChild);
-    }));
+  });
+  l.forEach((i) => {
+    e.appendChild(v(i, m));
+  });
+  [...l].reverse().forEach((i) => {
+    e.insertBefore(v(i, m), e.firstChild);
+  });
   const h = 1;
   let r = !1,
     f,
     d;
   const s = () => {
     const i = C(e, l.length);
-    (i.cardWidth && (f = i.cardWidth),
-      i.singleSetWidth && (d = i.singleSetWidth));
+    if (i.cardWidth) f = i.cardWidth;
+    if (i.singleSetWidth) d = i.singleSetWidth;
   };
-  (setTimeout(() => {
-    (s(), d && (e.scrollLeft = d));
-  }, 100),
-    window.addEventListener('resize', () => {
-      (s(), d && (e.scrollLeft = d));
-    }));
+  setTimeout(() => {
+    s();
+    if (d) e.scrollLeft = d;
+  }, 100);
+  const resizeHandler = () => {
+    s();
+    if (d) e.scrollLeft = d;
+  };
+  globalScope?.addEventListener?.('resize', resizeHandler);
+
   let a = c(
     e,
     () => d,
@@ -235,36 +255,43 @@ function D({
       r = !1;
     }
   };
-  (e.addEventListener('mouseenter', u.mouseenter),
-    e.addEventListener('mouseleave', u.mouseleave),
-    o &&
-      (o.addEventListener('click', () => {
-        e.scrollBy({ left: f, behavior: 'smooth' });
-      }),
-      o.addEventListener('mouseenter', u.mouseenter),
-      o.addEventListener('mouseleave', u.mouseleave)),
-    n &&
-      (n.addEventListener('click', () => {
-        e.scrollBy({ left: -f, behavior: 'smooth' });
-      }),
-      n.addEventListener('mouseenter', u.mouseenter),
-      n.addEventListener('mouseleave', u.mouseleave)));
+  e.addEventListener('mouseenter', u.mouseenter);
+  e.addEventListener('mouseleave', u.mouseleave);
+  if (o) {
+    o.addEventListener('click', () => {
+      e.scrollBy({ left: f, behavior: 'smooth' });
+    });
+    o.addEventListener('mouseenter', u.mouseenter);
+    o.addEventListener('mouseleave', u.mouseleave);
+  }
+  if (n) {
+    n.addEventListener('click', () => {
+      e.scrollBy({ left: -f, behavior: 'smooth' });
+    });
+    n.addEventListener('mouseenter', u.mouseenter);
+    n.addEventListener('mouseleave', u.mouseleave);
+  }
   const y = t.modal,
     p = t.closeModalBtn;
-  (p && y && p.addEventListener('click', () => E(t, document)),
-    window.addEventListener('click', (i) => {
-      y && i.target === y && E(t, document);
-    }),
-    document.addEventListener('visibilitychange', () => {
-      document.hidden
-        ? a()
-        : (a = c(
-            e,
-            () => d,
-            () => r,
-            h
-          ));
-    }));
+  if (p && y) {
+    p.addEventListener('click', () => E(t, document));
+  }
+  document.addEventListener('click', (i) => {
+    if (y && i.target === y) E(t, document);
+  });
+  const visibilityHandler = () => {
+    if (document.hidden) {
+      a();
+      return;
+    }
+    a = c(
+      e,
+      () => d,
+      () => r,
+      h
+    );
+  };
+  document.addEventListener('visibilitychange', visibilityHandler);
 }
 typeof document < 'u' &&
   (document.readyState === 'loading'

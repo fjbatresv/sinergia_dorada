@@ -1,12 +1,10 @@
 import fallbackDogs from '../content/dogs.json';
 
+const globalScope = typeof globalThis !== 'undefined' ? globalThis : undefined;
 const b = 'content/dogs.json';
 function w(e) {
   if (!e) return '';
-  const origin =
-    typeof globalThis !== 'undefined' && globalThis.location?.origin
-      ? globalThis.location.origin
-      : null;
+  const origin = globalScope?.location?.origin ?? null;
   if (!origin) return '';
   try {
     const n = new URL(e, origin);
@@ -150,15 +148,19 @@ function x(e, n) {
 }
 function L(e, n, o, l) {
   let t;
-  return (
-    (() => {
-      (t && clearInterval(t),
-        (t = setInterval(() => {
-          !o() && n() && ((e.scrollLeft += l), x(e, n()));
-        }, 20)));
-    })(),
-    () => t && clearInterval(t)
-  );
+  const start = () => {
+    if (t) clearInterval(t);
+    t = setInterval(() => {
+      if (!o() && n()) {
+        e.scrollLeft += l;
+        x(e, n());
+      }
+    }, 20);
+  };
+  start();
+  return () => {
+    if (t) clearInterval(t);
+  };
 }
 function A(e, n = 'No pudimos cargar el equipo en este momento.') {
   if (!e) return;
@@ -211,30 +213,34 @@ function D({
 }) {
   if (!e || !Array.isArray(l) || l.length === 0) return;
   const m = (i) => B(i, t, document);
-  (l.forEach((i) => {
+  l.forEach((i) => {
     e.appendChild(v(i, m));
-  }),
-    l.forEach((i) => {
-      e.appendChild(v(i, m));
-    }),
-    [...l].reverse().forEach((i) => {
-      e.insertBefore(v(i, m), e.firstChild);
-    }));
+  });
+  l.forEach((i) => {
+    e.appendChild(v(i, m));
+  });
+  [...l].reverse().forEach((i) => {
+    e.insertBefore(v(i, m), e.firstChild);
+  });
   const h = 1;
   let r = !1,
     f,
     d;
   const s = () => {
     const i = C(e, l.length);
-    (i.cardWidth && (f = i.cardWidth),
-      i.singleSetWidth && (d = i.singleSetWidth));
+    if (i.cardWidth) f = i.cardWidth;
+    if (i.singleSetWidth) d = i.singleSetWidth;
   };
-  (setTimeout(() => {
-    (s(), d && (e.scrollLeft = d));
-  }, 100),
-    window.addEventListener('resize', () => {
-      (s(), d && (e.scrollLeft = d));
-    }));
+  setTimeout(() => {
+    s();
+    if (d) e.scrollLeft = d;
+  }, 100);
+  const resizeHandler = () => {
+    s();
+    if (d) e.scrollLeft = d;
+  };
+  globalScope?.addEventListener?.('resize', resizeHandler);
+
   let a = c(
     e,
     () => d,
@@ -249,36 +255,43 @@ function D({
       r = !1;
     }
   };
-  (e.addEventListener('mouseenter', u.mouseenter),
-    e.addEventListener('mouseleave', u.mouseleave),
-    o &&
-      (o.addEventListener('click', () => {
-        e.scrollBy({ left: f, behavior: 'smooth' });
-      }),
-      o.addEventListener('mouseenter', u.mouseenter),
-      o.addEventListener('mouseleave', u.mouseleave)),
-    n &&
-      (n.addEventListener('click', () => {
-        e.scrollBy({ left: -f, behavior: 'smooth' });
-      }),
-      n.addEventListener('mouseenter', u.mouseenter),
-      n.addEventListener('mouseleave', u.mouseleave)));
+  e.addEventListener('mouseenter', u.mouseenter);
+  e.addEventListener('mouseleave', u.mouseleave);
+  if (o) {
+    o.addEventListener('click', () => {
+      e.scrollBy({ left: f, behavior: 'smooth' });
+    });
+    o.addEventListener('mouseenter', u.mouseenter);
+    o.addEventListener('mouseleave', u.mouseleave);
+  }
+  if (n) {
+    n.addEventListener('click', () => {
+      e.scrollBy({ left: -f, behavior: 'smooth' });
+    });
+    n.addEventListener('mouseenter', u.mouseenter);
+    n.addEventListener('mouseleave', u.mouseleave);
+  }
   const y = t.modal,
     p = t.closeModalBtn;
-  (p && y && p.addEventListener('click', () => E(t, document)),
-    window.addEventListener('click', (i) => {
-      y && i.target === y && E(t, document);
-    }),
-    document.addEventListener('visibilitychange', () => {
-      document.hidden
-        ? a()
-        : (a = c(
-            e,
-            () => d,
-            () => r,
-            h
-          ));
-    }));
+  if (p && y) {
+    p.addEventListener('click', () => E(t, document));
+  }
+  document.addEventListener('click', (i) => {
+    if (y && i.target === y) E(t, document);
+  });
+  const visibilityHandler = () => {
+    if (document.hidden) {
+      a();
+      return;
+    }
+    a = c(
+      e,
+      () => d,
+      () => r,
+      h
+    );
+  };
+  document.addEventListener('visibilitychange', visibilityHandler);
 }
 typeof document < 'u' &&
   (document.readyState === 'loading'

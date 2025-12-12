@@ -8,6 +8,7 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    target-branch: "develop"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

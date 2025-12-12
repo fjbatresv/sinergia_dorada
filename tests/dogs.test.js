@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, vi } from 'vitest';
 import * as dogsModule from '../scripts/dogs.js';
 import {
@@ -227,9 +228,14 @@ describe('initDogs', () => {
   });
 
   it('usa fallback local cuando fetch falla', async () => {
-    vi.useFakeTimers();
     const originalFetch = global.fetch;
     global.fetch = vi.fn().mockRejectedValue(new Error('network'));
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    const consoleInfoSpy = vi
+      .spyOn(console, 'info')
+      .mockImplementation(() => {});
 
     document.body.innerHTML = `
       <div id="carousel-track"></div>
@@ -248,8 +254,14 @@ describe('initDogs', () => {
 
     dogsModule.initDogs();
 
-    vi.runAllTimers();
+    await waitFor(() => {
+      expect(
+        document.querySelectorAll('#carousel-track .team-card').length
+      ).toBeGreaterThan(0);
+    });
+
     global.fetch = originalFetch;
-    vi.useRealTimers();
+    consoleErrorSpy.mockRestore();
+    consoleInfoSpy.mockRestore();
   });
 });

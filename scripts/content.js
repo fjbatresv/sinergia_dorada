@@ -1,11 +1,6 @@
 import fallbackContent from '../content/site-content.json';
 
-const globalScope =
-  typeof globalThis === 'undefined'
-    ? typeof window === 'undefined'
-      ? null
-      : window
-    : globalThis;
+const globalScope = typeof globalThis !== 'undefined' ? globalThis : undefined;
 
 const sectionsSelector = {
   hero: '#inicio',
@@ -393,17 +388,16 @@ function applySiteContent(content = {}, doc = document) {
 }
 
 /* c8 ignore start */
-function fetchSiteContentViaFetch() {
-  const hasLocation = !!globalScope?.location;
+function fetchSiteContentViaFetch(locationLike = globalScope?.location) {
+  const hasLocation = !!locationLike;
   const isAboutProtocol =
-    hasLocation && typeof globalScope.location.href === 'string'
-      ? globalScope.location.href.startsWith('about:')
+    hasLocation && typeof locationLike?.href === 'string'
+      ? locationLike.href.startsWith('about:')
       : false;
   if (!hasLocation || isAboutProtocol) {
     return Promise.reject(new Error('No base URL to resolve content JSON'));
   }
-  const url = new URL('content/site-content.json', globalScope.location.href)
-    .href;
+  const url = new URL('content/site-content.json', locationLike.href).href;
   return fetch(url, { cache: 'no-store' }).then((response) => {
     if (!response.ok) throw new Error(`Status ${response.status}`);
     return response.json();

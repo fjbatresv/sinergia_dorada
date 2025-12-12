@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as content from '../scripts/content.js';
 import {
   applySectionVisibility,
@@ -10,6 +10,8 @@ import {
   applySectionTexts,
   applySiteContent,
   drawWordCloud,
+  fetchSiteContentViaFetch,
+  fetchSiteContentViaXHR,
   loadSiteContent,
   setCurrentYear,
   initObservers
@@ -60,6 +62,15 @@ describe('populateStatistics', () => {
     expect(cards.length).toBe(2);
     expect(cards[0].textContent).toContain('10');
   });
+
+  it('usa el prefijo + y valores por defecto cuando faltan', () => {
+    const container = document.createElement('div');
+    populateStatistics(container, [{ label: 'Impacto', plus: true }]);
+    const stat = container.querySelector('.stat-number');
+    expect(stat?.dataset.prefix).toBe('+');
+    expect(stat?.dataset.target).toBe('0');
+    expect(stat?.textContent).toContain('0');
+  });
 });
 
 describe('applyHeroFloatingItems y applyHeroContent', () => {
@@ -74,6 +85,20 @@ describe('applyHeroFloatingItems y applyHeroContent', () => {
     expect(heroCollage.querySelectorAll('.floating-item').length).toBe(1);
     expect(heroCTA.textContent).toBe('Ir');
     expect(heroCTA.getAttribute('href')).toBe('#destino');
+  });
+
+  it('reutiliza contenedor existente de ítems flotantes', () => {
+    const heroCollage = document.createElement('div');
+    const existing = document.createElement('div');
+    existing.className = 'floating-items';
+    heroCollage.appendChild(existing);
+
+    applyHeroFloatingItems(heroCollage, [
+      { image: 'dog.png', alt: 'Dog', type: 'paw' }
+    ]);
+
+    expect(heroCollage.querySelectorAll('.floating-item').length).toBe(1);
+    expect(heroCollage.querySelector('.floating-items')).toBe(existing);
   });
 });
 
@@ -225,6 +250,32 @@ describe('applySiteContent', () => {
       })
     ).not.toThrow();
   });
+
+  it('no falla si faltan los botones de navegación de testimonios', () => {
+    document.getElementById('prev-testimonial')?.remove();
+    document.getElementById('next-testimonial')?.remove();
+
+    applySiteContent({
+      navigation: [],
+      sections: {},
+      hero: { floatingItems: [] },
+      about: {},
+      statistics: [{ label: 'Visitas', value: 1 }],
+      partners: [],
+      testimonials: [{ quote: 'Bien', author: 'X', role: 'R' }],
+      sectionsContent: {
+        partners: {},
+        testimonials: {},
+        team: {},
+        join: {},
+        contact: {}
+      }
+    });
+
+    expect(
+      document.querySelectorAll('#testimonials-track .testimonial-card').length
+    ).toBe(1);
+  });
 });
 
 describe('drawWordCloud', () => {
@@ -270,6 +321,124 @@ describe('drawWordCloud', () => {
     expect(spyWeight).toHaveBeenCalled();
     expect(spyColor).toHaveBeenCalled();
   });
+
+  it('usa fallback y retorna si no hay WordCloud o canvas', () => {
+    expect(() => drawWordCloud(null, null, [], [])).not.toThrow();
+
+    const originalWordCloud = globalThis.WordCloud;
+    const canvas = document.createElement('canvas');
+    const container = document.createElement('div');
+    Object.defineProperty(container, 'offsetWidth', {
+      value: 150,
+      configurable: true
+    });
+    Object.defineProperty(container, 'offsetHeight', {
+      value: 100,
+      configurable: true
+    });
+
+    // Sin WordCloud definido no debe lanzar
+    globalThis.WordCloud = undefined;
+    expect(() => drawWordCloud(canvas, container, [], [])).not.toThrow();
+
+    const spy = vi.fn();
+    globalThis.WordCloud = spy;
+    drawWordCloud(canvas, container, [], [['fallback', 2]]);
+    const listPassed = spy.mock.calls[0][1].list;
+    expect(listPassed[0][0]).toBe('fallback');
+    globalThis.WordCloud = originalWordCloud;
+  });
+});
+
+describe('fetchSiteContentViaFetch', () => {
+  const originalFetch = global.fetch;
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+    vi.restoreAllMocks();
+  });
+
+  it('rechaza cuando la ubicación no es válida', async () => {
+    global.fetch = vi.fn();
+    await expect(fetchSiteContentViaFetch(null)).rejects.toThrow(/No base URL/);
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it('rechaza si la respuesta no es ok', async () => {
+    global.fetch = vi
+      .fn()
+      .mockResolvedValue({ ok: false, status: 500, json: vi.fn() });
+    await expect(
+      fetchSiteContentViaFetch({
+        href: 'https://acme.test',
+        protocol: 'https:'
+      })
+    ).rejects.toThrow('Status 500');
+  });
+
+  it('resuelve con JSON cuando todo es válido', async () => {
+    const payload = { foo: 'bar' };
+    const json = vi.fn().mockResolvedValue(payload);
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json });
+
+    const result = await fetchSiteContentViaFetch({
+      href: 'https://acme.test/path/',
+      protocol: 'https:'
+    });
+
+    expect(result).toEqual(payload);
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://acme.test/path/content/site-content.json',
+      { cache: 'no-store' }
+    );
+  });
+});
+
+describe('fetchSiteContentViaXHR', () => {
+  const originalXHR = global.XMLHttpRequest;
+
+  afterEach(() => {
+    global.XMLHttpRequest = originalXHR;
+  });
+
+  it('resuelve con el JSON cuando la respuesta es 200', async () => {
+    class MockXHR {
+      constructor() {
+        this.readyState = 0;
+        this.status = 0;
+        this.responseText = '';
+      }
+      overrideMimeType() {}
+      open() {}
+      send() {
+        this.readyState = 4;
+        this.status = 200;
+        this.responseText = JSON.stringify({ ok: true });
+        this.onreadystatechange?.();
+      }
+    }
+    global.XMLHttpRequest = MockXHR;
+    await expect(fetchSiteContentViaXHR()).resolves.toEqual({ ok: true });
+  });
+
+  it('rechaza cuando la respuesta es un error', async () => {
+    class MockXHR {
+      constructor() {
+        this.readyState = 0;
+        this.status = 0;
+        this.responseText = '';
+      }
+      overrideMimeType() {}
+      open() {}
+      send() {
+        this.readyState = 4;
+        this.status = 500;
+        this.onreadystatechange?.();
+      }
+    }
+    global.XMLHttpRequest = MockXHR;
+    await expect(fetchSiteContentViaXHR()).rejects.toThrow('XHR status 500');
+  });
 });
 
 describe('loadSiteContent', () => {
@@ -311,15 +480,18 @@ describe('loadSiteContent', () => {
 describe('helpers defensivos', () => {
   it('positionFloatingItems coloca coordenadas determinísticas', () => {
     const container = document.createElement('div');
-    container.innerHTML = `<div class="floating-item"></div><div class="floating-item"></div>`;
     const randomSpy = vi
       .spyOn(Math, 'random')
       .mockReturnValueOnce(0.1)
       .mockReturnValueOnce(0.2)
       .mockReturnValueOnce(0.3)
       .mockReturnValueOnce(0.4);
-    content.__esModule; // no-op to keep import alive
-    content.applyHeroFloatingItems(container, []); // triggers positionFloatingItems
+    content.applyHeroFloatingItems(container, [
+      { image: 'a.png', alt: 'a', type: 'dog' }
+    ]);
+    const first = container.querySelector('.floating-item');
+    expect(first?.style.left).not.toBe('');
+    expect(first?.style.top).not.toBe('');
     randomSpy.mockRestore();
   });
 
@@ -339,6 +511,48 @@ describe('helpers defensivos', () => {
     ).not.toThrow();
     // call animateStats indirectly via populateStatistics guard path
     expect(() => content.populateStatistics(container, [])).not.toThrow();
+  });
+
+  it('animateStats usa IntersectionObserver cuando está disponible', () => {
+    const originalObserver = globalThis.IntersectionObserver;
+    const originalRAF = globalThis.requestAnimationFrame;
+    const observations = [];
+    const disconnect = vi.fn();
+
+    globalThis.requestAnimationFrame = (cb) => {
+      cb();
+      return 1;
+    };
+    globalThis.IntersectionObserver = class {
+      constructor(cb) {
+        this.cb = cb;
+      }
+      observe(el) {
+        observations.push(el);
+        this.cb([{ target: el, isIntersecting: true }]);
+      }
+      disconnect() {
+        disconnect();
+      }
+    };
+
+    const container = document.createElement('div');
+    populateStatistics(container, [{ label: 'personas impactadas', value: 3 }]);
+
+    expect(observations.length).toBe(1);
+    expect(disconnect).toHaveBeenCalled();
+    expect(container.querySelector('.stat-value')?.textContent).toBe('+3');
+
+    if (originalRAF) {
+      globalThis.requestAnimationFrame = originalRAF;
+    } else {
+      delete globalThis.requestAnimationFrame;
+    }
+    if (originalObserver) {
+      globalThis.IntersectionObserver = originalObserver;
+    } else {
+      delete globalThis.IntersectionObserver;
+    }
   });
 });
 

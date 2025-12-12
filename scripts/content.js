@@ -1,11 +1,11 @@
 import fallbackContent from '../content/site-content.json';
 
 const globalScope =
-  typeof globalThis !== 'undefined'
-    ? globalThis
-    : typeof window !== 'undefined'
-      ? window
-      : null;
+  typeof globalThis === 'undefined'
+    ? typeof window === 'undefined'
+      ? null
+      : window
+    : globalThis;
 
 const sectionsSelector = {
   hero: '#inicio',
@@ -322,33 +322,32 @@ function applySectionTexts(
   { partners = {}, testimonials = {}, team = {}, join = {}, contact = {} } = {},
   doc = document
 ) {
-  const partnersTitle = doc.getElementById('partners-title');
-  const partnersSubtitle = doc.getElementById('partners-subtitle');
-  const testimonialsLabel = doc.getElementById('testimonials-label');
-  const testimonialsTitle = doc.getElementById('testimonials-title');
-  const teamTitle = doc.getElementById('team-title');
-  const teamSubtitle = doc.getElementById('team-subtitle');
-  const joinTitle = doc.getElementById('join-title');
-  const joinText = doc.getElementById('join-text');
-  const joinButton = doc.getElementById('join-button');
-  const contactTitle = doc.getElementById('contact-title');
-  const contactText = doc.getElementById('contact-text');
+  const fields = [
+    { el: doc.getElementById('partners-title'), value: partners.title },
+    { el: doc.getElementById('partners-subtitle'), value: partners.subtitle },
+    { el: doc.getElementById('testimonials-label'), value: testimonials.label },
+    {
+      el: doc.getElementById('testimonials-title'),
+      value: testimonials.titleHtml,
+      mode: 'html'
+    },
+    { el: doc.getElementById('team-title'), value: team.title },
+    { el: doc.getElementById('team-subtitle'), value: team.subtitle },
+    { el: doc.getElementById('join-title'), value: join.title },
+    { el: doc.getElementById('join-text'), value: join.text },
+    { el: doc.getElementById('join-button'), value: join.buttonText },
+    { el: doc.getElementById('contact-title'), value: contact.title },
+    { el: doc.getElementById('contact-text'), value: contact.text }
+  ];
 
-  if (partnersTitle && partners.title)
-    partnersTitle.textContent = partners.title;
-  if (partnersSubtitle && partners.subtitle)
-    partnersSubtitle.textContent = partners.subtitle;
-  if (testimonialsLabel && testimonials.label)
-    testimonialsLabel.textContent = testimonials.label;
-  if (testimonialsTitle && testimonials.titleHtml)
-    testimonialsTitle.innerHTML = testimonials.titleHtml;
-  if (teamTitle && team.title) teamTitle.textContent = team.title;
-  if (teamSubtitle && team.subtitle) teamSubtitle.textContent = team.subtitle;
-  if (joinTitle && join.title) joinTitle.textContent = join.title;
-  if (joinText && join.text) joinText.textContent = join.text;
-  if (joinButton && join.buttonText) joinButton.textContent = join.buttonText;
-  if (contactTitle && contact.title) contactTitle.textContent = contact.title;
-  if (contactText && contact.text) contactText.textContent = contact.text;
+  fields.forEach(({ el, value, mode }) => {
+    if (!el || value === undefined || value === null) return;
+    if (mode === 'html') {
+      el.innerHTML = value;
+      return;
+    }
+    el.textContent = value;
+  });
 }
 
 function applySiteContent(content = {}, doc = document) {
@@ -460,9 +459,9 @@ function setCurrentYear(doc = document) {
 }
 
 function initObservers(
-  ObserverCtor = typeof IntersectionObserver !== 'undefined'
-    ? IntersectionObserver
-    : null,
+  ObserverCtor = typeof IntersectionObserver === 'undefined'
+    ? null
+    : IntersectionObserver,
   doc = document
 ) {
   if (!ObserverCtor) return;
@@ -535,9 +534,9 @@ function animateStats(container) {
 }
 
 function initContent(content = fallbackContent) {
-  const isVitest =
-    (globalScope && globalScope.__VITEST__) ||
-    (typeof globalThis !== 'undefined' && globalThis.process?.env?.VITEST);
+  const isVitest = Boolean(
+    globalScope?.__VITEST__ || globalThis?.process?.env?.VITEST
+  );
 
   setCurrentYear();
   initObservers();

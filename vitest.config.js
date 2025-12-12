@@ -17,6 +17,7 @@ export default {
         '**/lint-staged.config.mjs',
         'scripts/sentry.js',
         '**/copy-vendor.js',
+        'scripts/ui.js',
         'assets/sentry.bundle.tracing.replay.min.js'
       ]
     }

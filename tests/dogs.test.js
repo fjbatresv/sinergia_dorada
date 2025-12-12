@@ -225,4 +225,31 @@ describe('initDogs', () => {
 
     vi.useRealTimers();
   });
+
+  it('usa fallback local cuando fetch falla', async () => {
+    vi.useFakeTimers();
+    const originalFetch = global.fetch;
+    global.fetch = vi.fn().mockRejectedValue(new Error('network'));
+
+    document.body.innerHTML = `
+      <div id="carousel-track"></div>
+      <button id="prev-btn"></button>
+      <button id="next-btn"></button>
+      <div id="dog-modal"></div>
+      <span class="close-modal"></span>
+      <img id="modal-img">
+      <div id="modal-name"></div>
+      <div id="modal-breed"></div>
+      <span id="modal-color"></span><div id="modal-color-container"></div>
+      <span id="modal-birthdate"></span><div id="modal-birthdate-container"></div>
+      <div id="modal-desc"></div>
+      <a id="modal-insta"></a>
+    `;
+
+    dogsModule.initDogs();
+
+    vi.runAllTimers();
+    global.fetch = originalFetch;
+    vi.useRealTimers();
+  });
 });

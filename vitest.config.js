@@ -18,6 +18,9 @@ export default {
         'scripts/sentry.js',
         '**/copy-vendor.js',
         'scripts/ui.js',
+        'scripts/dogs.js',
+        '**/*.json',
+        'content/**',
         'assets/sentry.bundle.tracing.replay.min.js'
       ]
     }

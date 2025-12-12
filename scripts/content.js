@@ -18,50 +18,46 @@ function w(t, n, e = document) {
 }
 function C(t = {}, n = document) {
   Object.entries(b).forEach(([e, o]) => {
-    const s = Object.prototype.hasOwnProperty.call(t, e) ? !!t[e] : !0;
+    const s = Object.hasOwn(t, e) ? !!t[e] : !0;
     w(o, s, n);
   });
 }
 function T(t, n = []) {
-  !t ||
-    !Array.isArray(n) ||
-    n.length === 0 ||
-    ((t.innerHTML = ''),
-    n.forEach((e) => {
-      const o = document.createElement('li'),
-        s = document.createElement('a');
-      ((s.textContent = e.label || ''),
-        (s.href = e.target || '#'),
-        s.classList.add('nav-link'),
-        o.appendChild(s),
-        t.appendChild(o));
-    }));
+  if (!t || !Array.isArray(n) || n.length === 0) return;
+  t.innerHTML = '';
+  n.forEach((e) => {
+    const o = document.createElement('li');
+    const s = document.createElement('a');
+    s.textContent = e.label || '';
+    s.href = e.target || '#';
+    s.classList.add('nav-link');
+    o.appendChild(s);
+    t.appendChild(o);
+  });
 }
 function I(t, n = []) {
-  !t ||
-    !Array.isArray(n) ||
-    n.length === 0 ||
-    ((t.innerHTML = ''),
-    n.forEach((e) => {
-      const o = document.createElement('div');
-      o.className = 'stat-item fade-up visible';
-      const s =
-          e.plus === !0 ||
-          (typeof e.label == 'string' &&
-            e.label.toLowerCase().includes('personas impactadas')),
-        i = document.createElement('div');
-      ((i.className = 'stat-number'),
-        (i.dataset.target = e.value || 0),
-        (i.dataset.prefix = s ? '+' : ''),
-        (i.innerHTML = `<span class="stat-value">${s ? '+' : ''}${e.value ?? 0}</span>`));
-      const r = document.createElement('p');
-      ((r.className = 'stat-label'),
-        (r.textContent = e.label || ''),
-        o.appendChild(i),
-        o.appendChild(r),
-        t.appendChild(o));
-    }),
-    P(t));
+  if (!t || !Array.isArray(n) || n.length === 0) return;
+  t.innerHTML = '';
+  n.forEach((e) => {
+    const o = document.createElement('div');
+    o.className = 'stat-item fade-up visible';
+    const s =
+      e.plus === !0 ||
+      (typeof e.label === 'string' &&
+        e.label.toLowerCase().includes('personas impactadas'));
+    const i = document.createElement('div');
+    i.className = 'stat-number';
+    i.dataset.target = e.value || 0;
+    i.dataset.prefix = s ? '+' : '';
+    i.innerHTML = `<span class="stat-value">${s ? '+' : ''}${e.value ?? 0}</span>`;
+    const r = document.createElement('p');
+    r.className = 'stat-label';
+    r.textContent = e.label || '';
+    o.appendChild(i);
+    o.appendChild(r);
+    t.appendChild(o);
+  });
+  P(t);
 }
 function L(t) {
   return Array.isArray(t) && t.length ? t : [];

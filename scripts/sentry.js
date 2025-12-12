@@ -1,9 +1,4 @@
-const globalScope =
-  typeof globalThis === 'undefined'
-    ? typeof window === 'undefined'
-      ? undefined
-      : window
-    : globalThis;
+const globalScope = typeof globalThis !== 'undefined' ? globalThis : undefined;
 const doc = globalScope?.document;
 const win = globalScope?.window ?? globalScope;
 

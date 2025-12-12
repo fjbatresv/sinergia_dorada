@@ -213,63 +213,59 @@ function D({
 }) {
   if (!e || !Array.isArray(l) || l.length === 0) return;
   const m = (i) => B(i, t, document);
-  l.forEach((i) => {
-    e.appendChild(v(i, m));
-  });
-  l.forEach((i) => {
-    e.appendChild(v(i, m));
-  });
-  [...l].reverse().forEach((i) => {
-    e.insertBefore(v(i, m), e.firstChild);
-  });
-  const h = 1;
-  let r = !1,
-    f,
-    d;
-  const s = () => {
-    const i = C(e, l.length);
-    if (i.cardWidth) f = i.cardWidth;
-    if (i.singleSetWidth) d = i.singleSetWidth;
+  const duplicateDogs = () => {
+    l.forEach((i) => {
+      e.appendChild(v(i, m));
+    });
+    l.forEach((i) => {
+      e.appendChild(v(i, m));
+    });
+    [...l].reverse().forEach((i) => {
+      e.insertBefore(v(i, m), e.firstChild);
+    });
   };
-  setTimeout(() => {
-    s();
-    if (d) e.scrollLeft = d;
-  }, 100);
-  const resizeHandler = () => {
-    s();
-    if (d) e.scrollLeft = d;
-  };
-  globalScope?.addEventListener?.('resize', resizeHandler);
 
-  let a = c(
+  duplicateDogs();
+  const h = 1;
+  const state = { paused: !1, cardWidth: undefined, singleSetWidth: undefined };
+  const recalc = () => {
+    const i = C(e, l.length);
+    state.cardWidth = i.cardWidth;
+    state.singleSetWidth = i.singleSetWidth;
+    if (state.singleSetWidth) e.scrollLeft = state.singleSetWidth;
+  };
+
+  setTimeout(recalc, 100);
+  globalScope?.addEventListener?.('resize', recalc);
+
+  let stopAuto = c(
     e,
-    () => d,
-    () => r,
+    () => state.singleSetWidth,
+    () => state.paused,
     h
   );
-  const u = {
-    mouseenter: () => {
-      r = !0;
-    },
-    mouseleave: () => {
-      r = !1;
-    }
+
+  const toggleHover = (hovered) => {
+    state.paused = hovered;
   };
-  e.addEventListener('mouseenter', u.mouseenter);
-  e.addEventListener('mouseleave', u.mouseleave);
+  e.addEventListener('mouseenter', () => toggleHover(!0));
+  e.addEventListener('mouseleave', () => toggleHover(!1));
+
   if (o) {
     o.addEventListener('click', () => {
-      e.scrollBy({ left: f, behavior: 'smooth' });
+      if (state.cardWidth)
+        e.scrollBy({ left: state.cardWidth, behavior: 'smooth' });
     });
-    o.addEventListener('mouseenter', u.mouseenter);
-    o.addEventListener('mouseleave', u.mouseleave);
+    o.addEventListener('mouseenter', () => toggleHover(!0));
+    o.addEventListener('mouseleave', () => toggleHover(!1));
   }
   if (n) {
     n.addEventListener('click', () => {
-      e.scrollBy({ left: -f, behavior: 'smooth' });
+      if (state.cardWidth)
+        e.scrollBy({ left: -state.cardWidth, behavior: 'smooth' });
     });
-    n.addEventListener('mouseenter', u.mouseenter);
-    n.addEventListener('mouseleave', u.mouseleave);
+    n.addEventListener('mouseenter', () => toggleHover(!0));
+    n.addEventListener('mouseleave', () => toggleHover(!1));
   }
   const y = t.modal,
     p = t.closeModalBtn;
@@ -279,19 +275,18 @@ function D({
   document.addEventListener('click', (i) => {
     if (y && i.target === y) E(t, document);
   });
-  const visibilityHandler = () => {
+  document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-      a();
+      stopAuto?.();
       return;
     }
-    a = c(
+    stopAuto = c(
       e,
-      () => d,
-      () => r,
+      () => state.singleSetWidth,
+      () => state.paused,
       h
     );
-  };
-  document.addEventListener('visibilitychange', visibilityHandler);
+  });
 }
 typeof document < 'u' &&
   (document.readyState === 'loading'

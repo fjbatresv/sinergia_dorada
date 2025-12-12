@@ -33,7 +33,7 @@
     "husky": "^9.1.3",
     "jsdom": "^27.2.0",
     "lighthouse": "^12.8.2",
-    "linkinator": "^4.0.3",
+    "linkinator": "^7.5.1",
     "lint-staged": "^16.2.7",
     "prettier": "^3.3.3",
     "vitest": "^4.0.13",

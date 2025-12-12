@@ -35,7 +35,7 @@
     "lighthouse": "^12.8.2",
     "linkinator": "^4.0.3",
     "lint-staged": "^16.2.7",
-    "prettier": "^3.3.3",
+    "prettier": "^3.7.4",
     "vitest": "^4.0.13",
     "wordcloud": "^1.2.2"
   }

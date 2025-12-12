@@ -37,5 +37,5 @@ jobs:
         with:
           args: >
             -Dsonar.organization=fjbatresv
-            -Dsonar.projectKey=sinergia_dorada
+            -Dsonar.projectKey=fjbatresv_sinergia_dorada
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info

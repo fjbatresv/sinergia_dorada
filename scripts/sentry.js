@@ -32,7 +32,7 @@ let loadingSdk;
 const defaultSources = [
   scriptWithDsn?.dataset?.sentrySrc ||
     'assets/sentry.bundle.tracing.replay.min.js',
-  'https://browser.sentry-cdn.com/7.120.1/bundle.tracing.replay.min.js'
+  'https://browser.sentry-cdn.com/10.30.0/bundle.tracing.replay.min.js'
 ];
 
 function loadSentrySdk() {

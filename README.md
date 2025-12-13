@@ -8,7 +8,8 @@
 ![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?logo=amazonaws&logoColor=white)
 ![CloudFront](https://img.shields.io/badge/CloudFront-8C4FFF?logo=amazonaws&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-vitest-green)
-![Coverage](https://img.shields.io/badge/coverage-100%25-blue)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fjbatresv_sinergia_dorada&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fjbatresv_sinergia_dorada)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fjbatresv_sinergia_dorada&metric=coverage)](https://sonarcloud.io/summary/new_code?id=fjbatresv_sinergia_dorada)
 
 Sitio oficial de **Sinergia Dorada**, una iniciativa sin fines de lucro que lleva terapia asistida con perros a hospitales, centros educativos y empresas en Guatemala.
 

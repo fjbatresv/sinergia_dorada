@@ -20,6 +20,12 @@ function normalizeUrl(path) {
 }
 /* c8 ignore stop */
 
+/**
+ * Crea una tarjeta del equipo canino y enlaza el handler de apertura.
+ * @param {object} dog - Datos del perro (imagen, nombre, raza).
+ * @param {Function} [onOpen] - Callback cuando se hace clic.
+ * @returns {HTMLDivElement}
+ */
 function createDogCard(dog, onOpen = () => {}) {
   const card = document.createElement('div');
   card.classList.add('team-card');
@@ -52,6 +58,11 @@ function createDogCard(dog, onOpen = () => {}) {
   return card;
 }
 
+/**
+ * Obtiene las referencias del modal de perros.
+ * @param {Document} [doc=document]
+ * @returns {{modal: HTMLElement|null, closeModalBtn: HTMLElement|null, modalImg: HTMLImageElement|null, modalName: HTMLElement|null, modalBreed: HTMLElement|null, modalColor: HTMLElement|null, modalColorContainer: HTMLElement|null, modalBirthdate: HTMLElement|null, modalBirthdateContainer: HTMLElement|null, modalDesc: HTMLElement|null, modalInsta: HTMLAnchorElement|null}}
+ */
 function getModalElements(doc = document) {
   return {
     modal: doc.getElementById('dog-modal'),
@@ -125,6 +136,12 @@ function renderInstagram(linkEl, instagram) {
   }
 }
 
+/**
+ * Pinta el contenido del modal y lo muestra.
+ * @param {object} dog - Datos del perro seleccionados.
+ * @param {ReturnType<typeof getModalElements>} modalElements
+ * @param {Document} [doc=document]
+ */
 function showDogModal(dog, modalElements, doc = document) {
   if (!modalElements?.modal) return;
   const {
@@ -152,11 +169,23 @@ function showDogModal(dog, modalElements, doc = document) {
   if (doc?.body) doc.body.style.overflow = 'hidden';
 }
 
+/**
+ * Oculta el modal y restablece el scroll del body.
+ * @param {ReturnType<typeof getModalElements>} modalElements
+ * @param {Document} [doc=document]
+ */
 function hideDogModal(modalElements, doc = document) {
   if (modalElements?.modal) modalElements.modal.classList.remove('show');
   if (doc?.body) doc.body.style.overflow = 'auto';
 }
 
+/**
+ * Calcula el ancho de tarjeta y del set completo.
+ * @param {HTMLElement} track
+ * @param {number} dogCount
+ * @param {number} [gap=32]
+ * @returns {{cardWidth: number|undefined, singleSetWidth: number|undefined}}
+ */
 function updateDimensions(track, dogCount, gap = 32) {
   const firstCard = track?.querySelector('.team-card');
   if (!firstCard) return { cardWidth: undefined, singleSetWidth: undefined };
@@ -164,6 +193,12 @@ function updateDimensions(track, dogCount, gap = 32) {
   return { cardWidth, singleSetWidth: cardWidth * dogCount };
 }
 
+/**
+ * Reposiciona el scroll cuando se alcanza el límite para simular carrusel infinito.
+ * @param {HTMLElement} track
+ * @param {number} singleSetWidth
+ * @returns {number}
+ */
 function checkInfiniteScroll(track, singleSetWidth) {
   if (!track || !singleSetWidth) return track?.scrollLeft ?? 0;
 
@@ -179,6 +214,14 @@ function checkInfiniteScroll(track, singleSetWidth) {
   return track.scrollLeft;
 }
 
+/**
+ * Inicia el auto-scroll del carrusel y devuelve un limpiador.
+ * @param {HTMLElement} track
+ * @param {Function} getSingleSetWidth
+ * @param {Function} isPaused
+ * @param {number} [step=1]
+ * @returns {Function} cleanup interval
+ */
 function startAutoScroll(track, getSingleSetWidth, isPaused, step = 1) {
   let intervalId;
   const tick = () => {
@@ -219,6 +262,10 @@ function fetchDogsFromNetwork() {
 }
 /* c8 ignore stop */
 
+/**
+ * Configura el carrusel del equipo canino (tarjetas, controles, modal).
+ * @returns {Function|undefined} cleanup de listeners y timers.
+ */
 function setupDogsCarousel({
   track,
   prevBtn,
@@ -347,6 +394,9 @@ function setupDogsCarousel({
   };
 }
 
+/**
+ * Punto de entrada para inicializar el carrusel de perros en la página.
+ */
 function initDogs() {
   const track = document.getElementById('carousel-track');
   const prevBtn = document.getElementById('prev-btn');

@@ -79,7 +79,7 @@ index.html               # Layout principal
 - `npm run validate:html` — html-validate.
 - `npm run check:links` — Linkinator sirviendo la web en localhost (requiere poder abrir un puerto; en algunos entornos locales puede bloquearse).
 - `npm run test` — suite de Vitest.
-- `npm run test:coverage` — cobertura (≈86% statements / 75% branches sobre `content.js`, `dogs.js`, `ui.js`; se excluyen solo scripts de build/Sentry).
+- `npm run test:coverage` — cobertura (≈92% statements / 80% branches sobre `content.js`, `dogs.js`, `ui.js`; se excluyen solo scripts de build/Sentry).
 - `npm run test:axe` — smoke de accesibilidad (axe-core) sobre `index.html`.
 - `npm run build` — copia vendors a `assets/vendor` y genera bundles en `dist/` (IIFE + sourcemaps).
 

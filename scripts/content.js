@@ -13,6 +13,7 @@ function secureRandomFloat() {
   return Math.random();
 }
 
+/** Mapeo de secciones y sus selectores en el DOM. */
 const sectionsSelector = {
   hero: '#inicio',
   about: '#nosotros',
@@ -24,6 +25,12 @@ const sectionsSelector = {
   contact: '#contacto'
 };
 
+/**
+ * Alterna visibilidad de secciones mediante clase CSS.
+ * @param {string} selector - Selector CSS de la sección.
+ * @param {boolean} visible - Si la sección debe mostrarse.
+ * @param {Document} [doc=document]
+ */
 function setSectionVisibility(selector, visible, doc = document) {
   /* c8 ignore next */
   if (!selector) return;
@@ -32,6 +39,11 @@ function setSectionVisibility(selector, visible, doc = document) {
   });
 }
 
+/**
+ * Aplica configuración de visibilidad a todas las secciones conocidas.
+ * @param {Record<string, boolean>} [sections={}]
+ * @param {Document} [doc=document]
+ */
 function applySectionVisibility(sections = {}, doc = document) {
   Object.entries(sectionsSelector).forEach(([key, selector]) => {
     const isVisible = Object.hasOwn(sections, key) ? !!sections[key] : true;
@@ -39,6 +51,11 @@ function applySectionVisibility(sections = {}, doc = document) {
   });
 }
 
+/**
+ * Construye la navegación principal desde un array de items.
+ * @param {HTMLElement|null} list
+ * @param {Array<{label:string,target:string}>} [items=[]]
+ */
 function populateNavigation(list, items = []) {
   /* c8 ignore next */
   if (!list || !Array.isArray(items) || items.length === 0) return;
@@ -54,6 +71,11 @@ function populateNavigation(list, items = []) {
   });
 }
 
+/**
+ * Renderiza las tarjetas de estadísticas con animación.
+ * @param {HTMLElement|null} container
+ * @param {Array<{label:string,value:number,plus?:boolean}>} [stats=[]]
+ */
 function populateStatistics(container, stats = []) {
   /* c8 ignore next */
   if (!container || !Array.isArray(stats) || stats.length === 0) return;
@@ -126,6 +148,13 @@ function positionFloatingItems(container, itemSelector = '.floating-item') {
   });
 }
 
+/**
+ * Dibuja una nube de palabras dentro del canvas indicado.
+ * @param {HTMLCanvasElement} canvas
+ * @param {HTMLElement} container
+ * @param {Array} words - Lista de pares [palabra, peso].
+ * @param {Array} fallback - Lista a usar si no hay palabras.
+ */
 function drawWordCloud(canvas, container, words, fallback) {
   if (!canvas || !container) return;
 
@@ -154,6 +183,11 @@ function drawWordCloud(canvas, container, words, fallback) {
   });
 }
 
+/**
+ * Inyecta y posiciona ítems flotantes en el hero.
+ * @param {HTMLElement|null} heroCollage
+ * @param {Array} [items=[]]
+ */
 function applyHeroFloatingItems(heroCollage, items = []) {
   /* c8 ignore next */
   if (!heroCollage) return;
@@ -177,6 +211,12 @@ function applyHeroFloatingItems(heroCollage, items = []) {
   positionFloatingItems(container, '.floating-item');
 }
 
+/**
+ * Pinta CTA y collage del hero.
+ * @param {HTMLElement|null} heroCollage
+ * @param {HTMLElement|null} ctaButton
+ * @param {object} heroContent
+ */
 function applyHeroContent(heroCollage, ctaButton, heroContent) {
   /* c8 ignore next */
   if (!heroContent) return;
@@ -188,6 +228,11 @@ function applyHeroContent(heroCollage, ctaButton, heroContent) {
   }
 }
 
+/**
+ * Renderiza las tarjetas de misión/visión/valores.
+ * @param {HTMLElement|null} container
+ * @param {object} [about={}]
+ */
 function applyAboutContent(container, about = {}) {
   /* c8 ignore next */
   if (!container || !about) return;
@@ -214,6 +259,11 @@ function applyAboutContent(container, about = {}) {
   });
 }
 
+/**
+ * Renderiza los logos de aliados.
+ * @param {HTMLElement|null} container
+ * @param {Array<{name:string,logo:string}>} [partners=[]]
+ */
 function applyPartners(container, partners = []) {
   /* c8 ignore next */
   if (!container || !partners.length) return;
@@ -226,6 +276,12 @@ function applyPartners(container, partners = []) {
   });
 }
 
+/**
+ * Construye el slider de testimonios y sus dots.
+ * @param {HTMLElement|null} track
+ * @param {HTMLElement|null} dotsContainer
+ * @param {Array} [testimonials=[]]
+ */
 function applyTestimonials(track, dotsContainer, testimonials = []) {
   /* c8 ignore next */
   if (!track || !Array.isArray(testimonials) || testimonials.length === 0) {
@@ -335,6 +391,11 @@ function initTestimonialsCarousel(track, dotsContainer, prevBtn, nextBtn) {
 }
 /* c8 ignore stop */
 
+/**
+ * Aplica textos a las secciones parametrizadas.
+ * @param {object} [sectionsContent={}]
+ * @param {Document} [doc=document]
+ */
 function applySectionTexts(
   { partners = {}, testimonials = {}, team = {}, join = {}, contact = {} } = {},
   doc = document
@@ -367,6 +428,11 @@ function applySectionTexts(
   });
 }
 
+/**
+ * Aplica todo el contenido del sitio (hero, navegación, secciones).
+ * @param {object} [content={}]
+ * @param {Document} [doc=document]
+ */
 function applySiteContent(content = {}, doc = document) {
   const heroCollage = doc.getElementById('hero-collage');
   const navList = doc.getElementById('nav-list');
@@ -398,6 +464,11 @@ function applySiteContent(content = {}, doc = document) {
 }
 
 /* c8 ignore start */
+/**
+ * Descarga el JSON de contenido vía fetch.
+ * @param {Location} [locationLike=globalScope?.location]
+ * @returns {Promise<any>}
+ */
 function fetchSiteContentViaFetch(locationLike = globalScope?.location) {
   const hasLocation = !!locationLike;
   const isAboutProtocol =
@@ -414,6 +485,10 @@ function fetchSiteContentViaFetch(locationLike = globalScope?.location) {
   });
 }
 
+/**
+ * Descarga el JSON de contenido vía XHR (para file://).
+ * @returns {Promise<any>}
+ */
 function fetchSiteContentViaXHR() {
   return new Promise((resolve, reject) => {
     try {
@@ -440,6 +515,12 @@ function fetchSiteContentViaXHR() {
   });
 }
 
+/**
+ * Intenta cargar contenido remoto y aplica fallback en caso de error.
+ * @param {object} [defaultContent=fallbackContent]
+ * @param {object} options
+ * @returns {Promise<void>}
+ */
 function loadSiteContent(
   defaultContent = fallbackContent,
   {
@@ -470,11 +551,20 @@ function loadSiteContent(
     });
 }
 
+/**
+ * Setea el año actual en el elemento correspondiente.
+ * @param {Document} [doc=document]
+ */
 function setCurrentYear(doc = document) {
   const yearEl = doc.getElementById('current-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 }
 
+/**
+ * Activa las animaciones de aparición con IntersectionObserver.
+ * @param {typeof IntersectionObserver|null} [ObserverCtor]
+ * @param {Document} [doc=document]
+ */
 function initObservers(
   ObserverCtor = typeof IntersectionObserver === 'undefined'
     ? null
@@ -552,6 +642,10 @@ function animateStats(container) {
 }
 /* c8 ignore stop */
 
+/**
+ * Inicializa el contenido del sitio y los observers.
+ * @param {object} [content=fallbackContent]
+ */
 function initContent(content = fallbackContent) {
   const isVitest = Boolean(
     globalScope?.__VITEST__ || globalThis?.process?.env?.VITEST

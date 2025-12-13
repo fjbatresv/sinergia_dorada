@@ -1,3 +1,8 @@
+/**
+ * Alterna el estado del menú móvil y el ícono.
+ * @param {HTMLElement|null} nav
+ * @param {HTMLElement|null} iconEl
+ */
 function toggleNav(nav, iconEl) {
   if (!nav) return;
   nav.classList.toggle('active');
@@ -8,6 +13,11 @@ function toggleNav(nav, iconEl) {
   iconEl.classList.add(isOpen ? 'fa-times' : 'fa-bars');
 }
 
+/**
+ * Cierra el menú móvil y restaura el ícono.
+ * @param {HTMLElement|null} nav
+ * @param {HTMLElement|null} iconEl
+ */
 function closeNav(nav, iconEl) {
   if (!nav) return;
   nav.classList.remove('active');
@@ -17,6 +27,10 @@ function closeNav(nav, iconEl) {
   }
 }
 
+/**
+ * Registra los eventos de apertura/cierre del menú y navegación.
+ * @param {{menuBtn: HTMLElement|null, nav: HTMLElement|null, navList: HTMLElement|null}} param0
+ */
 function setupNavMenu({ menuBtn, nav, navList }) {
   if (menuBtn && nav) {
     menuBtn.addEventListener('click', () => {
@@ -34,6 +48,10 @@ function setupNavMenu({ menuBtn, nav, navList }) {
   }
 }
 
+/**
+ * Aplica estilos de sombra y fondo al header según el scroll.
+ * @param {HTMLElement|null} header
+ */
 function setupHeaderShadow(header) {
   if (!header) return;
   window.addEventListener('scroll', () => {
@@ -47,6 +65,9 @@ function setupHeaderShadow(header) {
   });
 }
 
+/**
+ * Inicializa los comportamientos de UI en la página.
+ */
 function initUI() {
   const menuBtn = document.querySelector('.mobile-menu-btn');
   const nav = document.querySelector('.nav');

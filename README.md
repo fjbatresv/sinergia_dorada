@@ -18,6 +18,7 @@ Sitio oficial de **Sinergia Dorada**, una iniciativa sin fines de lucro que llev
 - **Componentización ligera**: CSS y JS divididos por responsabilidad (`styles/` y `scripts/`) para escalar fácilmente.
 - **Experiencias interactivas**: collage animado, carrusel infinito del equipo canino, testimonios, contadores y modal con detalles.
 - **Sin dependencias pesadas**: HTML + CSS + JavaScript vanilla, ideal para hosting estático (S3, Netlify, GH Pages, etc.).
+- **Cobertura y calidad en CI**: Vitest + cobertura (statements/branches >80%), ESLint, Prettier y chequeos de accesibilidad ejecutados en PRs.
 
 ## 🗂 Estructura del Proyecto
 
@@ -82,6 +83,7 @@ index.html               # Layout principal
 - `npm run test:coverage` — cobertura (≈92% statements / 80% branches sobre `content.js`, `dogs.js`, `ui.js`; se excluyen solo scripts de build/Sentry).
 - `npm run test:axe` — smoke de accesibilidad (axe-core) sobre `index.html`.
 - `npm run build` — copia vendors a `assets/vendor` y genera bundles en `dist/` (IIFE + sourcemaps).
+- Hooks locales: Husky ejecuta `lint-staged` en el pre-commit (ESLint, Prettier y tests rápidos sobre archivos staged).
 
 ## 📦 Despliegue (CI/CD)
 
@@ -123,6 +125,8 @@ El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación d
 - `check:links` levanta un servidor en `localhost:4173`; si tu entorno bloquea la apertura de puertos (p. ej. con restricciones de SO), ejecuta un server manual (`npx serve -l 4173`) antes de correr el comando.
 - El build genera bundles IIFE en `dist/`; los scripts fuente quedan sin tocar para desarrollo y tests.
 - Si usas un registry privado en local, forzar el público: `npm ci --registry=https://registry.npmjs.org`.
+- El menú móvil espera un `<ul id="nav-list" class="nav-list">` para alinearse con los selectores usados en `content.js` y `ui.js`.
+- La inicialización de Sentry registra errores y los traga (no rompe la ejecución); en entornos de prueba se omite.
 
 ## ❤️ Créditos
 

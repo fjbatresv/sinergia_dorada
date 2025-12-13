@@ -387,10 +387,14 @@ function setupDogsCarousel({
     document.removeEventListener('visibilitychange', handleVisibility)
   );
 
-  cleanup.push(() => stopAuto?.());
+  cleanup.push(
+    () => stopAuto?.(),
+    () => cleanup.length && cleanup.splice(0).forEach((fn) => fn())
+  );
 
   return () => {
-    cleanup.forEach((fn) => fn());
+    const tasks = cleanup.splice(0);
+    tasks.forEach((fn) => fn());
   };
 }
 

@@ -429,7 +429,7 @@ function applySectionTexts(
 }
 
 /**
- * Aplica todo el contenido del sitio (hero, navegación, secciones).
+ * Aplica el contenido del sitio (hero, navegación, secciones).
  * @param {object} [content={}]
  * @param {Document} [doc=document]
  */

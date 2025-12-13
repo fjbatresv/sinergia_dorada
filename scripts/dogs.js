@@ -383,11 +383,8 @@ function setupDogsCarousel({
     );
   };
   document.addEventListener('visibilitychange', handleVisibility);
-  cleanup.push(() =>
-    document.removeEventListener('visibilitychange', handleVisibility)
-  );
-
   cleanup.push(
+    () => document.removeEventListener('visibilitychange', handleVisibility),
     () => stopAuto?.(),
     () => cleanup.length && cleanup.splice(0).forEach((fn) => fn())
   );

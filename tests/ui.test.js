@@ -48,14 +48,14 @@ describe('setupNavMenu', () => {
     document.body.innerHTML = `
       <button class="mobile-menu-btn"><i class="fa-bars"></i></button>
       <nav class="nav"></nav>
-      <ul class="nav-list">
+      <ul id="nav-list" class="nav-list">
         <li><a class="nav-link" href="#inicio">Inicio</a></li>
       </ul>
     `;
 
     const menuBtn = document.querySelector('.mobile-menu-btn');
     const nav = document.querySelector('.nav');
-    const navList = document.querySelector('.nav-list');
+    const navList = document.getElementById('nav-list');
 
     setupNavMenu({ menuBtn, nav, navList });
 
@@ -97,7 +97,7 @@ describe('auto-inicialización', () => {
     document.body.innerHTML = `
       <button class="mobile-menu-btn"><i class="fa-bars"></i></button>
       <nav class="nav"></nav>
-      <ul class="nav-list"></ul>
+      <ul id="nav-list" class="nav-list"></ul>
       <header class="header"></header>
     `;
 

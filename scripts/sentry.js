@@ -93,8 +93,9 @@ function loadSentrySdk() {
  * When initialization runs successfully, configures integrations, calls Sentry.init with
  * the resolved options (dsn, environment, release, sampling rates), and sets win.SENTRY_READY = true.
  * If initialization is skipped (missing/invalid DSN or test environment) the promise resolves immediately.
+ * Errors loading or initializing the SDK are logged and swallowed; the promise resolves without throwing.
  *
- * @returns {Promise<void>} Resolves when initialization completes or is skipped. Rejects only if loading the SDK fails.
+ * @returns {Promise<void>} Resolves when initialization completes, is skipped, or when an error occurs (errors are logged, not propagated).
  */
 function initSentry() {
   if (!shouldInitSentry) return Promise.resolve();

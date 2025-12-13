@@ -21,7 +21,7 @@ function toggleNav(nav, iconEl) {
 /**
  * Close the mobile navigation and reset the menu icon to the closed state.
  * @param {HTMLElement|null} nav - Navigation element to close; no-op if null.
- * @param {HTMLElement|null} iconEl - Icon element to update to the "bars" state; ignored if null.
+ * @param {Element|null} iconEl - Icon element to update to the "bars" state; ignored if null.
  */
 function closeNav(nav, iconEl) {
   if (!nav) return;
@@ -89,7 +89,7 @@ function setupHeaderShadow(header) {
 function initUI() {
   const menuBtn = document.querySelector('.mobile-menu-btn');
   const nav = document.querySelector('.nav');
-  const navList = document.querySelector('.nav-list');
+  const navList = document.getElementById('nav-list');
   const header = document.querySelector('.header');
   setupNavMenu({ menuBtn, nav, navList });
   setupHeaderShadow(header);

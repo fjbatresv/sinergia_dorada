@@ -22,7 +22,6 @@ function normalizeUrl(path) {
     return '';
   }
 }
-/* c8 ignore stop */
 
 /**
  * Create a DOM card representing a dog with image, name, and breed and wire a click handler.
@@ -336,7 +335,6 @@ function fetchDogsFromNetwork() {
     return response.json();
   });
 }
-/* c8 ignore stop */
 
 /**
  * Initialize and wire a horizontal carousel of dog cards with navigation controls and modal interactions.
@@ -469,8 +467,7 @@ function setupDogsCarousel({
   document.addEventListener('visibilitychange', handleVisibility);
   cleanup.push(
     () => document.removeEventListener('visibilitychange', handleVisibility),
-    () => stopAuto?.(),
-    () => cleanup.length && cleanup.splice(0).forEach((fn) => fn())
+    () => stopAuto?.()
   );
 
   return () => {

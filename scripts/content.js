@@ -1,6 +1,6 @@
 import fallbackContent from '../content/site-content.json';
 
-const globalScope = typeof globalThis !== 'undefined' ? globalThis : undefined;
+const globalScope = typeof globalThis === 'undefined' ? undefined : globalThis;
 
 const sectionsSelector = {
   hero: '#inicio',

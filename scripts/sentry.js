@@ -1,4 +1,4 @@
-const globalScope = typeof globalThis !== 'undefined' ? globalThis : undefined;
+const globalScope = typeof globalThis === 'undefined' ? undefined : globalThis;
 const doc = globalScope?.document;
 const win = globalScope?.window ?? globalScope;
 
@@ -27,6 +27,8 @@ const release =
   '__SENTRY_RELEASE__';
 
 const isTestEnv = Boolean(win?.__VITEST__ || globalScope?.process?.env?.VITEST);
+const releaseOption = release === '__SENTRY_RELEASE__' ? undefined : release;
+const shouldInitSentry = hasValidDsn && !isTestEnv;
 
 let loadingSdk;
 const defaultSources = [
@@ -77,8 +79,6 @@ function loadSentrySdk() {
 }
 
 async function initSentry() {
-  if (!hasValidDsn || isTestEnv) return;
-
   try {
     const Sentry = await loadSentrySdk();
     if (!Sentry) return;
@@ -95,10 +95,10 @@ async function initSentry() {
         Boolean
       ),
       environment,
-      release: release !== '__SENTRY_RELEASE__' ? release : undefined,
-      tracesSampleRate: 1.0,
+      release: releaseOption,
+      tracesSampleRate: 1,
       replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
+      replaysOnErrorSampleRate: 1,
       debug: false
     });
 
@@ -110,4 +110,6 @@ async function initSentry() {
   }
 }
 
-initSentry();
+const sentryReady = shouldInitSentry ? initSentry() : Promise.resolve();
+
+export { sentryReady };

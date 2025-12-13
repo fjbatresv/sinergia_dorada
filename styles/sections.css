@@ -60,11 +60,6 @@
   display: block;
 }
 
-/* Team Section */
-.team {
-  background-color: white;
-}
-
 /* Values List */
 .values-list {
   margin-top: 1rem;
@@ -232,16 +227,16 @@
   gap: 10px;
   padding: 12px 24px;
   border-radius: 50px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  background-color: #f7e9b5;
+  color: #1b1b1b;
   font-weight: 600;
   transition: var(--transition-fast);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #d4af37;
 }
 
 .social-btn:hover {
-  background-color: white;
-  color: var(--text-dark);
+  background-color: #d4af37;
+  color: #0f0c05;
   transform: translateY(-3px);
 }
 
@@ -470,25 +465,29 @@
   position: absolute;
   top: 15px;
   right: 20px;
-  color: #aaa;
+  color: #2b2b2b;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
   z-index: 10;
-  transition: color 0.3s;
-  background: rgba(255, 255, 255, 0.8);
+  transition:
+    color 0.3s,
+    background 0.3s,
+    box-shadow 0.3s;
+  background: #ffffff;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .close-modal:hover,
 .close-modal:focus {
-  color: var(--text-dark);
-  background: white;
+  color: #0c0c0c;
+  background: #f1f1f1;
 }
 
 .modal-body {
@@ -598,7 +597,7 @@
 .modal-btn:hover,
 .modal-btn:focus {
   background-color: white;
-  color: #d4af37;
+  color: #8a6b00;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   border: 1px solid #d4af37;
@@ -1044,7 +1043,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1.3rem;
-  color: white;
+  color: #1b1300;
   margin-bottom: 1.5rem;
 }
 

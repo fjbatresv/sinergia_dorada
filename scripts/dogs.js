@@ -4,7 +4,11 @@ const globalScope = typeof globalThis === 'undefined' ? undefined : globalThis;
 const DOGS_JSON_PATH = 'content/dogs.json';
 let teardownCarousel = null;
 
-/* c8 ignore start */
+/**
+ * Normalize and validate a URL path relative to the page origin.
+ * @param {string} path - A URL or path (absolute or relative) to normalize.
+ * @returns {string} The absolute `http`/`https` URL resolved against the page origin, or an empty string if `path` is falsy, the page origin is unavailable, the input is invalid, or the resolved protocol is not `http`/`https`.
+ */
 function normalizeUrl(path) {
   if (!path) return '';
   const origin = globalScope?.location?.origin ?? null;
@@ -21,10 +25,10 @@ function normalizeUrl(path) {
 /* c8 ignore stop */
 
 /**
- * Crea una tarjeta del equipo canino y enlaza el handler de apertura.
- * @param {object} dog - Datos del perro (imagen, nombre, raza).
- * @param {Function} [onOpen] - Callback cuando se hace clic.
- * @returns {HTMLDivElement}
+ * Create a DOM card representing a dog with image, name, and breed and wire a click handler.
+ * @param {{image?: string, name?: string, breed?: string}} dog - Dog data; properties may be missing or empty.
+ * @param {Function} [onOpen] - Callback invoked with the `dog` object when the card is clicked.
+ * @returns {HTMLDivElement} The constructed card element.
  */
 function createDogCard(dog, onOpen = () => {}) {
   const card = document.createElement('div');
@@ -64,9 +68,9 @@ function createDogCard(dog, onOpen = () => {}) {
 }
 
 /**
- * Obtiene las referencias del modal de perros.
- * @param {Document} [doc=document]
- * @returns {{modal: HTMLElement|null, closeModalBtn: HTMLElement|null, modalImg: HTMLImageElement|null, modalName: HTMLElement|null, modalBreed: HTMLElement|null, modalColor: HTMLElement|null, modalColorContainer: HTMLElement|null, modalBirthdate: HTMLElement|null, modalBirthdateContainer: HTMLElement|null, modalDesc: HTMLElement|null, modalInsta: HTMLAnchorElement|null}}
+ * Retrieve references to the dog-detail modal and its related DOM elements.
+ * @param {Document} [doc=document] - Document to query for modal elements.
+ * @returns {{modal: HTMLElement|null, closeModalBtn: HTMLElement|null, modalImg: HTMLImageElement|null, modalName: HTMLElement|null, modalBreed: HTMLElement|null, modalColor: HTMLElement|null, modalColorContainer: HTMLElement|null, modalBirthdate: HTMLElement|null, modalBirthdateContainer: HTMLElement|null, modalDesc: HTMLElement|null, modalInsta: HTMLAnchorElement|null}} Object with element references keyed by name; each value is the element or `null` if not found.
  */
 function getModalElements(doc = document) {
   return {
@@ -84,6 +88,15 @@ function getModalElements(doc = document) {
   };
 }
 
+/**
+ * Safely set or clear the modal image source and ensure consistent image attributes.
+ *
+ * If a valid absolute HTTP(S) URL is provided, assigns it to the element's `src`; otherwise removes the `src` attribute.
+ * Always sets `width` and `height` to 640 and `loading` to `"lazy"`.
+ *
+ * @param {HTMLImageElement|null|undefined} modalImg - The <img> element in the modal; nothing happens if missing.
+ * @param {string|undefined} imageUrl - The image URL to apply; invalid or non-HTTP(S) URLs will result in `src` being cleared.
+ */
 function setModalImage(modalImg, imageUrl) {
   if (!modalImg) return;
   const safeSrc = imageUrl ? normalizeUrl(imageUrl) : '';
@@ -97,10 +110,22 @@ function setModalImage(modalImg, imageUrl) {
   modalImg.loading = 'lazy';
 }
 
+/**
+ * Set an element's text content safely.
+ * Assigns the element's textContent to the provided value, using an empty string when the value is null or undefined; does nothing if the element is falsy.
+ * @param {Element|null|undefined} element - The DOM element whose textContent will be set.
+ * @param {string} [value=''] - The text to assign; null or undefined becomes an empty string.
+ */
 function setText(element, value = '') {
   if (element) element.textContent = value ?? '';
 }
 
+/**
+ * Show or hide an information row and set its text when a value is present.
+ * @param {HTMLElement|null|undefined} container - The container element for the info row; will be hidden if not present or value is falsy.
+ * @param {string|number|any} value - The value to display; treated as present when truthy.
+ * @param {HTMLElement|null|undefined} textElement - Element whose textContent will be set to `value` when present.
+ */
 function toggleInfoRow(container, value, textElement) {
   if (!container) return;
   const hasValue = Boolean(value);
@@ -108,6 +133,17 @@ function toggleInfoRow(container, value, textElement) {
   if (hasValue && textElement) textElement.textContent = value;
 }
 
+/**
+ * Render a dog description into the provided container element.
+ * 
+ * If `description` is an array of strings, each item is added as text with two
+ * line breaks between items. If it's a non-empty string, it is set as the
+ * element's text. If no valid description is provided, the element is set to
+ * 'Sin descripción disponible.'. If `descElement` is falsy, the function does nothing.
+ * 
+ * @param {HTMLElement|null|undefined} descElement - Container element where the description will be rendered.
+ * @param {string|string[]|any} description - Description to render; may be a string or an array of strings.
+ */
 function renderDescription(descElement, description) {
   if (!descElement) return;
   while (descElement.firstChild) {
@@ -135,6 +171,12 @@ function renderDescription(descElement, description) {
   descElement.textContent = 'Sin descripción disponible.';
 }
 
+/**
+ * Configure an Instagram anchor element: validate and apply the provided URL or hide the element when absent/invalid.
+ *
+ * @param {HTMLAnchorElement} linkEl - Anchor element to update; if falsy, the function does nothing.
+ * @param {string} instagram - URL or path to the Instagram profile; will be validated and normalized. If valid, assigned to the anchor's `href` and `rel="noopener noreferrer"` is set; if invalid or empty, the anchor is hidden.
+ */
 function renderInstagram(linkEl, instagram) {
   if (!linkEl) return;
   const href = instagram ? normalizeUrl(instagram) : '';
@@ -147,10 +189,14 @@ function renderInstagram(linkEl, instagram) {
 }
 
 /**
- * Pinta el contenido del modal y lo muestra.
- * @param {object} dog - Datos del perro seleccionados.
- * @param {ReturnType<typeof getModalElements>} modalElements
- * @param {Document} [doc=document]
+ * Populate the dog detail modal with the provided data and display it.
+ *
+ * If the modal element is not present, the function exits without side effects.
+ * When shown, page scrolling is locked by setting the document body's overflow to "hidden".
+ *
+ * @param {object} dog - Dog data used to populate the modal. Expected properties: `image`, `name`, `breed`, `color`, `birthdate`, `description`, and `instagram`.
+ * @param {ReturnType<typeof getModalElements>} modalElements - References to modal DOM elements returned by `getModalElements`.
+ * @param {Document} [doc=document] - Document object to operate on (defaults to the global document).
  */
 function showDogModal(dog, modalElements, doc = document) {
   if (!modalElements?.modal) return;
@@ -180,9 +226,11 @@ function showDogModal(dog, modalElements, doc = document) {
 }
 
 /**
- * Oculta el modal y restablece el scroll del body.
- * @param {ReturnType<typeof getModalElements>} modalElements
- * @param {Document} [doc=document]
+ * Hide the dog detail modal and restore page scrolling.
+ *
+ * Removes the modal's visible state and resets the document body's overflow style so the page can scroll.
+ * @param {ReturnType<typeof getModalElements>} modalElements - Object containing modal DOM references (must include `modal` to be hidden).
+ * @param {Document} [doc=document] - Document object whose body overflow will be restored.
  */
 function hideDogModal(modalElements, doc = document) {
   if (modalElements?.modal) modalElements.modal.classList.remove('show');
@@ -190,11 +238,11 @@ function hideDogModal(modalElements, doc = document) {
 }
 
 /**
- * Calcula el ancho de tarjeta y del set completo.
- * @param {HTMLElement} track
- * @param {number} dogCount
- * @param {number} [gap=32]
- * @returns {{cardWidth: number|undefined, singleSetWidth: number|undefined}}
+ * Compute the width of a single card (including gap) and the total width of one set of cards.
+ * @param {HTMLElement} track - Container element that holds card elements.
+ * @param {number} dogCount - Number of cards in a single logical set.
+ * @param {number} [gap=32] - Horizontal gap in pixels added to each card's offsetWidth.
+ * @returns {{cardWidth: number|undefined, singleSetWidth: number|undefined}} Object with `cardWidth` (width in pixels of one card plus gap) and `singleSetWidth` (`cardWidth` multiplied by `dogCount`); both are `undefined` if no card element is found.
  */
 function updateDimensions(track, dogCount, gap = 32) {
   const firstCard = track?.querySelector('.team-card');
@@ -204,10 +252,12 @@ function updateDimensions(track, dogCount, gap = 32) {
 }
 
 /**
- * Reposiciona el scroll cuando se alcanza el límite para simular carrusel infinito.
- * @param {HTMLElement} track
- * @param {number} singleSetWidth
- * @returns {number}
+ * Repositions the horizontal scroll to simulate an infinite looping carousel.
+ *
+ * Adjusts the track's scroll position when it has moved past the duplicated set boundaries so the visible sequence appears continuous.
+ * @param {HTMLElement} track - The scrolling container element for the carousel.
+ * @param {number} singleSetWidth - The width (in pixels) of one full set of items.
+ * @returns {number} The track's updated scrollLeft value.
  */
 function checkInfiniteScroll(track, singleSetWidth) {
   if (!track || !singleSetWidth) return track?.scrollLeft ?? 0;
@@ -225,12 +275,14 @@ function checkInfiniteScroll(track, singleSetWidth) {
 }
 
 /**
- * Inicia el auto-scroll del carrusel y devuelve un limpiador.
- * @param {HTMLElement} track
- * @param {Function} getSingleSetWidth
- * @param {Function} isPaused
- * @param {number} [step=1]
- * @returns {Function} cleanup interval
+ * Start automatic horizontal scrolling of the given track.
+ *
+ * Begins periodic small horizontal increments and applies the carousel's infinite-scroll adjustment while not paused.
+ * @param {HTMLElement} track - The scrollable track element to advance.
+ * @param {Function} getSingleSetWidth - Function returning the current width (in pixels) of one set of cards; used for infinite-loop calculations.
+ * @param {Function} isPaused - Function returning `true` when auto-scrolling should be suspended, `false` otherwise.
+ * @param {number} [step=1] - Number of pixels to advance the track on each tick.
+ * @returns {Function} A cleanup function that stops the automatic scrolling when invoked.
  */
 function startAutoScroll(track, getSingleSetWidth, isPaused, step = 1) {
   let intervalId;
@@ -250,7 +302,14 @@ function startAutoScroll(track, getSingleSetWidth, isPaused, step = 1) {
   return () => clearInterval(intervalId);
 }
 
-/* c8 ignore start */
+/**
+ * Display a centered error message inside the carousel track element.
+ *
+ * Clears the track's contents, creates a container with role="status" and class "team-error",
+ * sets its text to the provided message, and appends it to the track.
+ * @param {HTMLElement|null|undefined} track - Container element where the error message will be rendered; nothing happens if falsy.
+ * @param {string} [message='No pudimos cargar el equipo en este momento.'] - Message text to show inside the error container.
+ */
 function renderError(
   track,
   message = 'No pudimos cargar el equipo en este momento.'
@@ -264,6 +323,12 @@ function renderError(
   track.appendChild(wrapper);
 }
 
+/**
+ * Fetches dog data JSON from the configured network path.
+ *
+ * @returns {any} Parsed JSON value containing the dogs dataset.
+ * @throws {Error} If the HTTP response is not OK; the error message includes the response status.
+ */
 function fetchDogsFromNetwork() {
   const url = normalizeUrl(DOGS_JSON_PATH);
   return fetch(url).then((response) => {
@@ -274,8 +339,16 @@ function fetchDogsFromNetwork() {
 /* c8 ignore stop */
 
 /**
- * Configura el carrusel del equipo canino (tarjetas, controles, modal).
- * @returns {Function|undefined} cleanup de listeners y timers.
+ * Initialize and wire a horizontal carousel of dog cards with navigation controls and modal interactions.
+ *
+ * @param {Object} options - Configuration options.
+ * @param {HTMLElement} options.track - Scrollable container element that will hold the dog cards.
+ * @param {HTMLElement} [options.prevBtn] - Optional previous button; wired to scroll the track backward.
+ * @param {HTMLElement} [options.nextBtn] - Optional next button; wired to scroll the track forward.
+ * @param {Array<Object>} options.dogs - Array of dog data objects used to build the cards.
+ * @param {Object} options.modalElements - References to modal DOM elements used for displaying dog details.
+ * @param {Function} [options.startAutoScrollFn=startAutoScroll] - Function that starts auto-scrolling; receives (track, getSingleSetWidth, isPaused, step) and returns a stop function.
+ * @returns {Function|undefined} A cleanup function that removes event listeners and stops timers created by the carousel, or `undefined` if the carousel was not initialized due to invalid inputs.
  */
 function setupDogsCarousel({
   track,
@@ -407,7 +480,9 @@ function setupDogsCarousel({
 }
 
 /**
- * Punto de entrada para inicializar el carrusel de perros en la página.
+ * Initialize the dogs carousel on the page.
+ *
+ * Finds the carousel track and navigation controls in the DOM, builds and displays dog cards populated from the network or a local fallback, wires modal and interaction handlers, and retains a teardown function to remove listeners and stop auto-scrolling. If the carousel track element is not found, the function returns immediately. Errors loading remote data are logged and, when available, a local fallback array is used instead; if no data is available an error message is rendered into the track.
  */
 function initDogs() {
   const track = document.getElementById('carousel-track');

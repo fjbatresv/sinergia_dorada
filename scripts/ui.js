@@ -1,7 +1,12 @@
 /**
- * Alterna el estado del menú móvil y el ícono.
- * @param {HTMLElement|null} nav
- * @param {HTMLElement|null} iconEl
+ * Toggle the mobile navigation's open state and update the menu icon.
+ *
+ * Toggles the 'active' class on the provided navigation container. If an icon element
+ * is provided, it swaps Font Awesome classes: adds 'fa-times' and removes 'fa-bars'
+ * when the menu becomes open, and reverses that when the menu is closed.
+ *
+ * @param {HTMLElement|null} nav - The navigation container element whose 'active' class will be toggled.
+ * @param {HTMLElement|null} iconEl - Optional icon element (typically an <i>) to switch between 'fa-bars' and 'fa-times'.
  */
 function toggleNav(nav, iconEl) {
   if (!nav) return;
@@ -14,9 +19,9 @@ function toggleNav(nav, iconEl) {
 }
 
 /**
- * Cierra el menú móvil y restaura el ícono.
- * @param {HTMLElement|null} nav
- * @param {HTMLElement|null} iconEl
+ * Close the mobile navigation and reset the menu icon to the closed state.
+ * @param {HTMLElement|null} nav - Navigation element to close; no-op if null.
+ * @param {HTMLElement|null} iconEl - Icon element to update to the "bars" state; ignored if null.
  */
 function closeNav(nav, iconEl) {
   if (!nav) return;
@@ -28,8 +33,11 @@ function closeNav(nav, iconEl) {
 }
 
 /**
- * Registra los eventos de apertura/cierre del menú y navegación.
- * @param {{menuBtn: HTMLElement|null, nav: HTMLElement|null, navList: HTMLElement|null}} param0
+ * Register event listeners to toggle the mobile navigation and to close it when a navigation link is clicked.
+ *
+ * @param {HTMLElement|null} menuBtn - The mobile menu button element; when provided a click listener is added to toggle the nav. May be null.
+ * @param {HTMLElement|null} nav - The navigation container element; used to toggle/close the `active` state. May be null.
+ * @param {HTMLElement|null} navList - The container holding navigation links; when provided a click listener is added to close the nav on link clicks. May be null.
  */
 function setupNavMenu({ menuBtn, nav, navList }) {
   if (menuBtn && nav) {
@@ -49,8 +57,12 @@ function setupNavMenu({ menuBtn, nav, navList }) {
 }
 
 /**
- * Aplica estilos de sombra y fondo al header según el scroll.
- * @param {HTMLElement|null} header
+ * Apply shadow and background styling to a header element based on page scroll position.
+ *
+ * When the page is scrolled more than 50 pixels, a stronger box shadow and a slightly more
+ * opaque white background are applied; otherwise a lighter shadow and background are used.
+ *
+ * @param {HTMLElement|null} header - The header element to update; if null or undefined, no action is taken.
  */
 function setupHeaderShadow(header) {
   if (!header) return;
@@ -66,7 +78,10 @@ function setupHeaderShadow(header) {
 }
 
 /**
- * Inicializa los comportamientos de UI en la página.
+ * Initialize page UI by locating navigation and header elements and wiring their behaviors.
+ *
+ * Finds the mobile menu button, navigation container, navigation list, and header in the DOM,
+ * then sets up the navigation menu event handlers and header scroll shadow behavior.
  */
 function initUI() {
   const menuBtn = document.querySelector('.mobile-menu-btn');

@@ -7,7 +7,7 @@ function secureRandomFloat() {
   if (crypto?.getRandomValues) {
     const buf = new Uint32Array(1);
     crypto.getRandomValues(buf);
-    return buf[0] / 0xffffffff;
+    return buf[0] / 0x100000000;
   }
   // Non-cryptographic fallback; keep range [0, 1)
   return Math.random();

@@ -29,7 +29,7 @@ describe('createDogCard', () => {
   it('devuelve src vacío cuando no hay imagen disponible', () => {
     const card = createDogCard({ name: 'Brie', breed: 'Labrador' }, () => {});
 
-    expect(card.querySelector('img').getAttribute('src')).toBe('');
+    expect(card.querySelector('img').getAttribute('src')).toBeNull();
   });
 });
 
@@ -439,7 +439,7 @@ describe('defensivos adicionales', () => {
       { image: 'ftp://example.com/img.png', name: 'Pip' },
       () => {}
     );
-    expect(card.querySelector('img').getAttribute('src')).toBe('');
+    expect(card.querySelector('img').getAttribute('src')).toBeNull();
   });
 
   it('setupDogsCarousel sin datos retorna undefined', () => {

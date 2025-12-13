@@ -38,7 +38,12 @@ function createDogCard(dog, onOpen = () => {}) {
   img.width = 320;
   img.height = 320;
   img.alt = name || 'Perro';
-  img.src = normalizeUrl(dog?.image);
+  const normalizedSrc = normalizeUrl(dog?.image);
+  if (normalizedSrc) {
+    img.src = normalizedSrc;
+  } else {
+    img.removeAttribute('src');
+  }
   imageWrapper.appendChild(img);
 
   const content = document.createElement('div');
@@ -81,7 +86,12 @@ function getModalElements(doc = document) {
 
 function setModalImage(modalImg, imageUrl) {
   if (!modalImg) return;
-  modalImg.src = normalizeUrl(imageUrl);
+  const safeSrc = imageUrl ? normalizeUrl(imageUrl) : '';
+  if (safeSrc) {
+    modalImg.src = safeSrc;
+  } else {
+    modalImg.removeAttribute('src');
+  }
   modalImg.width = 640;
   modalImg.height = 640;
   modalImg.loading = 'lazy';
@@ -255,7 +265,8 @@ function renderError(
 }
 
 function fetchDogsFromNetwork() {
-  return fetch(DOGS_JSON_PATH).then((response) => {
+  const url = normalizeUrl(DOGS_JSON_PATH);
+  return fetch(url).then((response) => {
     if (!response?.ok) throw new Error(`HTTP ${response?.status ?? 'error'}`);
     return response.json();
   });

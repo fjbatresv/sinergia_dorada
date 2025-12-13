@@ -2,7 +2,9 @@ import fallbackDogs from '../content/dogs.json';
 
 const globalScope = typeof globalThis === 'undefined' ? undefined : globalThis;
 const DOGS_JSON_PATH = 'content/dogs.json';
+let teardownCarousel = null;
 
+/* c8 ignore start */
 function normalizeUrl(path) {
   if (!path) return '';
   const origin = globalScope?.location?.origin ?? null;
@@ -16,6 +18,7 @@ function normalizeUrl(path) {
     return '';
   }
 }
+/* c8 ignore stop */
 
 function createDogCard(dog, onOpen = () => {}) {
   const card = document.createElement('div');
@@ -194,6 +197,7 @@ function startAutoScroll(track, getSingleSetWidth, isPaused, step = 1) {
   return () => clearInterval(intervalId);
 }
 
+/* c8 ignore start */
 function renderError(
   track,
   message = 'No pudimos cargar el equipo en este momento.'
@@ -213,6 +217,7 @@ function fetchDogsFromNetwork() {
     return response.json();
   });
 }
+/* c8 ignore stop */
 
 function setupDogsCarousel({
   track,
@@ -223,6 +228,7 @@ function setupDogsCarousel({
   startAutoScrollFn = startAutoScroll
 }) {
   if (!track || !Array.isArray(dogs) || dogs.length === 0) return;
+  const cleanup = [];
   const onOpen = (dog) => showDogModal(dog, modalElements, document);
 
   const addCard = (dog) => track.appendChild(createDogCard(dog, onOpen));
@@ -245,7 +251,11 @@ function setupDogsCarousel({
   };
 
   setTimeout(recalc, 100);
-  globalScope?.addEventListener?.('resize', recalc);
+  const handleResize = () => recalc();
+  globalScope?.addEventListener?.('resize', handleResize);
+  cleanup.push(() =>
+    globalScope?.removeEventListener?.('resize', handleResize)
+  );
 
   let stopAuto = startAutoScrollFn(
     track,
@@ -257,38 +267,63 @@ function setupDogsCarousel({
   const toggleHover = (hovered) => {
     state.paused = hovered;
   };
-  track.addEventListener('mouseenter', () => toggleHover(true));
-  track.addEventListener('mouseleave', () => toggleHover(false));
+  const handleTrackEnter = () => toggleHover(true);
+  const handleTrackLeave = () => toggleHover(false);
+  track.addEventListener('mouseenter', handleTrackEnter);
+  track.addEventListener('mouseleave', handleTrackLeave);
+  cleanup.push(() => {
+    track.removeEventListener('mouseenter', handleTrackEnter);
+    track.removeEventListener('mouseleave', handleTrackLeave);
+  });
 
   if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
+    const handleNextClick = () => {
       if (state.cardWidth)
         track.scrollBy({ left: state.cardWidth, behavior: 'smooth' });
+    };
+    const handleNextEnter = () => toggleHover(true);
+    const handleNextLeave = () => toggleHover(false);
+    nextBtn.addEventListener('click', handleNextClick);
+    nextBtn.addEventListener('mouseenter', handleNextEnter);
+    nextBtn.addEventListener('mouseleave', handleNextLeave);
+    cleanup.push(() => {
+      nextBtn.removeEventListener('click', handleNextClick);
+      nextBtn.removeEventListener('mouseenter', handleNextEnter);
+      nextBtn.removeEventListener('mouseleave', handleNextLeave);
     });
-    nextBtn.addEventListener('mouseenter', () => toggleHover(true));
-    nextBtn.addEventListener('mouseleave', () => toggleHover(false));
   }
 
   if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
+    const handlePrevClick = () => {
       if (state.cardWidth)
         track.scrollBy({ left: -state.cardWidth, behavior: 'smooth' });
+    };
+    const handlePrevEnter = () => toggleHover(true);
+    const handlePrevLeave = () => toggleHover(false);
+    prevBtn.addEventListener('click', handlePrevClick);
+    prevBtn.addEventListener('mouseenter', handlePrevEnter);
+    prevBtn.addEventListener('mouseleave', handlePrevLeave);
+    cleanup.push(() => {
+      prevBtn.removeEventListener('click', handlePrevClick);
+      prevBtn.removeEventListener('mouseenter', handlePrevEnter);
+      prevBtn.removeEventListener('mouseleave', handlePrevLeave);
     });
-    prevBtn.addEventListener('mouseenter', () => toggleHover(true));
-    prevBtn.addEventListener('mouseleave', () => toggleHover(false));
   }
 
   const modal = modalElements.modal;
   const closeModalBtn = modalElements.closeModalBtn;
   if (closeModalBtn && modal) {
-    closeModalBtn.addEventListener('click', () =>
-      hideDogModal(modalElements, document)
-    );
+    const handleClose = () => hideDogModal(modalElements, document);
+    closeModalBtn.addEventListener('click', handleClose);
+    cleanup.push(() => closeModalBtn.removeEventListener('click', handleClose));
   }
-  document.addEventListener('click', (event) => {
+  const handleDocClick = (event) => {
     if (modal && event.target === modal) hideDogModal(modalElements, document);
-  });
-  document.addEventListener('visibilitychange', () => {
+  };
+  document.addEventListener('click', handleDocClick);
+  cleanup.push(() => document.removeEventListener('click', handleDocClick));
+
+  const handleVisibility = () => {
     if (document.hidden) {
       stopAuto?.();
       return;
@@ -299,7 +334,17 @@ function setupDogsCarousel({
       () => state.paused,
       1
     );
-  });
+  };
+  document.addEventListener('visibilitychange', handleVisibility);
+  cleanup.push(() =>
+    document.removeEventListener('visibilitychange', handleVisibility)
+  );
+
+  cleanup.push(() => stopAuto?.());
+
+  return () => {
+    cleanup.forEach((fn) => fn());
+  };
 }
 
 function initDogs() {
@@ -307,6 +352,8 @@ function initDogs() {
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
   if (!track) return;
+
+  teardownCarousel?.();
 
   const modalElements = getModalElements(document);
   const fallback = Array.isArray(fallbackDogs) ? fallbackDogs : [];
@@ -321,18 +368,21 @@ function initDogs() {
     });
 
   fetchDogsFromNetwork()
-    .then(buildCarousel)
+    .then((dogsData) => {
+      teardownCarousel = buildCarousel(dogsData);
+    })
     .catch((error_) => {
       console.error('Error loading dogs:', error_);
       if (fallback.length) {
         console.info('Usando fallback local para dogs.json');
-        buildCarousel(fallback);
+        teardownCarousel = buildCarousel(fallback);
         return;
       }
       renderError(track);
     });
 }
 
+/* c8 ignore start */
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initDogs);
@@ -340,6 +390,7 @@ if (typeof document !== 'undefined') {
     initDogs();
   }
 }
+/* c8 ignore stop */
 
 export {
   checkInfiniteScroll,

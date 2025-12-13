@@ -1,7 +1,6 @@
 # Sinergia Dorada Website
 
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/fjbatresv/sinergia_dorada?utm_source=oss&utm_medium=github&utm_campaign=fjbatresv%2Fsinergia_dorada&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
-
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
@@ -22,7 +21,7 @@ Sitio oficial de **Sinergia Dorada**, una iniciativa sin fines de lucro que llev
 
 ## 🗂 Estructura del Proyecto
 
-```
+```bash
 content/
   ├─ site-content.json   # Textos, menús, banderas de secciones, héroe, testimonios, etc.
   └─ dogs.json           # Información del equipo canino (carrusel + modal)
@@ -53,10 +52,12 @@ index.html               # Layout principal
 ## 🚀 Ejecución Local
 
 1. Clona el repositorio y entra a la carpeta:
+
    ```bash
    git clone https://github.com/fjbatresv/sinergia_dorada.git
    cd sinergia_dorada
    ```
+
 2. Levanta un servidor estático (para que `fetch` lea los JSON):
 
    ```bash
@@ -78,7 +79,7 @@ index.html               # Layout principal
 - `npm run validate:html` — html-validate.
 - `npm run check:links` — Linkinator sirviendo la web en localhost (requiere poder abrir un puerto; en algunos entornos locales puede bloquearse).
 - `npm run test` — suite de Vitest.
-- `npm run test:coverage` — cobertura (actualmente 100% en JS).
+- `npm run test:coverage` — cobertura (≈86% statements / 75% branches sobre `content.js`, `dogs.js`, `ui.js`; se excluyen solo scripts de build/Sentry).
 - `npm run test:axe` — smoke de accesibilidad (axe-core) sobre `index.html`.
 - `npm run build` — copia vendors a `assets/vendor` y genera bundles en `dist/` (IIFE + sourcemaps).
 

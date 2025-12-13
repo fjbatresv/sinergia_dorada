@@ -9,8 +9,8 @@ function secureRandomFloat() {
     crypto.getRandomValues(buf);
     return buf[0] / 0xffffffff;
   }
-  // deterministic fallback to avoid Math.random in unsupported environments
-  return 0.5;
+  // Non-cryptographic fallback; keep range [0, 1)
+  return Math.random();
 }
 
 const sectionsSelector = {

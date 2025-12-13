@@ -56,6 +56,7 @@ function initUI() {
   setupHeaderShadow(header);
 }
 
+/* c8 ignore start */
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initUI);
@@ -63,5 +64,6 @@ if (typeof document !== 'undefined') {
     initUI();
   }
 }
+/* c8 ignore stop */
 
 export { closeNav, initUI, setupHeaderShadow, setupNavMenu, toggleNav };

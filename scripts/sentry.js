@@ -37,6 +37,15 @@ const defaultSources = [
   'https://browser.sentry-cdn.com/10.30.0/bundle.tracing.replay.min.js'
 ];
 
+/**
+ * Load the Sentry browser SDK by inserting a script tag for each configured source until one succeeds.
+ *
+ * Attempts to reuse an in-flight load or an existing global Sentry instance. Resolves with the global
+ * Sentry object when a script source initializes it; rejects if window/document are unavailable or
+ * if all provided sources fail to load or initialize Sentry.
+ *
+ * @returns {Promise<any>} The global Sentry object when loaded; rejects with an Error on failure.
+ */
 function loadSentrySdk() {
   if (!win || !doc) {
     return Promise.reject(new Error('No window/document available for Sentry'));
@@ -78,6 +87,15 @@ function loadSentrySdk() {
   return loadingSdk;
 }
 
+/**
+ * Initialize the Sentry SDK if a valid DSN is present and not running in a test environment.
+ *
+ * When initialization runs successfully, configures integrations, calls Sentry.init with
+ * the resolved options (dsn, environment, release, sampling rates), and sets win.SENTRY_READY = true.
+ * If initialization is skipped (missing/invalid DSN or test environment) the promise resolves immediately.
+ *
+ * @returns {Promise<void>} Resolves when initialization completes or is skipped. Rejects only if loading the SDK fails.
+ */
 function initSentry() {
   if (!shouldInitSentry) return Promise.resolve();
 

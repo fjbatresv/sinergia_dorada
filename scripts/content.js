@@ -469,8 +469,6 @@ function initTestimonialsCarousel(track, dotsContainer, prevBtn, nextBtn) {
     });
   }
 }
-/* c8 ignore stop */
-
 /**
  * Apply text content to configurable site sections by populating specific elements by ID.
  *
@@ -556,7 +554,6 @@ function applySiteContent(content = {}, doc = document) {
   }
 }
 
-/* c8 ignore start */
 /**
  * Load the site's content JSON using fetch.
  * @param {Location} [locationLike=globalScope?.location] - Optional base Location to resolve "content/site-content.json"; when omitted the global location is used.
@@ -622,6 +619,7 @@ function fetchSiteContentViaXHR() {
  * @param {Function} [options.applyFn] - Function invoked with content to render/apply.
  * @param {string} [options.protocol] - Optional protocol string to force loader selection (e.g., "file:"), otherwise resolved from global location.
  * @returns {Promise<void>} Promise that resolves after the content (remote or fallback) has been applied.
+ */
 function loadSiteContent(
   defaultContent = fallbackContent,
   {
@@ -752,8 +750,6 @@ function animateStats(container) {
 
   observer.observe(container);
 }
-/* c8 ignore stop */
-
 /**
  * Initialize site content, reveal-on-scroll observers, and trigger remote content loading when appropriate.
  *
@@ -780,8 +776,6 @@ function initContent(content = fallbackContent) {
     loadSiteContent(content);
   }
 }
-/* c8 ignore stop */
-
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => initContent());
@@ -803,9 +797,9 @@ export {
   secureRandomFloat,
   fetchSiteContentViaFetch,
   fetchSiteContentViaXHR,
+  loadSiteContent,
   initContent,
   initObservers,
-  loadSiteContent,
   populateNavigation,
   populateStatistics,
   setCurrentYear,

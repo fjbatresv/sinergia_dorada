@@ -135,12 +135,12 @@ function toggleInfoRow(container, value, textElement) {
 
 /**
  * Render a dog description into the provided container element.
- * 
+ *
  * If `description` is an array of strings, each item is added as text with two
  * line breaks between items. If it's a non-empty string, it is set as the
  * element's text. If no valid description is provided, the element is set to
  * 'Sin descripción disponible.'. If `descElement` is falsy, the function does nothing.
- * 
+ *
  * @param {HTMLElement|null|undefined} descElement - Container element where the description will be rendered.
  * @param {string|string[]|any} description - Description to render; may be a string or an array of strings.
  */

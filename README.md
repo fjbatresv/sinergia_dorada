@@ -1,14 +1,14 @@
 # Sinergia Dorada Website
 
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/fjbatresv/sinergia_dorada?utm_source=oss&utm_medium=github&utm_campaign=fjbatresv%2Fsinergia_dorada&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
-
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?logo=amazonaws&logoColor=white)
 ![CloudFront](https://img.shields.io/badge/CloudFront-8C4FFF?logo=amazonaws&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-vitest-green)
-![Coverage](https://img.shields.io/badge/coverage-100%25-blue)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fjbatresv_sinergia_dorada&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fjbatresv_sinergia_dorada)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fjbatresv_sinergia_dorada&metric=coverage)](https://sonarcloud.io/summary/new_code?id=fjbatresv_sinergia_dorada)
 
 Sitio oficial de **Sinergia Dorada**, una iniciativa sin fines de lucro que lleva terapia asistida con perros a hospitales, centros educativos y empresas en Guatemala.
 
@@ -18,10 +18,11 @@ Sitio oficial de **Sinergia Dorada**, una iniciativa sin fines de lucro que llev
 - **Componentización ligera**: CSS y JS divididos por responsabilidad (`styles/` y `scripts/`) para escalar fácilmente.
 - **Experiencias interactivas**: collage animado, carrusel infinito del equipo canino, testimonios, contadores y modal con detalles.
 - **Sin dependencias pesadas**: HTML + CSS + JavaScript vanilla, ideal para hosting estático (S3, Netlify, GH Pages, etc.).
+- **Cobertura y calidad en CI**: Vitest + cobertura (statements/branches >80%), ESLint, Prettier y chequeos de accesibilidad ejecutados en PRs.
 
 ## 🗂 Estructura del Proyecto
 
-```
+```bash
 content/
   ├─ site-content.json   # Textos, menús, banderas de secciones, héroe, testimonios, etc.
   └─ dogs.json           # Información del equipo canino (carrusel + modal)
@@ -52,10 +53,12 @@ index.html               # Layout principal
 ## 🚀 Ejecución Local
 
 1. Clona el repositorio y entra a la carpeta:
+
    ```bash
    git clone https://github.com/fjbatresv/sinergia_dorada.git
    cd sinergia_dorada
    ```
+
 2. Levanta un servidor estático (para que `fetch` lea los JSON):
 
    ```bash
@@ -77,9 +80,10 @@ index.html               # Layout principal
 - `npm run validate:html` — html-validate.
 - `npm run check:links` — Linkinator sirviendo la web en localhost (requiere poder abrir un puerto; en algunos entornos locales puede bloquearse).
 - `npm run test` — suite de Vitest.
-- `npm run test:coverage` — cobertura (actualmente 100% en JS).
+- `npm run test:coverage` — cobertura (≈92% statements / 80% branches sobre `content.js`, `dogs.js`, `ui.js`; se excluyen solo scripts de build/Sentry).
 - `npm run test:axe` — smoke de accesibilidad (axe-core) sobre `index.html`.
 - `npm run build` — copia vendors a `assets/vendor` y genera bundles en `dist/` (IIFE + sourcemaps).
+- Hooks locales: Husky ejecuta `lint-staged` en el pre-commit (ESLint, Prettier y tests rápidos sobre archivos staged).
 
 ## 📦 Despliegue (CI/CD)
 
@@ -121,6 +125,8 @@ El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación d
 - `check:links` levanta un servidor en `localhost:4173`; si tu entorno bloquea la apertura de puertos (p. ej. con restricciones de SO), ejecuta un server manual (`npx serve -l 4173`) antes de correr el comando.
 - El build genera bundles IIFE en `dist/`; los scripts fuente quedan sin tocar para desarrollo y tests.
 - Si usas un registry privado en local, forzar el público: `npm ci --registry=https://registry.npmjs.org`.
+- El menú móvil espera un `<ul id="nav-list" class="nav-list">` para alinearse con los selectores usados en `content.js` y `ui.js`.
+- La inicialización de Sentry registra errores y los traga (no rompe la ejecución); en entornos de prueba se omite.
 
 ## ❤️ Créditos
 

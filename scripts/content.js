@@ -1,7 +1,27 @@
 import fallbackContent from '../content/site-content.json';
 
-const globalScope = typeof globalThis !== 'undefined' ? globalThis : undefined;
+const globalScope = typeof globalThis === 'undefined' ? undefined : globalThis;
 
+/**
+ * Generate a pseudorandom floating-point number in the range [0, 1).
+ *
+ * Produces a number greater than or equal to 0 and less than 1; when the
+ * environment provides a crypto-secure source, that source is used, otherwise
+ * falls back to Math.random().
+ * @returns {number} A value >= 0 and < 1 from a cryptographically secure RNG when available, otherwise from Math.random().
+ */
+function secureRandomFloat() {
+  const crypto = globalScope?.crypto;
+  if (crypto?.getRandomValues) {
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    return buf[0] / 0x100000000;
+  }
+  // Non-cryptographic fallback; keep range [0, 1)
+  return Math.random();
+}
+
+/** Mapeo de secciones y sus selectores en el DOM. */
 const sectionsSelector = {
   hero: '#inicio',
   about: '#nosotros',
@@ -13,6 +33,15 @@ const sectionsSelector = {
   contact: '#contacto'
 };
 
+/**
+ * Toggle the visibility of all elements matching a CSS selector by adding or removing the 'section-hidden' class.
+ *
+ * Applies the 'section-hidden' CSS class when visible is false and removes it when visible is true for every element matched by the selector.
+ *
+ * @param {string} selector - CSS selector matching one or more section elements; if falsy no action is taken.
+ * @param {boolean} visible - Whether matched sections should be shown.
+ * @param {Document} [doc=document] - Document in which to query elements (defaults to the global document).
+ */
 function setSectionVisibility(selector, visible, doc = document) {
   /* c8 ignore next */
   if (!selector) return;
@@ -21,6 +50,13 @@ function setSectionVisibility(selector, visible, doc = document) {
   });
 }
 
+/**
+ * Apply visibility settings to the site's predefined sections.
+ *
+ * For each recognized section key, uses the provided mapping to show or hide that section; keys not present in the mapping are shown.
+ * @param {Record<string, boolean>} [sections={}] - Mapping of section identifiers to visibility: `true` to show, `false` to hide.
+ * @param {Document} [doc=document] - Document object whose elements will be updated; defaults to the global `document`.
+ */
 function applySectionVisibility(sections = {}, doc = document) {
   Object.entries(sectionsSelector).forEach(([key, selector]) => {
     const isVisible = Object.hasOwn(sections, key) ? !!sections[key] : true;
@@ -28,6 +64,11 @@ function applySectionVisibility(sections = {}, doc = document) {
   });
 }
 
+/**
+ * Builds the main navigation list from an array of items.
+ * @param {HTMLElement|null} list - The list element (e.g., UL/OL) to populate; no action is taken if falsy.
+ * @param {Array<{label:string,target:string}>} [items=[]] - Navigation entries; each object provides `label` (link text) and `target` (href).
+ */
 function populateNavigation(list, items = []) {
   /* c8 ignore next */
   if (!list || !Array.isArray(items) || items.length === 0) return;
@@ -43,6 +84,17 @@ function populateNavigation(list, items = []) {
   });
 }
 
+/**
+ * Render statistic cards into the given container and start their animated counters.
+ *
+ * Each stat produces a card with a numeric value (optionally prefixed with '+') and a label, then invokes the animation runner.
+ *
+ * @param {HTMLElement|null} container - Element that will receive the statistic cards; if falsy the function is a no-op.
+ * @param {Array<{label:string,value:number,plus?:boolean}>} [stats=[]] - Array of stats to render. Each item should contain:
+ *   - label: displayed text for the stat.
+ *   - value: numeric target for the animated counter.
+ *   - plus (optional): when true forces a '+' prefix; otherwise a '+' is also added if the label contains "personas impactadas" (case-insensitive).
+ */
 function populateStatistics(container, stats = []) {
   /* c8 ignore next */
   if (!container || !Array.isArray(stats) || stats.length === 0) return;
@@ -73,11 +125,25 @@ function populateStatistics(container, stats = []) {
   animateStats(container);
 }
 
+/**
+ * Normalize the input into a non-empty array.
+ *
+ * @param {*} list - Value to normalize.
+ * @returns {Array} `list` if it is an array with at least one element, otherwise an empty array.
+ */
 function ensureArray(list) {
   return Array.isArray(list) && list.length ? list : [];
 }
 
-/* c8 ignore start */
+/**
+ * Distributes matching child elements inside a container by assigning each a left/top percentage position.
+ *
+ * Positions elements selected by `itemSelector` with pseudo-random, non-overlapping coordinates (as percentage values)
+ * while avoiding a central exclusion zone. Updates each element's inline `left` and `top` styles.
+ *
+ * @param {Element} container - Parent element containing items to position.
+ * @param {string} [itemSelector='.floating-item'] - CSS selector for items to place; defaults to '.floating-item'.
+ */
 function positionFloatingItems(container, itemSelector = '.floating-item') {
   const items = container.querySelectorAll(itemSelector);
   if (!items.length) return;
@@ -94,8 +160,8 @@ function positionFloatingItems(container, itemSelector = '.floating-item') {
     let positioned = false;
 
     while (!positioned && attempts < 100) {
-      left = Math.random() * 85;
-      top = Math.random() * 85;
+      left = secureRandomFloat() * 85;
+      top = secureRandomFloat() * 85;
 
       if (Math.hypot(left - centerX, top - centerY) < minDistance) {
         attempts++;
@@ -116,6 +182,13 @@ function positionFloatingItems(container, itemSelector = '.floating-item') {
   });
 }
 
+/**
+ * Render a word cloud into the given canvas using the provided words or a fallback list.
+ * @param {HTMLCanvasElement} canvas - Canvas element where the word cloud will be drawn.
+ * @param {HTMLElement} container - Container element used to size the canvas.
+ * @param {Array.<[string, number]>} words - Array of [word, weight] pairs to display; if empty or falsy, the `fallback` list is used.
+ * @param {Array.<[string, number]>} fallback - Fallback array of [word, weight] pairs used when `words` is empty or not provided.
+ */
 function drawWordCloud(canvas, container, words, fallback) {
   if (!canvas || !container) return;
 
@@ -134,7 +207,8 @@ function drawWordCloud(canvas, container, words, fallback) {
     fontFamily: '"Poppins", sans-serif',
     color() {
       const palette = ['#D4AF37', '#C5A028', '#B08D1E', '#333333', '#555555'];
-      return palette[Math.floor(Math.random() * palette.length)];
+      const idx = Math.floor(secureRandomFloat() * palette.length);
+      return palette[idx];
     },
     rotateRatio: 0,
     backgroundColor: 'transparent',
@@ -142,8 +216,20 @@ function drawWordCloud(canvas, container, words, fallback) {
     ellipticity: 1
   });
 }
-/* c8 ignore stop */
 
+/**
+ * Injects decorative floating items into the hero collage and arranges them within the collage.
+ *
+ * Creates a container for floating items if one does not exist, clears its contents,
+ * adds one element per provided item (each rendered as a lazy-loaded image with type-based CSS classes
+ * and a staggered fade-in delay), and positions the items in a pseudo-random layout inside the collage.
+ *
+ * @param {HTMLElement|null} heroCollage - The hero collage element to populate; nothing is done if null.
+ * @param {Array<Object>} [items=[]] - Array of items to render. Each item should have:
+ *   - {string} image: URL of the image.
+ *   - {string} [alt]: Alt text for the image.
+ *   - {string} [type]: Optional type used to add a modifier CSS class (e.g., "dog").
+ */
 function applyHeroFloatingItems(heroCollage, items = []) {
   /* c8 ignore next */
   if (!heroCollage) return;
@@ -167,6 +253,18 @@ function applyHeroFloatingItems(heroCollage, items = []) {
   positionFloatingItems(container, '.floating-item');
 }
 
+/**
+ * Apply hero collage floating items and configure the call-to-action button.
+ *
+ * If `heroContent` is falsy, no changes are made.
+ *
+ * @param {HTMLElement|null} heroCollage - Container for hero floating items; may be null.
+ * @param {HTMLElement|null} ctaButton - Anchor or button element for the hero CTA; may be null.
+ * @param {object} heroContent - Content for the hero section.
+ * @param {Array<object>} [heroContent.floatingItems] - Floating items to render inside the collage.
+ * @param {string} [heroContent.ctaText] - Text to set on the CTA button.
+ * @param {string} [heroContent.ctaLink] - Href to set on the CTA button.
+ */
 function applyHeroContent(heroCollage, ctaButton, heroContent) {
   /* c8 ignore next */
   if (!heroContent) return;
@@ -178,6 +276,21 @@ function applyHeroContent(heroCollage, ctaButton, heroContent) {
   }
 }
 
+/**
+ * Populate a container with Mission, Vision, and Values cards.
+ *
+ * Renders three cards labeled "Misión", "Visión", and "Valores" inside the provided container.
+ * Each card receives a data-tab attribute of `mission`, `vision`, or `values`. The first card
+ * is given the `active` class. For each field in `about`, a string value is used as-is and an
+ * array value is joined with commas. If `container` is falsy or `about` is not provided, the
+ * function performs no action.
+ *
+ * @param {HTMLElement|null} container - Element to populate with the MVV cards; if falsy the call is a no-op.
+ * @param {Object} [about={}] - Source content for the cards.
+ * @param {string|string[]} [about.mission] - Mission text or array of phrases.
+ * @param {string|string[]} [about.vision] - Vision text or array of phrases.
+ * @param {string|string[]} [about.values] - Values text or array of phrases.
+ */
 function applyAboutContent(container, about = {}) {
   /* c8 ignore next */
   if (!container || !about) return;
@@ -204,6 +317,16 @@ function applyAboutContent(container, about = {}) {
   });
 }
 
+/**
+ * Render partner logos into the given container element.
+ *
+ * Each partner is rendered as a `.partner-logo` element containing an `<img>` using lazy loading.
+ * The image's `src` is taken from `partner.logo`, `alt` from `partner.name`, and the element
+ * includes width="180" and height="100".
+ *
+ * @param {HTMLElement|null} container - DOM element that will receive the partner logo elements; nothing is done if falsy.
+ * @param {Array<{name: string, logo: string}>} [partners=[]] - Array of partner entries with `name` (used for alt text) and `logo` (image URL).
+ */
 function applyPartners(container, partners = []) {
   /* c8 ignore next */
   if (!container || !partners.length) return;
@@ -216,6 +339,20 @@ function applyPartners(container, partners = []) {
   });
 }
 
+/**
+ * Render testimonial cards into a track element and corresponding navigation dots.
+ *
+ * Clears any existing content in the provided track and dots container, then creates
+ * a testimonial card for each item and a corresponding dot. The first testimonial
+ * is marked as featured and its dot is marked active.
+ *
+ * @param {HTMLElement|null} track - Container element that will receive testimonial cards; nothing is done if falsy.
+ * @param {HTMLElement|null} dotsContainer - Container element that will receive dot indicators; nothing is done if falsy.
+ * @param {Array<Object>} [testimonials=[]] - Array of testimonial objects. Each object may include:
+ *   - {string} quote - The testimonial text.
+ *   - {string} author - The testimonial author's name.
+ *   - {string} role - The testimonial author's role or title.
+ */
 function applyTestimonials(track, dotsContainer, testimonials = []) {
   /* c8 ignore next */
   if (!track || !Array.isArray(testimonials) || testimonials.length === 0) {
@@ -245,7 +382,16 @@ function applyTestimonials(track, dotsContainer, testimonials = []) {
   });
 }
 
-/* c8 ignore start */
+/**
+ * Sets up a horizontal testimonials carousel with autoplay, hover-to-pause, dot navigation, and optional prev/next controls.
+ *
+ * Initializes layout and active-state handling for child testimonial cards inside `track`, advances the active card automatically every 5 seconds, pauses autoplay while the pointer is over the track, and wires dot clicks and optional prev/next buttons to change the active card and restart autoplay.
+ *
+ * @param {HTMLElement} track - Container element whose direct children are testimonial cards; must be present in the document.
+ * @param {HTMLElement} dotsContainer - Container holding `.dot` elements corresponding to each card; active dot is toggled to match the active card.
+ * @param {HTMLElement|null} prevBtn - Optional element that, when provided, navigates to the previous card on click.
+ * @param {HTMLElement|null} nextBtn - Optional element that, when provided, navigates to the next card on click.
+ */
 function initTestimonialsCarousel(track, dotsContainer, prevBtn, nextBtn) {
   const cards = Array.from(track.children);
   if (!cards.length) return;
@@ -323,8 +469,21 @@ function initTestimonialsCarousel(track, dotsContainer, prevBtn, nextBtn) {
     });
   }
 }
-/* c8 ignore stop */
-
+/**
+ * Apply text content to configurable site sections by populating specific elements by ID.
+ *
+ * Populates titles, subtitles, labels, and button text for partners, testimonials, team, join, and contact sections.
+ * Elements are selected by fixed IDs (e.g., "partners-title", "testimonials-title", "join-button"). Missing elements or values are skipped.
+ * When `testimonials.titleHtml` is provided it is set as HTML; all other values are assigned to textContent.
+ *
+ * @param {Object} [sectionsContent={}] - Section content values.
+ * @param {{ title?: string, subtitle?: string }} [sectionsContent.partners] - Partners section texts.
+ * @param {{ label?: string, titleHtml?: string }} [sectionsContent.testimonials] - Testimonials texts; `titleHtml` is injected as HTML.
+ * @param {{ title?: string, subtitle?: string }} [sectionsContent.team] - Team section texts.
+ * @param {{ title?: string, text?: string, buttonText?: string }} [sectionsContent.join] - Join section texts and CTA label.
+ * @param {{ title?: string, text?: string }} [sectionsContent.contact] - Contact section texts.
+ * @param {Document} [doc=document] - Document to query and update (useful for testing or shadow DOM contexts).
+ */
 function applySectionTexts(
   { partners = {}, testimonials = {}, team = {}, join = {}, contact = {} } = {},
   doc = document
@@ -357,6 +516,14 @@ function applySectionTexts(
   });
 }
 
+/**
+ * Populate the page DOM with the provided site content.
+ *
+ * Populates or updates top-level page sections: toggles section visibility, fills navigation, injects hero content and floating items, renders about (mission/vision/values), statistics, partner logos, and testimonials. If testimonial controls and dots exist, initializes the testimonial carousel.
+ *
+ * @param {object} [content={}] - Site content object. Expected shape includes optional properties: `sections` (visibility map), `navigation` (array of {label, target}), `sectionsContent` (titles/texts for sections), `hero`, `about`, `statistics`, `partners`, and `testimonials`.
+ * @param {Document} [doc=document] - Document object to operate on (allows using a test or shadow document).
+ */
 function applySiteContent(content = {}, doc = document) {
   const heroCollage = doc.getElementById('hero-collage');
   const navList = doc.getElementById('nav-list');
@@ -387,7 +554,13 @@ function applySiteContent(content = {}, doc = document) {
   }
 }
 
-/* c8 ignore start */
+/**
+ * Load the site's content JSON using fetch.
+ * @param {Location} [locationLike=globalScope?.location] - Optional base Location to resolve "content/site-content.json"; when omitted the global location is used.
+ * @returns {any} The parsed JSON content object.
+ * @throws {Error} If no base URL is available to resolve the content URL.
+ * @throws {Error} If the fetch response has a non-OK HTTP status.
+ */
 function fetchSiteContentViaFetch(locationLike = globalScope?.location) {
   const hasLocation = !!locationLike;
   const isAboutProtocol =
@@ -404,6 +577,10 @@ function fetchSiteContentViaFetch(locationLike = globalScope?.location) {
   });
 }
 
+/**
+ * Load and parse content/site-content.json using XMLHttpRequest (intended for file:// usage).
+ * @returns {Promise<any>} The parsed JSON content from content/site-content.json. Rejects if the request fails or the response cannot be parsed.
+ */
 function fetchSiteContentViaXHR() {
   return new Promise((resolve, reject) => {
     try {
@@ -430,6 +607,19 @@ function fetchSiteContentViaXHR() {
   });
 }
 
+/**
+ * Attempts to load remote site content and applies the provided fallback if loading fails.
+ *
+ * Chooses the loader based on protocol: uses the XHR loader when the resolved protocol is "file:", otherwise uses the fetch loader. On success calls the apply function with the loaded content; on failure calls the apply function with the fallback content if one is provided.
+ *
+ * @param {object} [defaultContent=fallbackContent] - Fallback content to apply when remote loading fails.
+ * @param {Object} [options] - Optional overrides.
+ * @param {Function} [options.fetchFn] - Function that returns a promise resolving to remote content (used for non-file protocols).
+ * @param {Function} [options.xhrFn] - Function that returns a promise resolving to remote content (used for file protocol).
+ * @param {Function} [options.applyFn] - Function invoked with content to render/apply.
+ * @param {string} [options.protocol] - Optional protocol string to force loader selection (e.g., "file:"), otherwise resolved from global location.
+ * @returns {Promise<void>} Promise that resolves after the content (remote or fallback) has been applied.
+ */
 function loadSiteContent(
   defaultContent = fallbackContent,
   {
@@ -460,11 +650,23 @@ function loadSiteContent(
     });
 }
 
+/**
+ * Update the element with id "current-year" to the current calendar year.
+ * @param {Document} [doc=document] - Document to query for the target element; defaults to the global `document`.
+ */
 function setCurrentYear(doc = document) {
   const yearEl = doc.getElementById('current-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 }
 
+/**
+ * Enables reveal-on-scroll animations by observing elements and adding the `visible` class when they enter the viewport.
+ *
+ * Observes elements with the classes `.fade-in`, `.fade-in-left`, `.fade-in-right`, and `.fade-up`. When an observed element becomes visible, the `visible` class is added and the element is unobserved. If `ObserverCtor` is `null`, the function does nothing.
+ *
+ * @param {typeof IntersectionObserver|null} [ObserverCtor] - IntersectionObserver constructor to use; pass `null` to disable observer-based reveals.
+ * @param {Document} [doc=document] - Document root used to query and observe elements.
+ */
 function initObservers(
   ObserverCtor = typeof IntersectionObserver === 'undefined'
     ? null
@@ -488,6 +690,14 @@ function initObservers(
     .forEach((element) => observer.observe(element));
 }
 
+/**
+ * Animate numeric stat elements inside a container by counting from 0 to each element's `data-target`.
+ *
+ * When present, each `.stat-number` element's `data-target` defines the final value and `data-prefix` is prepended.
+ * If a `.stat-value` child exists it is updated; otherwise the `.stat-number` element itself is updated.
+ * If IntersectionObserver is available, animation is deferred until the container is approximately 20% visible; otherwise values are rendered immediately.
+ * @param {HTMLElement} container - The element containing `.stat-number` elements to animate.
+ */
 function animateStats(container) {
   const stats = container.querySelectorAll('.stat-number');
   if (!stats.length) return;
@@ -540,8 +750,15 @@ function animateStats(container) {
 
   observer.observe(container);
 }
-/* c8 ignore stop */
-
+/**
+ * Initialize site content, reveal-on-scroll observers, and trigger remote content loading when appropriate.
+ *
+ * Sets the current year in the page, registers IntersectionObservers for reveal animations,
+ * applies the provided content immediately (if any), and — unless running under Vitest or
+ * when the environment uses the `about:` protocol — attempts to load and apply remote site content.
+ *
+ * @param {object} [content=fallbackContent] - Optional content object to apply immediately and use as the fallback when loading remote content.
+ */
 function initContent(content = fallbackContent) {
   const isVitest = Boolean(
     globalScope?.__VITEST__ || globalThis?.process?.env?.VITEST
@@ -559,8 +776,6 @@ function initContent(content = fallbackContent) {
     loadSiteContent(content);
   }
 }
-/* c8 ignore stop */
-
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => initContent());
@@ -579,11 +794,12 @@ export {
   applySiteContent,
   applyTestimonials,
   drawWordCloud,
+  secureRandomFloat,
   fetchSiteContentViaFetch,
   fetchSiteContentViaXHR,
+  loadSiteContent,
   initContent,
   initObservers,
-  loadSiteContent,
   populateNavigation,
   populateStatistics,
   setCurrentYear,

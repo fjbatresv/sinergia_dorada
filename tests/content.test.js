@@ -14,7 +14,8 @@ import {
   fetchSiteContentViaXHR,
   loadSiteContent,
   setCurrentYear,
-  initObservers
+  initObservers,
+  secureRandomFloat
 } from '../scripts/content.js';
 
 describe('setSectionVisibility', () => {
@@ -481,7 +482,7 @@ describe('helpers defensivos', () => {
   it('positionFloatingItems coloca coordenadas determinísticas', () => {
     const container = document.createElement('div');
     const randomSpy = vi
-      .spyOn(Math, 'random')
+      .spyOn(content, 'secureRandomFloat')
       .mockReturnValueOnce(0.1)
       .mockReturnValueOnce(0.2)
       .mockReturnValueOnce(0.3)

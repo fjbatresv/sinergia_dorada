@@ -3,9 +3,9 @@ import { describe, it, expect, vi } from 'vitest';
 import * as dogsModule from '../scripts/dogs.js';
 import {
   createDogCard,
+  checkInfiniteScroll,
   showDogModal,
   getModalElements,
-  checkInfiniteScroll,
   hideDogModal,
   updateDimensions,
   startAutoScroll,
@@ -29,7 +29,7 @@ describe('createDogCard', () => {
   it('devuelve src vacío cuando no hay imagen disponible', () => {
     const card = createDogCard({ name: 'Brie', breed: 'Labrador' }, () => {});
 
-    expect(card.querySelector('img').getAttribute('src')).toBe('');
+    expect(card.querySelector('img').getAttribute('src')).toBeNull();
   });
 });
 
@@ -48,6 +48,13 @@ describe('updateDimensions', () => {
 
     expect(cardWidth).toBe(130);
     expect(singleSetWidth).toBe(390);
+  });
+
+  it('retorna undefined si no hay tarjetas', () => {
+    const track = document.createElement('div');
+    const result = updateDimensions(track, 2, 10);
+    expect(result.cardWidth).toBeUndefined();
+    expect(result.singleSetWidth).toBeUndefined();
   });
 });
 
@@ -95,6 +102,23 @@ describe('startAutoScroll', () => {
     expect(track.scrollLeft).toBeGreaterThan(0);
     vi.useRealTimers();
   });
+
+  it('no avanza si no hay ancho calculado', () => {
+    vi.useFakeTimers();
+    const track = document.createElement('div');
+    Object.defineProperty(track, 'scrollLeft', { value: 5, writable: true });
+
+    startAutoScroll(
+      track,
+      () => undefined,
+      () => false,
+      3
+    );
+
+    vi.advanceTimersByTime(40);
+    expect(track.scrollLeft).toBe(5);
+    vi.useRealTimers();
+  });
 });
 
 describe('showDogModal', () => {
@@ -129,6 +153,56 @@ describe('showDogModal', () => {
     expect(elements.modalInsta.style.display).toBe('inline-flex');
     expect(elements.modalDesc.innerHTML).toContain('Linea 1');
   });
+
+  it('maneja campos faltantes y usa mensajes por defecto', () => {
+    document.body.innerHTML = `
+      <div id="dog-modal"></div>
+      <img id="modal-img">
+      <div id="modal-name"></div>
+      <div id="modal-breed"></div>
+      <div id="modal-color-container"><span id="modal-color"></span></div>
+      <div id="modal-birthdate-container"><span id="modal-birthdate"></span></div>
+      <div id="modal-desc"></div>
+      <a id="modal-insta"></a>
+    `;
+
+    const elements = getModalElements(document);
+    showDogModal({ name: 'Sin IG', description: '' }, elements, document);
+
+    expect(elements.modalColorContainer.style.display).toBe('none');
+    expect(elements.modalBirthdateContainer.style.display).toBe('none');
+    expect(elements.modalInsta.style.display).toBe('none');
+    expect(elements.modalDesc.textContent).toContain(
+      'Sin descripción disponible'
+    );
+  });
+
+  it('renderiza descripción cuando es string', () => {
+    document.body.innerHTML = `
+      <div id="dog-modal"></div>
+      <img id="modal-img">
+      <div id="modal-name"></div>
+      <div id="modal-breed"></div>
+      <div id="modal-color-container"><span id="modal-color"></span></div>
+      <div id="modal-birthdate-container"><span id="modal-birthdate"></span></div>
+      <div id="modal-desc"></div>
+      <a id="modal-insta"></a>
+    `;
+    const elements = getModalElements(document);
+    showDogModal(
+      {
+        name: 'Luna',
+        breed: 'Mix',
+        description: 'Una perrita feliz',
+        instagram: 'https://instagram.com/luna'
+      },
+      elements,
+      document
+    );
+
+    expect(elements.modalDesc.textContent).toContain('Una perrita feliz');
+    expect(elements.modalInsta.style.display).toBe('inline-flex');
+  });
 });
 
 describe('hideDogModal', () => {
@@ -157,6 +231,12 @@ describe('checkInfiniteScroll', () => {
     track.scrollLeft = -10;
     const resultBack = checkInfiniteScroll(track, 100);
     expect(resultBack).toBe(90);
+  });
+
+  it('devuelve scroll actual cuando faltan argumentos', () => {
+    expect(checkInfiniteScroll(null, 100)).toBe(0);
+    const track = { scrollLeft: 10 };
+    expect(checkInfiniteScroll(track, null)).toBe(10);
   });
 });
 
@@ -227,6 +307,39 @@ describe('initDogs', () => {
     vi.useRealTimers();
   });
 
+  it('usa fetch exitoso y crea el carrusel', async () => {
+    const originalFetch = global.fetch;
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue([{ name: 'F', breed: 'G' }])
+    });
+
+    document.body.innerHTML = `
+      <div id="carousel-track"></div>
+      <button id="prev-btn"></button>
+      <button id="next-btn"></button>
+      <div id="dog-modal"></div>
+      <span class="close-modal"></span>
+      <img id="modal-img">
+      <div id="modal-name"></div>
+      <div id="modal-breed"></div>
+      <span id="modal-color"></span><div id="modal-color-container"></div>
+      <span id="modal-birthdate"></span><div id="modal-birthdate-container"></div>
+      <div id="modal-desc"></div>
+      <a id="modal-insta"></a>
+    `;
+
+    await dogsModule.initDogs();
+    expect(global.fetch).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(
+        document.querySelectorAll('#carousel-track .team-card').length
+      ).toBeGreaterThan(0);
+    });
+
+    global.fetch = originalFetch;
+  });
+
   it('usa fallback local cuando fetch falla', async () => {
     const originalFetch = global.fetch;
     global.fetch = vi.fn().mockRejectedValue(new Error('network'));
@@ -263,5 +376,81 @@ describe('initDogs', () => {
     global.fetch = originalFetch;
     consoleErrorSpy.mockRestore();
     consoleInfoSpy.mockRestore();
+  });
+
+  it('retorna cleanup y libera listeners/auto-scroll', () => {
+    vi.useFakeTimers();
+    const dogs = [{ name: 'X', breed: 'Y' }];
+    document.body.innerHTML = `
+      <div id="carousel-track"></div>
+      <button id="prev-btn"></button>
+      <button id="next-btn"></button>
+      <div id="dog-modal"></div>
+      <span class="close-modal"></span>
+      <img id="modal-img">
+      <div id="modal-name"></div>
+      <div id="modal-breed"></div>
+      <span id="modal-color"></span><div id="modal-color-container"></div>
+      <span id="modal-birthdate"></span><div id="modal-birthdate-container"></div>
+      <div id="modal-desc"></div>
+      <a id="modal-insta"></a>
+    `;
+
+    const startAutoScrollMock = vi.fn().mockReturnValue(vi.fn());
+    const track = document.getElementById('carousel-track');
+    const cleanup = setupDogsCarousel({
+      track,
+      prevBtn: document.getElementById('prev-btn'),
+      nextBtn: document.getElementById('next-btn'),
+      dogs,
+      modalElements: getModalElements(document),
+      startAutoScrollFn: startAutoScrollMock
+    });
+
+    window.dispatchEvent(new Event('resize'));
+    track.dispatchEvent(new Event('mouseenter'));
+    track.dispatchEvent(new Event('mouseleave'));
+    document.dispatchEvent(new Event('click', { bubbles: true }));
+    Object.defineProperty(document, 'hidden', {
+      value: true,
+      configurable: true
+    });
+    document.dispatchEvent(new Event('visibilitychange'));
+    Object.defineProperty(document, 'hidden', {
+      value: false,
+      configurable: true
+    });
+    document.dispatchEvent(new Event('visibilitychange'));
+
+    cleanup?.();
+    expect(startAutoScrollMock).toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it('retorna temprano cuando no existe el track', () => {
+    document.body.innerHTML = '';
+    expect(() => dogsModule.initDogs()).not.toThrow();
+  });
+});
+
+describe('defensivos adicionales', () => {
+  it('createDogCard ignora URLs no seguras', () => {
+    const card = createDogCard(
+      { image: 'ftp://example.com/img.png', name: 'Pip' },
+      () => {}
+    );
+    expect(card.querySelector('img').getAttribute('src')).toBeNull();
+  });
+
+  it('setupDogsCarousel sin datos retorna undefined', () => {
+    expect(
+      setupDogsCarousel({
+        track: null,
+        prevBtn: null,
+        nextBtn: null,
+        dogs: [],
+        modalElements: {}
+      })
+    ).toBeUndefined();
   });
 });

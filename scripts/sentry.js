@@ -1,4 +1,4 @@
-const globalScope = typeof globalThis !== 'undefined' ? globalThis : undefined;
+const globalScope = typeof globalThis === 'undefined' ? undefined : globalThis;
 const doc = globalScope?.document;
 const win = globalScope?.window ?? globalScope;
 
@@ -27,6 +27,8 @@ const release =
   '__SENTRY_RELEASE__';
 
 const isTestEnv = Boolean(win?.__VITEST__ || globalScope?.process?.env?.VITEST);
+const releaseOption = release === '__SENTRY_RELEASE__' ? undefined : release;
+const shouldInitSentry = hasValidDsn && !isTestEnv;
 
 let loadingSdk;
 const defaultSources = [
@@ -35,6 +37,15 @@ const defaultSources = [
   'https://browser.sentry-cdn.com/10.30.0/bundle.tracing.replay.min.js'
 ];
 
+/**
+ * Load the Sentry browser SDK by inserting a script tag for each configured source until one succeeds.
+ *
+ * Attempts to reuse an in-flight load or an existing global Sentry instance. Resolves with the global
+ * Sentry object when a script source initializes it; rejects if window/document are unavailable or
+ * if all provided sources fail to load or initialize Sentry.
+ *
+ * @returns {Promise<any>} The global Sentry object when loaded; rejects with an Error on failure.
+ */
 function loadSentrySdk() {
   if (!win || !doc) {
     return Promise.reject(new Error('No window/document available for Sentry'));
@@ -76,38 +87,51 @@ function loadSentrySdk() {
   return loadingSdk;
 }
 
-async function initSentry() {
-  if (!hasValidDsn || isTestEnv) return;
+/**
+ * Initialize the Sentry SDK if a valid DSN is present and not running in a test environment.
+ *
+ * When initialization runs successfully, configures integrations, calls Sentry.init with
+ * the resolved options (dsn, environment, release, sampling rates), and sets win.SENTRY_READY = true.
+ * If initialization is skipped (missing/invalid DSN or test environment) the promise resolves immediately.
+ * Errors loading or initializing the SDK are logged and swallowed; the promise resolves without throwing.
+ *
+ * @returns {Promise<void>} Resolves when initialization completes, is skipped, or when an error occurs (errors are logged, not propagated).
+ */
+function initSentry() {
+  if (!shouldInitSentry) return Promise.resolve();
 
-  try {
-    const Sentry = await loadSentrySdk();
-    if (!Sentry) return;
+  return loadSentrySdk()
+    .then((Sentry) => {
+      if (!Sentry) return;
 
-    const browserTracingIntegration = Sentry.browserTracingIntegration?.();
-    const replayIntegration = Sentry.replayIntegration?.({
-      maskAllText: false,
-      blockAllMedia: false
+      const browserTracingIntegration = Sentry.browserTracingIntegration?.();
+      const replayIntegration = Sentry.replayIntegration?.({
+        maskAllText: false,
+        blockAllMedia: false
+      });
+
+      Sentry.init({
+        dsn,
+        integrations: [browserTracingIntegration, replayIntegration].filter(
+          Boolean
+        ),
+        environment,
+        release: releaseOption,
+        tracesSampleRate: 1,
+        replaysSessionSampleRate: 0.1,
+        replaysOnErrorSampleRate: 1,
+        debug: false
+      });
+
+      if (win) {
+        win.SENTRY_READY = true;
+      }
+    })
+    .catch((error_) => {
+      console.warn('Sentry no se inicializó', error_);
     });
-
-    Sentry.init({
-      dsn,
-      integrations: [browserTracingIntegration, replayIntegration].filter(
-        Boolean
-      ),
-      environment,
-      release: release !== '__SENTRY_RELEASE__' ? release : undefined,
-      tracesSampleRate: 1.0,
-      replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
-      debug: false
-    });
-
-    if (win) {
-      win.SENTRY_READY = true;
-    }
-  } catch (error_) {
-    console.warn('Sentry no se inicializó', error_);
-  }
 }
 
-initSentry();
+const sentryReady = initSentry();
+
+export { sentryReady };

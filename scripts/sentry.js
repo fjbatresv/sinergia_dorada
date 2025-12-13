@@ -78,38 +78,41 @@ function loadSentrySdk() {
   return loadingSdk;
 }
 
-async function initSentry() {
-  try {
-    const Sentry = await loadSentrySdk();
-    if (!Sentry) return;
+function initSentry() {
+  if (!shouldInitSentry) return Promise.resolve();
 
-    const browserTracingIntegration = Sentry.browserTracingIntegration?.();
-    const replayIntegration = Sentry.replayIntegration?.({
-      maskAllText: false,
-      blockAllMedia: false
+  return loadSentrySdk()
+    .then((Sentry) => {
+      if (!Sentry) return;
+
+      const browserTracingIntegration = Sentry.browserTracingIntegration?.();
+      const replayIntegration = Sentry.replayIntegration?.({
+        maskAllText: false,
+        blockAllMedia: false
+      });
+
+      Sentry.init({
+        dsn,
+        integrations: [browserTracingIntegration, replayIntegration].filter(
+          Boolean
+        ),
+        environment,
+        release: releaseOption,
+        tracesSampleRate: 1,
+        replaysSessionSampleRate: 0.1,
+        replaysOnErrorSampleRate: 1,
+        debug: false
+      });
+
+      if (win) {
+        win.SENTRY_READY = true;
+      }
+    })
+    .catch((error_) => {
+      console.warn('Sentry no se inicializó', error_);
     });
-
-    Sentry.init({
-      dsn,
-      integrations: [browserTracingIntegration, replayIntegration].filter(
-        Boolean
-      ),
-      environment,
-      release: releaseOption,
-      tracesSampleRate: 1,
-      replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1,
-      debug: false
-    });
-
-    if (win) {
-      win.SENTRY_READY = true;
-    }
-  } catch (error_) {
-    console.warn('Sentry no se inicializó', error_);
-  }
 }
 
-const sentryReady = shouldInitSentry ? initSentry() : Promise.resolve();
+const sentryReady = initSentry();
 
 export { sentryReady };

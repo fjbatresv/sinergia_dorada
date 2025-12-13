@@ -2,6 +2,17 @@ import fallbackContent from '../content/site-content.json';
 
 const globalScope = typeof globalThis === 'undefined' ? undefined : globalThis;
 
+function secureRandomFloat() {
+  const crypto = globalScope?.crypto;
+  if (crypto?.getRandomValues) {
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    return buf[0] / 0xffffffff;
+  }
+  // deterministic fallback to avoid Math.random in unsupported environments
+  return 0.5;
+}
+
 const sectionsSelector = {
   hero: '#inicio',
   about: '#nosotros',
@@ -77,7 +88,6 @@ function ensureArray(list) {
   return Array.isArray(list) && list.length ? list : [];
 }
 
-/* c8 ignore start */
 function positionFloatingItems(container, itemSelector = '.floating-item') {
   const items = container.querySelectorAll(itemSelector);
   if (!items.length) return;
@@ -94,8 +104,8 @@ function positionFloatingItems(container, itemSelector = '.floating-item') {
     let positioned = false;
 
     while (!positioned && attempts < 100) {
-      left = Math.random() * 85;
-      top = Math.random() * 85;
+      left = secureRandomFloat() * 85;
+      top = secureRandomFloat() * 85;
 
       if (Math.hypot(left - centerX, top - centerY) < minDistance) {
         attempts++;
@@ -134,7 +144,8 @@ function drawWordCloud(canvas, container, words, fallback) {
     fontFamily: '"Poppins", sans-serif',
     color() {
       const palette = ['#D4AF37', '#C5A028', '#B08D1E', '#333333', '#555555'];
-      return palette[Math.floor(Math.random() * palette.length)];
+      const idx = Math.floor(secureRandomFloat() * palette.length);
+      return palette[idx];
     },
     rotateRatio: 0,
     backgroundColor: 'transparent',
@@ -142,7 +153,6 @@ function drawWordCloud(canvas, container, words, fallback) {
     ellipticity: 1
   });
 }
-/* c8 ignore stop */
 
 function applyHeroFloatingItems(heroCollage, items = []) {
   /* c8 ignore next */
@@ -579,6 +589,7 @@ export {
   applySiteContent,
   applyTestimonials,
   drawWordCloud,
+  secureRandomFloat,
   fetchSiteContentViaFetch,
   fetchSiteContentViaXHR,
   initContent,

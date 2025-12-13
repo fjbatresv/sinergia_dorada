@@ -6,7 +6,7 @@
  * when the menu becomes open, and reverses that when the menu is closed.
  *
  * @param {HTMLElement|null} nav - The navigation container element whose 'active' class will be toggled.
- * @param {HTMLElement|null} iconEl - Optional icon element (typically an <i>) to switch between 'fa-bars' and 'fa-times'.
+ * @param {Element|null} iconEl - Optional icon element (e.g., an <i>) to switch between 'fa-bars' and 'fa-times'.
  */
 function toggleNav(nav, iconEl) {
   if (!nav) return;
@@ -39,17 +39,20 @@ function closeNav(nav, iconEl) {
  * @param {HTMLElement|null} nav - The navigation container element; used to toggle/close the `active` state. May be null.
  * @param {HTMLElement|null} navList - The container holding navigation links; when provided a click listener is added to close the nav on link clicks. May be null.
  */
-function setupNavMenu({ menuBtn, nav, navList }) {
+function setupNavMenu({ menuBtn, nav, navList } = {}) {
   if (menuBtn && nav) {
     menuBtn.addEventListener('click', () => {
-      const icon = menuBtn.querySelector('i');
+      const icon = menuBtn?.querySelector('i');
       toggleNav(nav, icon);
     });
   }
 
   if (nav && navList) {
     navList.addEventListener('click', (event) => {
-      if (!event.target.closest('.nav-link')) return;
+      const target = event.target;
+      const isElement =
+        target instanceof Element || typeof target?.closest === 'function';
+      if (!isElement || !target.closest?.('.nav-link')) return;
       const icon = menuBtn?.querySelector('i');
       closeNav(nav, icon);
     });

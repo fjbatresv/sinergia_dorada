@@ -24,7 +24,7 @@
     "@sentry/browser": "^10.30.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.3",
-    "@vitest/coverage-v8": "^4.0.13",
+    "@vitest/coverage-v8": "^4.0.16",
     "axe-core": "^4.9.1",
     "esbuild": "^0.27.1",
     "eslint": "^9.13.0",

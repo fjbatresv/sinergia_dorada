@@ -10,8 +10,9 @@
     "lint": "eslint scripts/**/*.js",
     "format:check": "prettier --check \"**/*.{js,json,css,md,html}\"",
     "format": "prettier --write \"**/*.{js,json,css,md,html}\"",
-    "check:links": "sh -c 'python3 -m http.server 4173 >/dev/null 2>&1 & PID=$!; npx linkinator http://localhost:4173 --recurse --timeout 60000 --silent --skip \"https://.*\"; RC=$?; kill $PID; exit $RC'",
+    "check:links": "node scripts/check-links.js",
     "validate:html": "html-validate index.html",
+    "ci": "npm run test && npm run test:axe && npm run lint && npm run format:check && npm run validate:html && npm run check:links && npm run build",
     "build": "node scripts/copy-vendor.js && esbuild scripts/ui.js scripts/dogs.js scripts/content.js scripts/sentry.js --bundle --format=iife --minify --sourcemap --outdir=dist",
     "prepare": "husky install"
   },

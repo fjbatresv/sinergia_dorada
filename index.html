@@ -49,6 +49,7 @@
       });
     </script>
 
+    <!-- Data retention is managed in the Google Analytics admin UI; this snippet keeps anonymize_ip and consent only. -->
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -418,8 +419,7 @@
           document.head.appendChild(script);
           gtag('js', new Date());
           gtag('config', MEASUREMENT_ID, {
-            anonymize_ip: true,
-            data_retention: DATA_RETENTION_LABEL
+            anonymize_ip: true
           });
         }
 

@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { JSDOM } from 'jsdom';
 
-const ROOT = process.cwd();
+const ROOT = path.resolve(process.cwd());
 const SHOULD_SKIP = [
   'http://',
   'https://',
@@ -69,20 +69,22 @@ async function main() {
         issues.push({ selector, attr, value, reason: 'invalid URL' });
         return;
       }
-      if (!resolved.startsWith(ROOT)) {
+      const absoluteResolved = path.resolve(resolved);
+      const relativeToRoot = path.relative(ROOT, absoluteResolved);
+      if (relativeToRoot.startsWith('..') || path.isAbsolute(relativeToRoot)) {
         issues.push({
           selector,
           attr,
           value,
           reason: 'escaped root',
-          path: resolved
+          path: absoluteResolved
         });
         return;
       }
       checks.push(
         (async () => {
-          if (!(await fileExists(resolved))) {
-            issues.push({ selector, attr, value, path: resolved });
+          if (!(await fileExists(absoluteResolved))) {
+            issues.push({ selector, attr, value, path: absoluteResolved });
           }
         })()
       );

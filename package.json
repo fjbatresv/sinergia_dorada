@@ -20,15 +20,15 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@eslint/js": "^9.13.0",
+    "@eslint/js": "^9.39.2",
     "@fortawesome/fontawesome-free": "^7.1.0",
-    "@sentry/browser": "^10.30.0",
+    "@sentry/browser": "^10.31.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.3",
-    "@vitest/coverage-v8": "^4.0.13",
+    "@vitest/coverage-v8": "^4.0.16",
     "axe-core": "^4.9.1",
     "esbuild": "^0.27.1",
-    "eslint": "^9.13.0",
+    "eslint": "^9.39.2",
     "eslint-plugin-import": "^2.31.0",
     "html-validate": "^10.4.0",
     "husky": "^9.1.3",
@@ -37,7 +37,7 @@
     "linkinator": "^7.5.1",
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
-    "vitest": "^4.0.13",
+    "vitest": "^4.0.16",
     "wordcloud": "^1.2.2"
   }
 }

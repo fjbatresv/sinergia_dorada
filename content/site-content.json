@@ -3,7 +3,7 @@
     "hero": true,
     "about": true,
     "statistics": false,
-    "partners": false,
+    "partners": true,
     "testimonials": false,
     "team": true,
     "join": true,
@@ -108,39 +108,70 @@
     ]
   },
   "statistics": [
-    { "label": "Visitas Completadas", "value": 95 },
+    { "label": "Visitas Completadas", "value": 37 },
     { "label": "Personas Impactadas", "value": 500 },
-    { "label": "Instituciones Aliadas", "value": 25 }
+    { "label": "Instituciones Aliadas", "value": 32 }
   ],
   "partners": [
+    { "name": "24.7", "logo": "assets/partners/24.7.png" },
+    { "name": "ANINI", "logo": "assets/partners/ANINI.png" },
     {
-      "name": "Partner 1",
-      "logo": "assets/partners/logo1.png",
-      "url": "https://partner1.example.com"
+      "name": "Banco Promerica",
+      "logo": "assets/partners/BANCI PROMERICA.png"
     },
     {
-      "name": "Partner 2",
-      "logo": "assets/partners/logo2.png",
-      "url": "https://partner2.example.com"
+      "name": "Bomberos Voluntarios",
+      "logo": "assets/partners/BOMBEROS VOLUNTARIOS.jpg"
     },
-    { "name": "Partner 3", "logo": "assets/partners/logo3.png" },
+    { "name": "Canal 7", "logo": "assets/partners/CANAL 7.png" },
+    { "name": "Canal 3", "logo": "assets/partners/Canal3.png" },
     {
-      "name": "Partner 4",
-      "logo": "assets/partners/logo4.png",
-      "url": "https://partner4.example.com"
+      "name": "Casa El Alfarero",
+      "logo": "assets/partners/CASA EL ALFARERO.png"
     },
-    { "name": "Partner 5", "logo": "assets/partners/logo5.png" },
     {
-      "name": "Partner 6",
-      "logo": "assets/partners/logo6.png",
-      "url": "https://partner6.example.com"
+      "name": "Centro de Capacitación Ocupacional",
+      "logo": "assets/partners/Centro-de-Capacitacion-Ocupacional.jpg"
     },
-    { "name": "Partner 7", "logo": "assets/partners/logo7.png" },
     {
-      "name": "Partner 8",
-      "logo": "assets/partners/logo8.png",
-      "url": "https://partner8.example.com"
-    }
+      "name": "Colegio Interamericano",
+      "logo": "assets/partners/COELGIO INTERAMERICANO.png"
+    },
+    { "name": "COF", "logo": "assets/partners/COF.png" },
+    { "name": "ES COOL", "logo": "assets/partners/ES-COOL.jpeg" },
+    { "name": "FUNDABIEN", "logo": "assets/partners/FUNDABIEN.png" },
+    {
+      "name": "Fundación McDonald's",
+      "logo": "assets/partners/FUNDACION MCDONALDS.png"
+    },
+    { "name": "FUNDAL", "logo": "assets/partners/FUNDAL.jpg" },
+    { "name": "FUNDANIER", "logo": "assets/partners/FUNDANIER.png" },
+    {
+      "name": "Guatevision",
+      "logo": "assets/partners/Guatevisionlogo.jpg"
+    },
+    {
+      "name": "Hermano Pedro",
+      "logo": "assets/partners/HERMANO PEDRO.png"
+    },
+    {
+      "name": "Hogar de Fátima",
+      "logo": "assets/partners/HOGAR DE FATIMA.jpg"
+    },
+    {
+      "name": "Hospital Roosevelt",
+      "logo": "assets/partners/HOPSITAL ROOSEVELT.png"
+    },
+    { "name": "Integro", "logo": "assets/partners/INTEGRO.png" },
+    {
+      "name": "SOSEP",
+      "logo": "assets/partners/Logotipo-Secretaría_de_Obras_Sociales_de_la_Esposa_del_Presidente-SOSEP-_V.png"
+    },
+    { "name": "MSPAS", "logo": "assets/partners/MSPAS.png" },
+    { "name": "Nipro", "logo": "assets/partners/Nipro-Logo.wine.png" },
+    { "name": "UNICAR", "logo": "assets/partners/UNICAR.png" },
+    { "name": "UNAERC", "logo": "assets/partners/logo_unaerc.png" },
+    { "name": "Hospigen", "logo": "assets/partners/logohospigen.png" }
   ],
   "testimonials": [
     {

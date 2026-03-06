@@ -2,7 +2,7 @@
   "sections": {
     "hero": true,
     "about": true,
-    "statistics": false,
+    "statistics": true,
     "partners": true,
     "testimonials": false,
     "team": true,

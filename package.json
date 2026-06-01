@@ -25,7 +25,7 @@
     "@sentry/browser": "^10.31.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.3",
-    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/coverage-v8": "^4.1.8",
     "axe-core": "^4.9.1",
     "esbuild": "^0.27.1",
     "eslint": "^9.39.2",
@@ -37,7 +37,7 @@
     "linkinator": "^7.5.1",
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
-    "vitest": "^4.0.16",
+    "vitest": "^4.1.8",
     "wordcloud": "^1.2.2"
   }
 }

@@ -1,9 +1,6 @@
 node_modules
 coverage
 .git
-lighthouse-report.html
 index.html
 dist/*.js
 dist/vendor/**
-dist/vendor/**
-assets/sentry.bundle.tracing.replay.min.js

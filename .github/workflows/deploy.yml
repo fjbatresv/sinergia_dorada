@@ -6,16 +6,26 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+# Un solo deploy a la vez; los siguientes esperan en cola (no se cancelan a medias)
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production
     permissions:
-      contents: write
+      contents: write # crear tag + GitHub release
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Prepare temp workspace
         run: |
@@ -28,9 +38,9 @@ jobs:
             ./ /tmp/site/
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: |
             package-lock.json
@@ -50,69 +60,59 @@ jobs:
         working-directory: /tmp/site
         run: npm ci --registry=https://registry.npmjs.org
 
-      - name: Download Sentry bundle fallback
-        working-directory: /tmp/site
-        run: |
-          mkdir -p assets
-          curl -sfL https://browser.sentry-cdn.com/7.120.1/bundle.tracing.replay.min.js -o assets/sentry.bundle.tracing.replay.min.js
-
       - name: Build (minify JS)
         working-directory: /tmp/site
         run: npm run build
 
-      - name: Inject Sentry release
+      - name: Inject Sentry DSN and release
         working-directory: /tmp/site
         env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_RELEASE: ${{ github.sha }}
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import os
+          import re
           import sys
 
-          release = os.environ.get("SENTRY_RELEASE", "").strip()
-          if not release:
-              print("SENTRY_RELEASE no definido", file=sys.stderr)
-              sys.exit(1)
-
-          js = Path("scripts/sentry.js")
-          if not js.is_file():
-              print(f"No se encontró {js.resolve()}. Verifica la ruta del archivo.", file=sys.stderr)
-              sys.exit(1)
-
-          content = js.read_text(encoding="utf-8")
-          content = content.replace("__SENTRY_RELEASE__", release)
-          js.write_text(content, encoding="utf-8")
-          print(f"SENTRY_RELEASE inyectado en {js}")
-          PY
-      - name: Inject Sentry DSN
-        working-directory: /tmp/site
-        env:
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import os
-          import sys
-
-          dsn = os.environ.get("SENTRY_DSN", "").strip()
-          if not dsn:
-              print("SENTRY_DSN no definido", file=sys.stderr)
-              sys.exit(1)
+          values = {
+              "__SENTRY_DSN__": os.environ.get("SENTRY_DSN", "").strip(),
+              "__SENTRY_RELEASE__": os.environ.get("SENTRY_RELEASE", "").strip(),
+          }
 
           html = Path("index.html")
           if not html.is_file():
-              print(f"No se encontró {html.resolve()}. Verifica la ruta del archivo.", file=sys.stderr)
+              print(f"No se encontró {html.resolve()}.", file=sys.stderr)
               sys.exit(1)
 
           content = html.read_text(encoding="utf-8")
-          if "__SENTRY_DSN__" not in content:
-              print("Placeholder __SENTRY_DSN__ no encontrado en index.html", file=sys.stderr)
+          for placeholder, value in values.items():
+              if not value:
+                  print(f"Valor para {placeholder} no definido", file=sys.stderr)
+                  sys.exit(1)
+              if placeholder not in content:
+                  print(f"Placeholder {placeholder} no encontrado en index.html", file=sys.stderr)
+                  sys.exit(1)
+              content = content.replace(placeholder, value)
+
+          # Cache busting: los nombres de JS/CSS no llevan hash, así que se versiona
+          # la URL con el SHA del commit. Así el navegador nunca reutiliza una copia
+          # vieja (incluidas las que se cachearon antes como `immutable`).
+          version = values["__SENTRY_RELEASE__"][:12]
+          content, count = re.subn(
+              r'((?:src|href|data-sentry-src)=")((?:dist|styles)/[^"?#]+\.(?:js|css))"',
+              rf'\1\2?v={version}"',
+              content,
+          )
+          if count == 0:
+              print("No se encontraron assets locales para versionar", file=sys.stderr)
               sys.exit(1)
 
-          html.write_text(content.replace("__SENTRY_DSN__", dsn), encoding="utf-8")
-          print("SENTRY_DSN inyectado en index.html")
+          html.write_text(content, encoding="utf-8")
+          print(f"SENTRY_DSN y SENTRY_RELEASE inyectados; {count} URLs versionadas con ?v={version}")
           PY
+
       - name: Validate HTML
         working-directory: /tmp/site
         run: npm run validate:html
@@ -126,7 +126,7 @@ jobs:
         run: npm test
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -134,7 +134,7 @@ jobs:
 
       - name: Create Sentry release and upload sourcemaps
         # Se ejecuta desde el root del repo para que .git esté disponible para set_commits
-        uses: getsentry/action-release@v3
+        uses: getsentry/action-release@d55c8c3b7375607e972b710f12926b676d89d7d2 # v3.8.0
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ vars.SENTRY_ORG }}
@@ -148,18 +148,36 @@ jobs:
           set_commits: auto
           environment: ${{ vars.SENTRY_ENVIRONMENT }}
 
-      - name: Deploy assets to S3 (long cache)
+      # Ningún archivo lleva hash en el nombre, así que nada se marca "immutable":
+      # el navegador debe poder ver la versión nueva tras un deploy.
+      - name: Deploy static assets to S3 (7 days cache)
         run: |
           cd /tmp/site
           aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
             --exclude "*" \
-            --include "assets/**" \
-            --include "styles/**" \
-            --include "dist/**" \
-            --include "scripts/sentry.js" \
-            --include "content/**" \
-            --include "docs/**" \
-            --cache-control "public,max-age=31536000,immutable"
+            --include "assets/*" \
+            --include "docs/*" \
+            --include "dist/vendor/*" \
+            --cache-control "public,max-age=604800"
+
+      - name: Deploy JS, CSS and content to S3 (short cache)
+        run: |
+          cd /tmp/site
+          aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
+            --exclude "*" \
+            --include "dist/*" \
+            --exclude "dist/vendor/*" \
+            --exclude "dist/*.map" \
+            --include "styles/*" \
+            --include "content/*" \
+            --cache-control "public,max-age=300,must-revalidate"
+
+      # Los sourcemaps solo se publican en Sentry, no en el sitio
+      - name: Remove sourcemaps from S3
+        run: |
+          aws s3 rm s3://${{ vars.AWS_S3_BUCKET }}/dist/ --recursive \
+            --exclude "*" --include "*.map"
+          aws s3 rm s3://${{ vars.AWS_S3_BUCKET }}/scripts/sentry.js || true
 
       - name: Deploy HTML with short cache
         run: |
@@ -196,7 +214,7 @@ jobs:
           echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           tag_name: ${{ steps.version.outputs.new_tag }}
           name: Release ${{ steps.version.outputs.new_tag }}

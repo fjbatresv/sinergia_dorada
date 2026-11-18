@@ -1,0 +1,6 @@
+# Revisión automática de cambios sensibles (CI/CD, seguridad, build)
+/.github/              @fjbatresv
+/package.json          @fjbatresv
+/package-lock.json     @fjbatresv
+/scripts/copy-vendor.js @fjbatresv
+/sonar-project.properties @fjbatresv

@@ -330,7 +330,8 @@ function renderError(
  */
 function fetchDogsFromNetwork() {
   const url = normalizeUrl(DOGS_JSON_PATH);
-  return fetch(url).then((response) => {
+  // no-cache: siempre revalida con el servidor (evita copias viejas en el navegador)
+  return fetch(url, { cache: 'no-cache' }).then((response) => {
     if (!response?.ok) throw new Error(`HTTP ${response?.status ?? 'error'}`);
     return response.json();
   });

@@ -73,6 +73,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import os
+          import re
           import sys
 
           values = {
@@ -95,8 +96,21 @@ jobs:
                   sys.exit(1)
               content = content.replace(placeholder, value)
 
+          # Cache busting: los nombres de JS/CSS no llevan hash, así que se versiona
+          # la URL con el SHA del commit. Así el navegador nunca reutiliza una copia
+          # vieja (incluidas las que se cachearon antes como `immutable`).
+          version = values["__SENTRY_RELEASE__"][:12]
+          content, count = re.subn(
+              r'((?:src|href|data-sentry-src)=")((?:dist|styles)/[^"?#]+\.(?:js|css))"',
+              rf'\1\2?v={version}"',
+              content,
+          )
+          if count == 0:
+              print("No se encontraron assets locales para versionar", file=sys.stderr)
+              sys.exit(1)
+
           html.write_text(content, encoding="utf-8")
-          print("SENTRY_DSN y SENTRY_RELEASE inyectados en index.html")
+          print(f"SENTRY_DSN y SENTRY_RELEASE inyectados; {count} URLs versionadas con ?v={version}")
           PY
 
       - name: Validate HTML

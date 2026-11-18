@@ -132,6 +132,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      # La action de Sentry corre en un contenedor Docker que solo monta el
+      # workspace: /tmp/site no existe ahí. Se copia dist/ al workspace.
+      - name: Stage bundles for Sentry
+        run: |
+          rm -rf .sentry-dist
+          cp -R /tmp/site/dist .sentry-dist
+          rm -rf .sentry-dist/vendor
+
       - name: Create Sentry release and upload sourcemaps
         # Se ejecuta desde el root del repo para que .git esté disponible para set_commits
         uses: getsentry/action-release@d55c8c3b7375607e972b710f12926b676d89d7d2 # v3.8.0
@@ -142,11 +150,30 @@ jobs:
         with:
           release: ${{ github.sha }}
           projects: ${{ vars.SENTRY_PROJECT }}
-          sourcemaps: /tmp/site/dist
+          sourcemaps: ./.sentry-dist
+          inject: true
           url_prefix: '~/dist'
           finalize: true
           set_commits: auto
           environment: ${{ vars.SENTRY_ENVIRONMENT }}
+
+      # La action no falla si no encuentra archivos; se verifica que los Debug IDs
+      # se inyectaron y se publican esos mismos JS para que coincidan con los maps.
+      - name: Verify Sentry Debug IDs and publish injected bundles
+        run: |
+          missing=0
+          for f in .sentry-dist/*.js; do
+            if ! grep -q 'debugId' "$f"; then
+              echo "Sin Debug ID: $f" >&2
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "Sentry no procesó los bundles; no se publican sin sourcemaps." >&2
+            exit 1
+          fi
+          cp .sentry-dist/*.js /tmp/site/dist/
+          echo "Debug IDs inyectados en: $(ls .sentry-dist/*.js | xargs -n1 basename | tr '\n' ' ')"
 
       # Ningún archivo lleva hash en el nombre, así que nada se marca "immutable":
       # el navegador debe poder ver la versión nueva tras un deploy.
@@ -196,8 +223,10 @@ jobs:
       - name: Generate Next Version
         id: version
         run: |
-          # Get the latest tag, default to v0.0.0 if none exists
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          # Tag semver más alto del repo (no solo los alcanzables desde main:
+          # git describe devolvía v0.0.2 y cada deploy reescribía v0.0.3)
+          latest_tag=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)
+          latest_tag=${latest_tag:-v0.0.0}
           echo "Latest tag: $latest_tag"
 
           # Remove 'v' prefix

@@ -163,7 +163,9 @@ jobs:
         run: |
           missing=0
           for f in .sentry-dist/*.js; do
-            if ! grep -q 'debugId' "$f"; then
+            # sentry-cli añade una línea final "//# debugId=<uuid>"; buscar solo
+            # "debugId" daría falso positivo (el propio SDK contiene esa cadena).
+            if ! grep -qE '^//# debugId=[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$' "$f"; then
               echo "Sin Debug ID: $f" >&2
               missing=1
             fi

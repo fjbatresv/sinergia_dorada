@@ -4,13 +4,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: [
-      'node_modules',
-      'dist',
-      'assets',
-      'scripts/sentry.js',
-      'assets/sentry.bundle.tracing.replay.min.js'
-    ]
+    ignores: ['node_modules', 'dist', 'assets', 'scripts/sentry.js']
   },
   {
     languageOptions: {

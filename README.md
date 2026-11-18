@@ -30,8 +30,10 @@ assets/                  # Logos, fotos de perros y actividades
 scripts/
   ├─ ui.js               # Menú móvil, header sticky
   ├─ content.js          # Carga del JSON, render dinámico de secciones
-  └─ dogs.js             # Carrusel y modal del equipo
-  └─ copy-vendor.js      # Copia vendors (Font Awesome, wordcloud) a assets/vendor
+  ├─ dogs.js             # Carrusel y modal del equipo
+  ├─ sentry.js           # Inicialización diferida de Sentry
+  ├─ sentry-sdk.js       # Bundle local del SDK de Sentry (sin CDN)
+  └─ copy-vendor.js      # Copia vendors (Font Awesome, wordcloud) a dist/vendor
 styles/
   ├─ base.css            # Variables, reset, header, utilidades
   ├─ hero.css            # Estilos del collage principal
@@ -78,32 +80,35 @@ index.html               # Layout principal
 - `npm run lint` — ESLint sobre `scripts/**/*.js`.
 - `npm run format:check` — Prettier.
 - `npm run validate:html` — html-validate.
-- `npm run check:links` — Linkinator sirviendo la web en localhost (requiere poder abrir un puerto; en algunos entornos locales puede bloquearse).
+- `npm run check:links` — verifica que cada `href`/`src` local de `index.html` exista en disco (requiere `npm run build` antes, porque referencia `dist/`).
 - `npm run test` — suite de Vitest.
 - `npm run test:coverage` — cobertura (≈92% statements / 80% branches sobre `content.js`, `dogs.js`, `ui.js`; se excluyen solo scripts de build/Sentry).
 - `npm run test:axe` — smoke de accesibilidad (axe-core) sobre `index.html`.
-- `npm run build` — copia vendors a `assets/vendor` y genera bundles en `dist/` (IIFE + sourcemaps).
+- `npm run build` — copia vendors a `dist/vendor` y genera bundles en `dist/` (IIFE + sourcemaps).
 - Hooks locales: Husky ejecuta `lint-staged` en el pre-commit (ESLint, Prettier y tests rápidos sobre archivos staged).
 
 ## 📦 Despliegue (CI/CD)
 
 El flujo definido en `.github/workflows/deploy.yml`:
 
-1. Sube la versión compilada al bucket de **AWS S3**.
-2. Ejecuta una invalidación en **CloudFront** para propagar los cambios.
-3. Publica release en GitHub (tag auto-incremental) y sube sourcemaps a Sentry.
-4. Solo se publican `dist/*.js|*.map`, `assets/*`, `styles/*`, `content/*.json`; los HTML van con cache corto.
+1. Corre en el environment `production` (solo `main`), un deploy a la vez (`concurrency`).
+2. Compila, inyecta DSN y release de Sentry en `index.html`, valida y sube sourcemaps a Sentry.
+3. Sube a **AWS S3** con caché por tipo: `assets/`, `docs/`, `dist/vendor/` 7 días; `dist/*.js`, `styles/`, `content/` 5 minutos con revalidación; `index.html` 60 s. Los sourcemaps **no** se publican en S3 (solo en Sentry). Ningún archivo es `immutable` porque los nombres no llevan hash.
+4. Invalida **CloudFront** y publica un release en GitHub (tag auto-incremental).
 
-El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación de HTML, chequeo de links, tests con cobertura y un smoke de accesibilidad.
+El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación de HTML, chequeo de links, tests con cobertura y un smoke de accesibilidad. Los jobs `lint` y `test` son checks obligatorios para mergear a `main`.
+
+Todas las actions están fijadas por SHA (Dependabot las actualiza) y los workflows usan `GITHUB_TOKEN` de solo lectura salvo el deploy, que necesita `contents: write` para el release. SonarCloud se omite en PRs de Dependabot y de forks (no tienen acceso a `SONAR_TOKEN`).
 
 ### Configuración en GitHub
 
 1. Ve a `Settings > Secrets and variables > Actions`.
-2. Crea los siguientes **Secrets**:
+2. Crea los siguientes **Secrets** (preferiblemente en el environment `production`, en `Settings > Environments`; `SONAR_TOKEN` va a nivel de repositorio):
    - `AWS_ACCESS_KEY_ID`
    - `AWS_SECRET_ACCESS_KEY`
    - `SENTRY_AUTH_TOKEN` (token personal con `project:write`, `release:admin`, `organization:read`)
    - `SENTRY_DSN` (se inyecta en el deploy para no versionarlo)
+   - `SONAR_TOKEN`
 3. Agrega las **Variables**:
    - `AWS_REGION`
    - `AWS_S3_BUCKET`
@@ -111,18 +116,22 @@ El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación d
    - `SENTRY_ORG`
    - `SENTRY_PROJECT`
    - `SENTRY_ENVIRONMENT` (ej. `production`)
-4. En `Settings > Actions > General`, habilita **Workflow permissions → Read and write** para que `GITHUB_TOKEN` pueda crear releases.
+4. En `Settings > Actions > General`, deja **Workflow permissions → Read repository contents**; el workflow de deploy pide `contents: write` explícitamente.
 
 ### Sentry
 
 - El DSN se deja como placeholder en `index.html` y se inyecta en CI desde `SENTRY_DSN`.
-- El release se inyecta en CI con el SHA y sourcemaps (dist/\*.map) se suben a Sentry.
-- Sentry y vendors externos (Font Awesome, WordCloud) se sirven de `assets/vendor` para evitar cookies/terceros.
+- El release (SHA del commit) también se inyecta en `index.html` en CI y los sourcemaps (dist/\*.map) se suben a Sentry.
+- El SDK de Sentry se empaqueta desde `@sentry/browser` (`scripts/sentry-sdk.js` → `dist/sentry-sdk.js`), versionado por el lockfile; no se descarga de ningún CDN.
+- Font Awesome y WordCloud se sirven desde `dist/vendor` para evitar cookies/terceros.
 - En tests se omite Sentry para que no afecte la cobertura ni el runtime.
+
+## 🔒 Seguridad
+
+Consulta [SECURITY.md](SECURITY.md) para reportar vulnerabilidades de forma privada.
 
 ## ℹ️ Notas
 
-- `check:links` levanta un servidor en `localhost:4173`; si tu entorno bloquea la apertura de puertos (p. ej. con restricciones de SO), ejecuta un server manual (`npx serve -l 4173`) antes de correr el comando.
 - El build genera bundles IIFE en `dist/`; los scripts fuente quedan sin tocar para desarrollo y tests.
 - Si usas un registry privado en local, forzar el público: `npm ci --registry=https://registry.npmjs.org`.
 - El menú móvil espera un `<ul id="nav-list" class="nav-list">` para alinearse con los selectores usados en `content.js` y `ui.js`.

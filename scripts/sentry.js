@@ -31,10 +31,9 @@ const releaseOption = release === '__SENTRY_RELEASE__' ? undefined : release;
 const shouldInitSentry = hasValidDsn && !isTestEnv;
 
 let loadingSdk;
+// Solo se carga el bundle local (dist/sentry-sdk.js); sin fallback a CDN de terceros.
 const defaultSources = [
-  scriptWithDsn?.dataset?.sentrySrc ||
-    'assets/sentry.bundle.tracing.replay.min.js',
-  'https://browser.sentry-cdn.com/10.30.0/bundle.tracing.replay.min.js'
+  scriptWithDsn?.dataset?.sentrySrc || 'dist/sentry-sdk.js'
 ];
 
 /**

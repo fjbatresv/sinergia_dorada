@@ -1,18 +1,30 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 5
+    target-branch: 'main'
     commit-message:
-      prefix: "chore"
-      include: "scope"
-    target-branch: "develop"
-  - package-ecosystem: "github-actions"
-    directory: "/"
+      prefix: 'chore'
+      include: 'scope'
+    groups:
+      dev-minor-patch:
+        dependency-type: 'development'
+        update-types:
+          - 'minor'
+          - 'patch'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
+    target-branch: 'main'
     commit-message:
-      prefix: "chore"
-      include: "scope"
+      prefix: 'chore'
+      include: 'scope'
+    groups:
+      actions:
+        patterns:
+          - '*'

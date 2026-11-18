@@ -74,7 +74,10 @@ describe('setupHeaderShadow', () => {
     setupHeaderShadow(header);
     Object.defineProperty(window, 'scrollY', { value: 60, writable: true });
     window.dispatchEvent(new Event('scroll'));
-    expect(header.style.boxShadow).toContain('rgba(0,0,0,0.1)');
+    // jsdom 31 normaliza el valor ("rgba(0, 0, 0, 0.1) 0px 2px 20px"); se ignoran espacios.
+    expect(header.style.boxShadow.replaceAll(' ', '')).toContain(
+      'rgba(0,0,0,0.1)'
+    );
   });
 
   it('usa estilo ligero cuando no hay scroll', () => {

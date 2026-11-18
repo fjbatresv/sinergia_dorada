@@ -61,7 +61,14 @@ index.html               # Layout principal
    cd sinergia_dorada
    ```
 
-2. Levanta un servidor estático (para que `fetch` lea los JSON):
+2. Instala dependencias y genera `dist/` (`index.html` carga los bundles y los vendors desde ahí):
+
+   ```bash
+   npm ci
+   npm run build
+   ```
+
+3. Levanta un servidor estático (para que `fetch` lea los JSON):
 
    ```bash
    # Opción 1
@@ -71,7 +78,7 @@ index.html               # Layout principal
    npx serve
    ```
 
-3. Abre `http://localhost:8000` (o el puerto que corresponda).
+4. Abre `http://localhost:8000` (o el puerto que corresponda).
 
 > ⚠️ Abrir `index.html` con `file://` bloqueará la carga del contenido dinámico por CORS. Usa siempre un servidor local.
 

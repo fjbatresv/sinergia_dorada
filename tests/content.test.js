@@ -365,6 +365,18 @@ describe('fetchSiteContentViaFetch', () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
+  it('rechaza cuando el origin no es http(s)', async () => {
+    global.fetch = vi.fn();
+    await expect(
+      fetchSiteContentViaFetch({
+        href: 'file:///tmp/index.html',
+        origin: 'null',
+        protocol: 'file:'
+      })
+    ).rejects.toThrow(/No base URL/);
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
   it('rechaza si la respuesta no es ok', async () => {
     global.fetch = vi
       .fn()
@@ -372,6 +384,7 @@ describe('fetchSiteContentViaFetch', () => {
     await expect(
       fetchSiteContentViaFetch({
         href: 'https://acme.test',
+        origin: 'https://acme.test',
         protocol: 'https:'
       })
     ).rejects.toThrow('Status 500');
@@ -383,13 +396,14 @@ describe('fetchSiteContentViaFetch', () => {
     global.fetch = vi.fn().mockResolvedValue({ ok: true, json });
 
     const result = await fetchSiteContentViaFetch({
-      href: 'https://acme.test/path/',
+      href: 'https://acme.test/path/?x=1',
+      origin: 'https://acme.test',
       protocol: 'https:'
     });
 
     expect(result).toEqual(payload);
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://acme.test/path/content/site-content.json',
+      'https://acme.test/content/site-content.json',
       { cache: 'no-store' }
     );
   });

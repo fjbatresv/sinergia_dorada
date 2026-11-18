@@ -1,6 +1,7 @@
 import fallbackContent from '../content/site-content.json';
 
 const globalScope = typeof globalThis === 'undefined' ? undefined : globalThis;
+const CONTENT_JSON_PATH = 'content/site-content.json';
 
 /**
  * Generate a pseudorandom floating-point number in the range [0, 1).
@@ -556,7 +557,7 @@ function applySiteContent(content = {}, doc = document) {
 
 /**
  * Load the site's content JSON using fetch.
- * @param {Location} [locationLike=globalScope?.location] - Optional base Location to resolve "content/site-content.json"; when omitted the global location is used.
+ * @param {Location} [locationLike=globalScope?.location] - Optional Location whose http(s) origin resolves "/content/site-content.json"; when omitted the global location is used.
  * @returns {any} The parsed JSON content object.
  * @throws {Error} If no base URL is available to resolve the content URL.
  * @throws {Error} If the fetch response has a non-OK HTTP status.
@@ -570,7 +571,13 @@ function fetchSiteContentViaFetch(locationLike = globalScope?.location) {
   if (!hasLocation || isAboutProtocol) {
     return Promise.reject(new Error('No base URL to resolve content JSON'));
   }
-  const url = new URL('content/site-content.json', locationLike.href).href;
+  // Se resuelve contra el origin (no contra href) para que la URL no dependa de
+  // la ruta ni de la query de la página: siempre /content/site-content.json.
+  const origin = locationLike.origin;
+  if (typeof origin !== 'string' || !/^https?:\/\//.test(origin)) {
+    return Promise.reject(new Error('No base URL to resolve content JSON'));
+  }
+  const url = new URL(CONTENT_JSON_PATH, origin).href;
   return fetch(url, { cache: 'no-store' }).then((response) => {
     if (!response.ok) throw new Error(`Status ${response.status}`);
     return response.json();
@@ -586,7 +593,7 @@ function fetchSiteContentViaXHR() {
     try {
       const xhr = new XMLHttpRequest();
       xhr.overrideMimeType('application/json');
-      xhr.open('GET', 'content/site-content.json', true);
+      xhr.open('GET', CONTENT_JSON_PATH, true);
       xhr.onreadystatechange = function () {
         if (xhr.readyState !== 4) return;
         if (xhr.status === 200 || xhr.status === 0) {

@@ -311,7 +311,7 @@ function applyAboutContent(container, about = {}) {
       ? card.text.join(', ')
       : card.text || '';
     element.innerHTML = `
-      <h3>${card.label}</h3>
+      <h2>${card.label}</h2>
       <p>${content}</p>
     `;
     container.appendChild(element);
@@ -370,7 +370,7 @@ function applyTestimonials(track, dotsContainer, testimonials = []) {
       <div class="quote">"${testimonial.quote || ''}"</div>
       <div class="author">
         <div>
-          <h4>${testimonial.author || ''}</h4>
+          <h3>${testimonial.author || ''}</h3>
           <p>${testimonial.role || ''}</p>
         </div>
       </div>

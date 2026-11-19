@@ -208,12 +208,16 @@ jobs:
             --exclude "*" --include "*.map"
           aws s3 rm s3://${{ vars.AWS_S3_BUCKET }}/scripts/sentry.js || true
 
-      - name: Deploy HTML with short cache
+      # robots.txt y sitemap.xml viajan con index.html: cambian juntos y
+      # deben verse en cuanto se publica una versión nueva
+      - name: Deploy HTML, robots.txt and sitemap.xml with short cache
         run: |
           cd /tmp/site
           aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
             --exclude "*" \
             --include "index.html" \
+            --include "robots.txt" \
+            --include "sitemap.xml" \
             --cache-control "public,max-age=60"
 
       - name: Invalidate CloudFront Cache

@@ -42,6 +42,7 @@ dist/vendor/             # Font Awesome + wordcloud servidos localmente (sin coo
 dist/                    # Bundles minificados (IIFE) + sourcemaps generados por build
 .github/workflows/       # CI/CD (deploy a S3 + CloudFront)
 index.html               # Layout principal
+robots.txt / sitemap.xml # SEO: indexación y mapa del sitio
 ```
 
 ## 🔧 Personalización de Contenido
@@ -100,7 +101,7 @@ El flujo definido en `.github/workflows/deploy.yml`:
 
 1. Corre en el environment `production` (solo `main`), un deploy a la vez (`concurrency`).
 2. Compila, inyecta DSN y release de Sentry en `index.html`, valida y sube sourcemaps a Sentry.
-3. Sube a **AWS S3** con caché por tipo: `assets/`, `docs/`, `dist/vendor/` 7 días; `dist/*.js`, `styles/`, `content/` 5 minutos con revalidación; `index.html` 60 s. Los sourcemaps **no** se publican en S3 (solo en Sentry). Ningún archivo es `immutable` porque los nombres no llevan hash; en su lugar, el deploy agrega `?v=<sha>` a las URLs de JS/CSS en `index.html` (cache busting).
+3. Sube a **AWS S3** con caché por tipo: `assets/`, `docs/`, `dist/vendor/` 7 días; `dist/*.js`, `styles/`, `content/` 5 minutos con revalidación; `index.html`, `robots.txt` y `sitemap.xml` 60 s. Los sourcemaps **no** se publican en S3 (solo en Sentry). Ningún archivo es `immutable` porque los nombres no llevan hash; en su lugar, el deploy agrega `?v=<sha>` a las URLs de JS/CSS en `index.html` (cache busting).
 4. Invalida **CloudFront** y publica un release en GitHub (tag auto-incremental).
 
 El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación de HTML, chequeo de links, tests con cobertura y un smoke de accesibilidad. Los jobs `lint` y `test` son checks obligatorios para mergear a `main`.

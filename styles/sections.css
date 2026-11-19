@@ -645,7 +645,7 @@
   box-shadow: 0 15px 40px rgba(212, 175, 55, 0.35);
 }
 
-.mvv-card h3 {
+.mvv-card h2 {
   font-size: 1.5rem;
   color: var(--primary-gold);
   margin-bottom: 1rem;
@@ -1059,6 +1059,13 @@
   display: flex;
   align-items: flex-start;
   gap: 0.8rem;
+}
+
+/* El autor es h3 por jerarquía (va bajo el h2 de la sección); se le da
+   el mismo tamaño que tenía como h4 (1em por defecto del navegador). El
+   margen ya es 0 por el reset de base.css. */
+.testimonial-card .author h3 {
+  font-size: 1em;
 }
 
 .testimonial-author h4 {

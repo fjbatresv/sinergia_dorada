@@ -227,6 +227,29 @@ describe('applySiteContent', () => {
     document.querySelector('#testimonial-dots .dot')?.click();
   });
 
+  it('usa niveles de encabezado sin saltos (MVV h2, autor de testimonio h3)', () => {
+    applySiteContent({
+      about: { mission: 'M', vision: 'V', values: ['X'] },
+      testimonials: [
+        { quote: 'Q', author: 'Ana', role: 'R' },
+        { quote: 'Q2', role: 'R2' }
+      ]
+    });
+
+    const mvvHeadings = [
+      ...document.querySelectorAll('#mvv-cards .mvv-card')
+    ].map((card) => card.firstElementChild.tagName);
+    expect(mvvHeadings).toEqual(['H2', 'H2', 'H2']);
+    expect(
+      document.querySelector('.testimonial-card .author h3')
+    ).toHaveTextContent('Ana');
+    // Sin autor, el h3 se mantiene (vacío) para no romper la estructura
+    const authors = document.querySelectorAll('.testimonial-card .author h3');
+    expect(authors).toHaveLength(2);
+    expect(authors[1].textContent).toBe('');
+    expect(document.querySelector('.testimonial-card h4')).toBeNull();
+  });
+
   it('por defecto muestra secciones no declaradas', () => {
     applySectionVisibility({ about: false });
     expect(

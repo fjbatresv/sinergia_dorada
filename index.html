@@ -8,9 +8,11 @@
       name="description"
       content="Grupo sin fines de lucro de perros de servicio y terapia en Guatemala. Visitas a hospitales y áreas de trabajo."
     >
+    <link rel="canonical" href="https://sinergiadoradagt.com/">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sinergia Dorada">
     <meta
       property="og:title"
       content="Sinergia Dorada - Perros de Servicio y Terapia"
@@ -19,10 +21,16 @@
       property="og:description"
       content="Grupo sin fines de lucro de perros de servicio y terapia en Guatemala. Visitas a hospitales y áreas de trabajo."
     >
-    <meta property="og:url" content="https://sinergiadorada.gt/">
+    <meta property="og:url" content="https://sinergiadoradagt.com/">
     <meta
       property="og:image"
-      content="https://sinergiadorada.gt/assets/logo.jpg"
+      content="https://sinergiadoradagt.com/assets/og-image.jpg"
+    >
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta
+      property="og:image:alt"
+      content="Logo de Sinergia Dorada: dos huellas de perro con un corazón y el lema «Todo viene del corazón»"
     >
     <meta property="og:locale" content="es_GT">
 
@@ -38,7 +46,45 @@
     >
     <meta
       name="twitter:image"
-      content="https://sinergiadorada.gt/assets/logo.jpg">
+      content="https://sinergiadoradagt.com/assets/og-image.jpg"
+    >
+    <meta
+      name="twitter:image:alt"
+      content="Logo de Sinergia Dorada: dos huellas de perro con un corazón y el lema «Todo viene del corazón»"
+    >
+
+    <!-- Datos estructurados (schema.org) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "NGO",
+            "@id": "https://sinergiadoradagt.com/#organization",
+            "name": "Sinergia Dorada",
+            "url": "https://sinergiadoradagt.com/",
+            "logo": "https://sinergiadoradagt.com/assets/logo.jpg",
+            "image": "https://sinergiadoradagt.com/assets/og-image.jpg",
+            "slogan": "Todo viene del corazón",
+            "description": "Grupo sin fines de lucro de perros de servicio y terapia en Guatemala. Visitas a hospitales y áreas de trabajo.",
+            "areaServed": { "@type": "Country", "name": "Guatemala" },
+            "sameAs": [
+              "https://www.instagram.com/sinergiadoradagt/",
+              "https://www.tiktok.com/@sinergiadoradagt",
+              "https://www.facebook.com/396690473535208"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://sinergiadoradagt.com/#website",
+            "name": "Sinergia Dorada",
+            "url": "https://sinergiadoradagt.com/",
+            "inLanguage": "es-GT",
+            "publisher": { "@id": "https://sinergiadoradagt.com/#organization" }
+          }
+        ]
+      }
+    </script>
 
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -117,9 +163,15 @@
         <div class="hero-collage" id="hero-collage">
           <!-- Center Container (Logo + Button) -->
           <div class="hero-center-container fade-in-scale">
-            <div class="hero-center-logo">
-              <img src="assets/logo.jpg" alt="Sinergia Dorada Logo">
-            </div>
+            <h1 class="hero-center-logo">
+              <img
+                src="assets/logo.jpg"
+                alt="Sinergia Dorada: perros de servicio y terapia en Guatemala"
+                width="1080"
+                height="1080"
+                fetchpriority="high"
+              >
+            </h1>
             <a
               href="#contacto"
               class="btn btn-primary hero-floating-btn"

@@ -53,6 +53,39 @@
       content="Logo de Sinergia Dorada: dos huellas de perro con un corazón y el lema «Todo viene del corazón»"
     >
 
+    <!-- Datos estructurados (schema.org) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "NGO",
+            "@id": "https://sinergiadoradagt.com/#organization",
+            "name": "Sinergia Dorada",
+            "url": "https://sinergiadoradagt.com/",
+            "logo": "https://sinergiadoradagt.com/assets/logo.jpg",
+            "image": "https://sinergiadoradagt.com/assets/og-image.jpg",
+            "slogan": "Todo viene del corazón",
+            "description": "Grupo sin fines de lucro de perros de servicio y terapia en Guatemala. Visitas a hospitales y áreas de trabajo.",
+            "areaServed": { "@type": "Country", "name": "Guatemala" },
+            "sameAs": [
+              "https://www.instagram.com/sinergiadoradagt/",
+              "https://www.tiktok.com/@sinergiadoradagt",
+              "https://www.facebook.com/396690473535208"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://sinergiadoradagt.com/#website",
+            "name": "Sinergia Dorada",
+            "url": "https://sinergiadoradagt.com/",
+            "inLanguage": "es-GT",
+            "publisher": { "@id": "https://sinergiadoradagt.com/#organization" }
+          }
+        ]
+      }
+    </script>
+
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}

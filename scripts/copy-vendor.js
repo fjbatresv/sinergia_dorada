@@ -46,6 +46,16 @@ function copyNunito() {
   const destDir = join(distVendor, 'nunito');
   mkdirSync(destDir, { recursive: true });
   cpSync(src, join(destDir, 'nunito-latin-wght-normal.woff2'));
+  cpSync(
+    join(
+      projectRoot,
+      'node_modules',
+      '@fontsource-variable',
+      'nunito',
+      'LICENSE'
+    ),
+    join(destDir, 'LICENSE')
+  );
 }
 
 try {

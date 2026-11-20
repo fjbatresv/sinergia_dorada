@@ -309,7 +309,10 @@
 
 /* Join Us Section */
 .join-us {
-  background-color: var(--primary-gold-dark);
+  /* --primary-gold-darker y no -dark: el patrón blanco al 10 % de ::before
+     aclara el fondo y, con -dark, el párrafo (opacidad 0,95) bajaba a 3,9:1;
+     así queda en 5:1 */
+  background-color: var(--primary-gold-darker);
   color: white;
   text-align: center;
   padding: var(--spacing-lg) 0;
@@ -744,11 +747,13 @@
 
 /* --- Statistics Section --- */
 .statistics {
-  /* Texto blanco: el degradado anterior (#d4af37 → #b8941f) daba 2,1–2,9:1 */
+  /* Texto blanco: el degradado anterior (#d4af37 → #b8941f) daba 2,1–2,9:1.
+     Arranca en --primary-gold-darker porque las etiquetas (opacidad 0,9)
+     sobre la rejilla blanca al 5 % no llegaban a 4,5:1 con -dark */
   background: linear-gradient(
     135deg,
-    var(--primary-gold-dark) 0%,
-    var(--primary-gold-darker) 100%
+    var(--primary-gold-darker) 0%,
+    #5c4600 100%
   );
   padding: 3rem 0;
   position: relative;

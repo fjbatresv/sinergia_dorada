@@ -53,10 +53,13 @@ robots.txt / sitemap.xml # SEO: indexación y mapa del sitio
 3. **Hero collage**: agrega/quita objetos dentro de `hero.floatingItems` (`image`, `alt`, `type: "dog" | "activity"`).
 4. **Estadísticas, aliados, testimonios y redes** también viven en `site-content.json`.
 5. **Equipo canino**: edita `content/dogs.json` (nombre, raza, foto, descripción, IG, etc.).
-6. **Imágenes nuevas**: súbelas en **WebP**, con nombre en minúsculas y guiones (`assets/dogs/nombre.webp`). Redimensiona fotos a 800 px de lado máximo y logos de aliados a 400 px. Por ejemplo, con `cwebp`:
+6. **Imágenes nuevas**: súbelas en **WebP**, con nombre en minúsculas y guiones (`assets/dogs/nombre.webp`). Limita fotos a 800 px y logos de aliados a 400 px por lado. Usa `-resize 800 0` para imágenes horizontales y `-resize 0 800` para verticales; para logos aplica el mismo patrón con `400`. Si ambos lados ya están dentro del límite, omite `-resize` para no ampliar la imagen. Por ejemplo, con `cwebp`:
 
    ```bash
+   # Foto horizontal
    cwebp -q 80 -m 6 -resize 800 0 -metadata none foto.jpg -o assets/activities/actividad-AAAA-MM-DD.webp
+   # Foto vertical: para logos horizontales usa -resize 400 0; para verticales, -resize 0 400
+   cwebp -q 80 -m 6 -resize 0 800 -metadata none foto.jpg -o assets/activities/actividad-AAAA-MM-DD.webp
    ```
 
    El deploy no recodifica los WebP; solo optimiza los JPG/PNG que quedan (`logo.jpg` para JSON-LD, `og-image.jpg` para redes y `icono.jpg` como favicon).

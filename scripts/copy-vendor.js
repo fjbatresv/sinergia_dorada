@@ -34,9 +34,24 @@ function copyWordCloud() {
   cpSync(src, join(destDir, 'wordcloud2.js'));
 }
 
+function copyNunito() {
+  const src = join(
+    projectRoot,
+    'node_modules',
+    '@fontsource-variable',
+    'nunito',
+    'files',
+    'nunito-latin-wght-normal.woff2'
+  );
+  const destDir = join(distVendor, 'nunito');
+  mkdirSync(destDir, { recursive: true });
+  cpSync(src, join(destDir, 'nunito-latin-wght-normal.woff2'));
+}
+
 try {
   copyFontAwesome();
   copyWordCloud();
+  copyNunito();
   console.log('Vendor assets copied to dist/vendor');
 } catch (err) {
   console.error('Error copying vendor assets', err);

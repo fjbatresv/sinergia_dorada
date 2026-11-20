@@ -33,12 +33,12 @@ scripts/
   ├─ dogs.js             # Carrusel y modal del equipo
   ├─ sentry.js           # Inicialización diferida de Sentry
   ├─ sentry-sdk.js       # Bundle local del SDK de Sentry (sin CDN)
-  └─ copy-vendor.js      # Copia vendors (Font Awesome, wordcloud) a dist/vendor
+  └─ copy-vendor.js      # Copia vendors (Font Awesome, wordcloud, Nunito) a dist/vendor
 styles/
   ├─ base.css            # Variables, reset, header, utilidades
   ├─ hero.css            # Estilos del collage principal
   └─ sections.css        # Resto de secciones y responsive
-dist/vendor/             # Font Awesome + wordcloud servidos localmente (sin cookies 3rd-party)
+dist/vendor/             # Font Awesome, wordcloud y la fuente Nunito servidos localmente (sin cookies 3rd-party)
 dist/                    # Bundles minificados (IIFE) + sourcemaps generados por build
 .github/workflows/       # CI/CD (deploy a S3 + CloudFront)
 index.html               # Layout principal

@@ -30,10 +30,16 @@ function shouldSkipLink(value) {
   return SHOULD_SKIP.some((prefix) => trimmed.startsWith(prefix));
 }
 
+// Páginas publicadas cuyos enlaces locales se verifican
+const PAGES = ['index.html', '404.html'];
+
 function resolvePath(baseHtml, urlValue) {
   try {
-    const base = new URL(`file://${baseHtml}`);
-    const resolved = new URL(urlValue, base);
+    // Las rutas absolutas ("/styles/base.css") se resuelven contra la raíz del
+    // sitio, no contra la raíz del sistema de archivos
+    const isRootRelative = urlValue.startsWith('/');
+    const base = new URL(`file://${isRootRelative ? `${ROOT}/` : baseHtml}`);
+    const resolved = new URL(isRootRelative ? `.${urlValue}` : urlValue, base);
     if (resolved.protocol !== 'file:') {
       return null;
     }
@@ -51,12 +57,10 @@ async function fileExists(resourcePath) {
     return false;
   }
 }
-async function main() {
-  const htmlPath = path.join(ROOT, 'index.html');
+async function checkPage(page, issues, checks) {
+  const htmlPath = path.join(ROOT, page);
   const html = await fs.readFile(htmlPath, 'utf8');
   const dom = new JSDOM(html, { url: `file://${htmlPath}` });
-  const issues = [];
-  const checks = [];
 
   selectors.forEach(({ selector, attr }) => {
     dom.window.document.querySelectorAll(selector).forEach((node) => {
@@ -66,13 +70,14 @@ async function main() {
       }
       const resolved = resolvePath(htmlPath, value);
       if (!resolved) {
-        issues.push({ selector, attr, value, reason: 'invalid URL' });
+        issues.push({ page, selector, attr, value, reason: 'invalid URL' });
         return;
       }
       const absoluteResolved = path.resolve(resolved);
       const relativeToRoot = path.relative(ROOT, absoluteResolved);
       if (relativeToRoot.startsWith('..') || path.isAbsolute(relativeToRoot)) {
         issues.push({
+          page,
           selector,
           attr,
           value,
@@ -84,12 +89,27 @@ async function main() {
       checks.push(
         (async () => {
           if (!(await fileExists(absoluteResolved))) {
-            issues.push({ selector, attr, value, path: absoluteResolved });
+            issues.push({
+              page,
+              selector,
+              attr,
+              value,
+              path: absoluteResolved
+            });
           }
         })()
       );
     });
   });
+}
+
+async function main() {
+  const issues = [];
+  const checks = [];
+
+  for (const page of PAGES) {
+    await checkPage(page, issues, checks);
+  }
 
   await Promise.all(checks);
 
@@ -98,7 +118,7 @@ async function main() {
     issues.forEach((issue) => {
       const reason = issue.reason ? ` ${issue.reason}` : '';
       console.error(
-        `- ${issue.selector}[${issue.attr}]="${issue.value}"${reason} -> ${issue.path ?? ''}`.trim()
+        `- ${issue.page}: ${issue.selector}[${issue.attr}]="${issue.value}"${reason} -> ${issue.path ?? ''}`.trim()
       );
     });
     process.exit(1);

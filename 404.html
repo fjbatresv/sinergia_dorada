@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada - Sinergia Dorada</title>
+    <!-- CloudFront sirve esta página en cualquier ruta inexistente: no se indexa
+         y todas las rutas son absolutas desde la raíz -->
+    <meta name="robots" content="noindex">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap"
+      rel="stylesheet">
+    <link rel="icon" href="/assets/icono.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="/styles/base.css">
+    <style>
+      .not-found {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+        text-align: center;
+      }
+
+      .not-found__logo {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: var(--bg-light);
+        padding: 12px;
+        box-shadow: 0 15px 50px rgba(212, 175, 55, 0.3);
+      }
+
+      .not-found__logo img {
+        width: 100%;
+        height: auto;
+        border-radius: 50%;
+      }
+
+      .not-found h1 {
+        font-size: 2rem;
+        color: var(--text-dark);
+      }
+
+      .not-found p {
+        max-width: 32rem;
+        color: #555;
+      }
+
+      /* Blanco sobre --primary-gold da 3,82:1 (< 4,5:1 de WCAG AA para texto
+         normal); con --primary-gold-dark sube a 5,07:1 */
+      .not-found .btn-primary {
+        background-color: var(--primary-gold-dark);
+        border-color: var(--primary-gold-dark);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="not-found">
+      <div class="not-found__logo">
+        <img
+          src="/assets/logo.jpg"
+          alt="Sinergia Dorada"
+          width="1080"
+          height="1080">
+      </div>
+      <h1>Página no encontrada</h1>
+      <p>
+        La página que buscas no existe o cambió de lugar. Vuelve al inicio para
+        conocer a Sinergia Dorada y a nuestro equipo de perros de terapia.
+      </p>
+      <a href="/" class="btn btn-primary">Volver al inicio</a>
+    </main>
+  </body>
+</html>

@@ -208,8 +208,9 @@ jobs:
             --exclude "*" --include "*.map"
           aws s3 rm s3://${{ vars.AWS_S3_BUCKET }}/scripts/sentry.js || true
 
-      # robots.txt y sitemap.xml viajan con index.html: cambian juntos y
-      # deben verse en cuanto se publica una versión nueva
+      # robots.txt, sitemap.xml y 404.html viajan con index.html: cambian
+      # juntos y deben verse en cuanto se publica una versión nueva.
+      # CloudFront sirve 404.html para las rutas inexistentes (403/404 de S3).
       - name: Deploy HTML, robots.txt and sitemap.xml with short cache
         run: |
           cd /tmp/site
@@ -218,6 +219,7 @@ jobs:
             --include "index.html" \
             --include "robots.txt" \
             --include "sitemap.xml" \
+            --include "404.html" \
             --cache-control "public,max-age=60"
 
       - name: Invalidate CloudFront Cache

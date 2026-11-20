@@ -184,7 +184,7 @@
 
 .breed {
   display: block;
-  color: var(--primary-gold);
+  color: var(--primary-gold-dark);
   letter-spacing: 0.03em;
   font-weight: 600;
   font-size: 0.9rem;
@@ -309,7 +309,7 @@
 
 /* Join Us Section */
 .join-us {
-  background-color: var(--primary-gold);
+  background-color: var(--primary-gold-dark);
   color: white;
   text-align: center;
   padding: var(--spacing-lg) 0;
@@ -350,7 +350,7 @@
 
 .btn-white {
   background-color: white;
-  color: var(--primary-gold);
+  color: var(--primary-gold-dark);
   border: 2px solid white;
 }
 
@@ -536,7 +536,7 @@
 
 .modal-header-fixed .breed {
   font-size: 1.1rem;
-  color: var(--primary-gold);
+  color: var(--primary-gold-dark);
   font-weight: 600;
   text-transform: uppercase;
   margin-bottom: 0;
@@ -588,7 +588,7 @@
 .modal-btn {
   display: inline-flex;
   align-items: center;
-  background-color: var(--primary-gold);
+  background-color: var(--primary-gold-dark);
   color: white;
   border: none;
   transition: all 0.3s ease;
@@ -678,9 +678,9 @@
 }
 
 .value-tag:hover {
-  background: var(--primary-gold);
+  background: var(--primary-gold-dark);
   color: white;
-  border-color: var(--primary-gold);
+  border-color: var(--primary-gold-dark);
   transform: scale(1.05);
 }
 
@@ -716,7 +716,7 @@
 }
 
 .cloud-tag:hover {
-  color: var(--primary-gold);
+  color: var(--primary-gold-dark);
   transform: scale(1.1);
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -744,7 +744,12 @@
 
 /* --- Statistics Section --- */
 .statistics {
-  background: linear-gradient(135deg, #d4af37 0%, #c5a028 50%, #b8941f 100%);
+  /* Texto blanco: el degradado anterior (#d4af37 → #b8941f) daba 2,1–2,9:1 */
+  background: linear-gradient(
+    135deg,
+    var(--primary-gold-dark) 0%,
+    var(--primary-gold-darker) 100%
+  );
   padding: 3rem 0;
   position: relative;
   overflow: hidden;
@@ -943,7 +948,7 @@
 .section-label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--primary-gold);
+  color: var(--primary-gold-dark);
   letter-spacing: 2px;
   margin-bottom: 0.5rem;
 }

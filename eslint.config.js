@@ -25,5 +25,14 @@ export default [
       ...importPlugin.configs.recommended.rules,
       'import/no-unresolved': 'off'
     }
+  },
+  {
+    // Herramientas de build/CI que corren en Node, no en el navegador
+    files: ['scripts/copy-vendor.js', 'scripts/check-links.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node
+      }
+    }
   }
 ];

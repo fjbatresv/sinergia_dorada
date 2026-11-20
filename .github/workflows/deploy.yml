@@ -45,6 +45,10 @@ jobs:
           cache-dependency-path: |
             package-lock.json
 
+      # Las imágenes de contenido ya se suben al repo en WebP redimensionado.
+      # No se recodifican aquí: pasar otra vez un WebP con pérdida por
+      # -quality 82 solo degrada la imagen. Este paso queda para los JPG/PNG
+      # que se mantienen (logo, og-image, favicon).
       - name: Optimize images before deploy
         run: |
           sudo apt-get update
@@ -53,7 +57,6 @@ jobs:
           if [ -d assets ]; then
             find assets -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) -exec mogrify -strip -interlace Plane -quality 82 {} +
             find assets -type f -iname '*.png' -exec mogrify -strip -define png:compression-level=9 -define png:compression-filter=5 -define png:exclude-chunk=all {} +
-            find assets -type f -iname '*.webp' -exec mogrify -strip -quality 82 {} +
           fi
 
       - name: Install dependencies

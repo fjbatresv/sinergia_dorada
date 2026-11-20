@@ -19,66 +19,66 @@
     "ctaText": "Contáctanos",
     "ctaLink": "#contacto",
     "floatingItems": [
-      { "image": "assets/dogs/brie.png", "alt": "Brie", "type": "dog" },
-      { "image": "assets/dogs/duke.png", "alt": "Duke", "type": "dog" },
-      { "image": "assets/dogs/fontina.png", "alt": "Fontina", "type": "dog" },
-      { "image": "assets/dogs/gaia.png", "alt": "Gaia", "type": "dog" },
-      { "image": "assets/dogs/ginger.png", "alt": "Ginger", "type": "dog" },
-      { "image": "assets/dogs/lena.png", "alt": "Lena", "type": "dog" },
-      { "image": "assets/dogs/mohana.png", "alt": "Mohana", "type": "dog" },
-      { "image": "assets/dogs/pinata.png", "alt": "Piñata", "type": "dog" },
+      { "image": "assets/dogs/brie.webp", "alt": "Brie", "type": "dog" },
+      { "image": "assets/dogs/duke.webp", "alt": "Duke", "type": "dog" },
+      { "image": "assets/dogs/fontina.webp", "alt": "Fontina", "type": "dog" },
+      { "image": "assets/dogs/gaia.webp", "alt": "Gaia", "type": "dog" },
+      { "image": "assets/dogs/ginger.webp", "alt": "Ginger", "type": "dog" },
+      { "image": "assets/dogs/lena.webp", "alt": "Lena", "type": "dog" },
+      { "image": "assets/dogs/mohana.webp", "alt": "Mohana", "type": "dog" },
+      { "image": "assets/dogs/pinata.webp", "alt": "Piñata", "type": "dog" },
       {
-        "image": "assets/activities/WhatsApp Image 2025-09-16 at 11.01.16.jpeg",
+        "image": "assets/activities/actividad-2025-09-16-110116.webp",
         "alt": "Visita 16 de septiembre",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-09-25 at 19.16.08.jpeg",
+        "image": "assets/activities/actividad-2025-09-25-191608.webp",
         "alt": "Visita 25 de septiembre",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-09-29 at 12.26.44.jpeg",
+        "image": "assets/activities/actividad-2025-09-29-122644.webp",
         "alt": "Visita 29 de septiembre",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-09-29 at 12.26.46.jpeg",
+        "image": "assets/activities/actividad-2025-09-29-122646.webp",
         "alt": "Visita 29 de septiembre (2)",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-09-29 at 14.18.45.jpeg",
+        "image": "assets/activities/actividad-2025-09-29-141845.webp",
         "alt": "Visita 29 de septiembre (3)",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-09-29 at 18.00.27.jpeg",
+        "image": "assets/activities/actividad-2025-09-29-180027.webp",
         "alt": "Visita 29 de septiembre (4)",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-09-29 at 18.00.35.jpeg",
+        "image": "assets/activities/actividad-2025-09-29-180035.webp",
         "alt": "Visita 29 de septiembre (5)",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-10-08 at 19.31.24.jpeg",
+        "image": "assets/activities/actividad-2025-10-08-193124.webp",
         "alt": "Visita 8 de octubre",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.22.52.jpeg",
+        "image": "assets/activities/actividad-2025-10-08-202252.webp",
         "alt": "Visita 8 de octubre (2)",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.28.00.jpeg",
+        "image": "assets/activities/actividad-2025-10-08-202800.webp",
         "alt": "Visita 8 de octubre (3)",
         "type": "activity"
       },
       {
-        "image": "assets/activities/WhatsApp Image 2025-10-08 at 20.58.03.jpeg",
+        "image": "assets/activities/actividad-2025-10-08-205803.webp",
         "alt": "Visita 8 de octubre (4)",
         "type": "activity"
       }
@@ -113,103 +113,103 @@
     { "label": "Instituciones Aliadas", "value": 32 }
   ],
   "partners": [
-    { "name": "24.7", "logo": "assets/partners/24.7.png" },
-    { "name": "ANINI", "logo": "assets/partners/ANINI.png" },
+    { "name": "24.7", "logo": "assets/partners/24-7.webp" },
+    { "name": "ANINI", "logo": "assets/partners/anini.webp" },
     {
       "name": "Banco Promerica",
-      "logo": "assets/partners/BANCI PROMERICA.png"
+      "logo": "assets/partners/banco-promerica.webp"
     },
     {
       "name": "Bomberos Voluntarios",
-      "logo": "assets/partners/BOMBEROS VOLUNTARIOS.jpg"
+      "logo": "assets/partners/bomberos-voluntarios.webp"
     },
-    { "name": "Canal 7", "logo": "assets/partners/CANAL 7.png" },
-    { "name": "Canal 3", "logo": "assets/partners/Canal3.png" },
+    { "name": "Canal 7", "logo": "assets/partners/canal-7.webp" },
+    { "name": "Canal 3", "logo": "assets/partners/canal-3.webp" },
     {
       "name": "Casa El Alfarero",
-      "logo": "assets/partners/CASA EL ALFARERO.png"
+      "logo": "assets/partners/casa-el-alfarero.webp"
     },
     {
       "name": "Centro de Capacitación Ocupacional",
-      "logo": "assets/partners/Centro-de-Capacitacion-Ocupacional.jpg"
+      "logo": "assets/partners/centro-de-capacitacion-ocupacional.webp"
     },
     {
       "name": "Colegio Interamericano",
-      "logo": "assets/partners/COELGIO INTERAMERICANO.png"
+      "logo": "assets/partners/colegio-interamericano.webp"
     },
-    { "name": "COF", "logo": "assets/partners/COF.png" },
-    { "name": "ES COOL", "logo": "assets/partners/ES-COOL.jpeg" },
-    { "name": "FUNDABIEN", "logo": "assets/partners/FUNDABIEN.png" },
+    { "name": "COF", "logo": "assets/partners/cof.webp" },
+    { "name": "ES COOL", "logo": "assets/partners/es-cool.webp" },
+    { "name": "FUNDABIEN", "logo": "assets/partners/fundabien.webp" },
     {
       "name": "Fundación McDonald's",
-      "logo": "assets/partners/FUNDACION MCDONALDS.png"
+      "logo": "assets/partners/fundacion-mcdonalds.webp"
     },
-    { "name": "FUNDAL", "logo": "assets/partners/FUNDAL.jpg" },
-    { "name": "FUNDANIER", "logo": "assets/partners/FUNDANIER.png" },
+    { "name": "FUNDAL", "logo": "assets/partners/fundal.webp" },
+    { "name": "FUNDANIER", "logo": "assets/partners/fundanier.webp" },
     {
       "name": "Guatevision",
-      "logo": "assets/partners/Guatevisionlogo.jpg"
+      "logo": "assets/partners/guatevision.webp"
     },
     {
       "name": "Hermano Pedro",
-      "logo": "assets/partners/HERMANO PEDRO.png"
+      "logo": "assets/partners/hermano-pedro.webp"
     },
     {
       "name": "Hogar de Fátima",
-      "logo": "assets/partners/HOGAR DE FATIMA.jpg"
+      "logo": "assets/partners/hogar-de-fatima.webp"
     },
     {
       "name": "Hospital Roosevelt",
-      "logo": "assets/partners/HOPSITAL ROOSEVELT.png"
+      "logo": "assets/partners/hospital-roosevelt.webp"
     },
-    { "name": "Integro", "logo": "assets/partners/INTEGRO.png" },
+    { "name": "Integro", "logo": "assets/partners/integro.webp" },
     {
       "name": "SOSEP",
-      "logo": "assets/partners/Logotipo-Secretaría_de_Obras_Sociales_de_la_Esposa_del_Presidente-SOSEP-_V.png"
+      "logo": "assets/partners/sosep.webp"
     },
-    { "name": "MSPAS", "logo": "assets/partners/MSPAS.png" },
-    { "name": "Nipro", "logo": "assets/partners/Nipro-Logo.wine.png" },
-    { "name": "UNICAR", "logo": "assets/partners/UNICAR.png" },
-    { "name": "UNAERC", "logo": "assets/partners/logo_unaerc.png" },
-    { "name": "Hospigen", "logo": "assets/partners/logohospigen.png" }
+    { "name": "MSPAS", "logo": "assets/partners/mspas.webp" },
+    { "name": "Nipro", "logo": "assets/partners/nipro.webp" },
+    { "name": "UNICAR", "logo": "assets/partners/unicar.webp" },
+    { "name": "UNAERC", "logo": "assets/partners/unaerc.webp" },
+    { "name": "Hospigen", "logo": "assets/partners/hospigen.webp" }
   ],
   "testimonials": [
     {
       "quote": "La visita de Sinergia Dorada a nuestro hospital fue increíble. Los pacientes se iluminaron al ver a los perros, y el ambiente se llenó de alegría y esperanza.",
       "author": "María González",
       "role": "Directora, Hospital San Juan",
-      "photo": "assets/testimonials/person1.jpg"
+      "photo": "assets/testimonials/person1.webp"
     },
     {
       "quote": "Nuestros empleados esperan con ansias las visitas de Sinergia Dorada. El estrés laboral disminuye notablemente y el ambiente de trabajo mejora.",
       "author": "Carlos Méndez",
       "role": "Gerente de RRHH, Empresa Tech",
-      "photo": "assets/testimonials/person2.jpg",
+      "photo": "assets/testimonials/person2.webp",
       "featured": true
     },
     {
       "quote": "Los niños en nuestro centro han mostrado avances increíbles desde que comenzaron las sesiones con los perros de terapia. Es hermoso ver cómo se conectan.",
       "author": "Ana Rodríguez",
       "role": "Terapeuta, Centro Infantil",
-      "photo": "assets/testimonials/person3.jpg"
+      "photo": "assets/testimonials/person3.webp"
     },
     {
       "quote": "La terapia asistida con perros ha transformado la vida de muchos de nuestros pacientes. El equipo de Sinergia Dorada es excepcional y muy profesional.",
       "author": "Dr. Roberto Pérez",
       "role": "Médico, Clínica de Rehabilitación",
-      "photo": "assets/testimonials/person1.jpg"
+      "photo": "assets/testimonials/person1.webp"
     },
     {
       "quote": "Como institución educativa, valoramos enormemente las visitas de Sinergia Dorada. Los estudiantes aprenden sobre empatía y responsabilidad de manera práctica.",
       "author": "Lic. Patricia Morales",
       "role": "Directora, Colegio Internacional",
-      "photo": "assets/testimonials/person2.jpg"
+      "photo": "assets/testimonials/person2.webp"
     },
     {
       "quote": "El impacto positivo en nuestros adultos mayores es innegable. Los perros traen alegría y compañía que mejora significativamente su calidad de vida.",
       "author": "Enf. Laura Castillo",
       "role": "Coordinadora, Hogar de Ancianos",
-      "photo": "assets/testimonials/person3.jpg"
+      "photo": "assets/testimonials/person3.webp"
     }
   ],
   "sectionsContent": {

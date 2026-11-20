@@ -14,11 +14,11 @@ npm test                 # vitest (jsdom), single run
 npx vitest --no-watch tests/dogs.test.js        # single test file
 npx vitest --no-watch -t "setSectionVisibility" # single test by name
 npm run test:coverage    # v8 coverage -> coverage/lcov.info (used by SonarCloud)
-npm run test:axe         # axe-core accessibility check against index.html
+npm run test:axe         # axe-core accessibility check against index.html and 404.html
 npm run lint             # eslint scripts/**/*.js
 npm run format           # prettier --write (format:check in CI)
-npm run validate:html    # html-validate index.html
-npm run check:links      # verifies local href/src in index.html exist on disk (needs a build first: dist/ is referenced)
+npm run validate:html    # html-validate index.html 404.html
+npm run check:links      # verifies local href/src in index.html and 404.html exist on disk (needs a build first: dist/ is referenced)
 npm run ci               # everything above + build
 ```
 

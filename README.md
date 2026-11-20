@@ -43,6 +43,7 @@ dist/                    # Bundles minificados (IIFE) + sourcemaps generados por
 .github/workflows/       # CI/CD (deploy a S3 + CloudFront)
 index.html               # Layout principal
 robots.txt / sitemap.xml # SEO: indexación y mapa del sitio
+404.html                 # Página de error que CloudFront sirve en rutas inexistentes (noindex)
 ```
 
 ## 🔧 Personalización de Contenido
@@ -87,11 +88,11 @@ robots.txt / sitemap.xml # SEO: indexación y mapa del sitio
 
 - `npm run lint` — ESLint sobre `scripts/**/*.js`.
 - `npm run format:check` — Prettier.
-- `npm run validate:html` — html-validate.
-- `npm run check:links` — verifica que cada `href`/`src` local de `index.html` exista en disco (requiere `npm run build` antes, porque referencia `dist/`).
+- `npm run validate:html` — html-validate sobre `index.html` y `404.html`.
+- `npm run check:links` — verifica que cada `href`/`src` local de `index.html` y `404.html` exista en disco (las rutas `/...` se resuelven contra la raíz del repo) (requiere `npm run build` antes, porque referencia `dist/`).
 - `npm run test` — suite de Vitest.
 - `npm run test:coverage` — cobertura (≈92% statements / 80% branches sobre `content.js`, `dogs.js`, `ui.js`; se excluyen solo scripts de build/Sentry).
-- `npm run test:axe` — smoke de accesibilidad (axe-core) sobre `index.html`.
+- `npm run test:axe` — smoke de accesibilidad (axe-core) sobre `index.html` y `404.html`.
 - `npm run build` — copia vendors a `dist/vendor` y genera bundles en `dist/` (IIFE + sourcemaps).
 - Hooks locales: Husky ejecuta `lint-staged` en el pre-commit (ESLint, Prettier y tests rápidos sobre archivos staged).
 
@@ -101,7 +102,7 @@ El flujo definido en `.github/workflows/deploy.yml`:
 
 1. Corre en el environment `production` (solo `main`), un deploy a la vez (`concurrency`).
 2. Compila, inyecta DSN y release de Sentry en `index.html`, valida y sube sourcemaps a Sentry.
-3. Sube a **AWS S3** con caché por tipo: `assets/`, `docs/`, `dist/vendor/` 7 días; `dist/*.js`, `styles/`, `content/` 5 minutos con revalidación; `index.html`, `robots.txt` y `sitemap.xml` 60 s. Los sourcemaps **no** se publican en S3 (solo en Sentry). Ningún archivo es `immutable` porque los nombres no llevan hash; en su lugar, el deploy agrega `?v=<sha>` a las URLs de JS/CSS en `index.html` (cache busting).
+3. Sube a **AWS S3** con caché por tipo: `assets/`, `docs/`, `dist/vendor/` 7 días; `dist/*.js`, `styles/`, `content/` 5 minutos con revalidación; `index.html`, `404.html`, `robots.txt` y `sitemap.xml` 60 s. Los sourcemaps **no** se publican en S3 (solo en Sentry). Ningún archivo es `immutable` porque los nombres no llevan hash; en su lugar, el deploy agrega `?v=<sha>` a las URLs de JS/CSS en `index.html` (cache busting).
 4. Invalida **CloudFront** y publica un release en GitHub (tag auto-incremental).
 
 El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación de HTML, chequeo de links, tests con cobertura y un smoke de accesibilidad. Los jobs `lint` y `test` son checks obligatorios para mergear a `main`.

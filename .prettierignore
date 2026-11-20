@@ -2,5 +2,6 @@ node_modules
 coverage
 .git
 index.html
+404.html
 dist/*.js
 dist/vendor/**

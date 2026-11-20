@@ -182,10 +182,11 @@ jobs:
 
       # Ningún archivo lleva hash en el nombre, así que nada se marca "immutable":
       # el navegador debe poder ver la versión nueva tras un deploy.
+      # Se conservan los assets retirados porque el JSON anterior puede seguir en caché.
       - name: Deploy static assets to S3 (7 days cache)
         run: |
           cd /tmp/site
-          aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
+          aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} \
             --exclude "*" \
             --include "assets/*" \
             --include "docs/*" \

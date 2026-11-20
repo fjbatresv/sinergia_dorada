@@ -185,7 +185,7 @@ jobs:
       - name: Deploy static assets to S3 (7 days cache)
         run: |
           cd /tmp/site
-          aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
+          aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} \
             --exclude "*" \
             --include "assets/*" \
             --include "docs/*" \
@@ -224,6 +224,18 @@ jobs:
             --include "sitemap.xml" \
             --include "404.html" \
             --cache-control "public,max-age=60"
+
+      # Se borra al final para que el HTML/JSON anterior no apunte a imágenes ya eliminadas
+      # mientras dura el deploy.
+      - name: Remove stale static assets from S3
+        run: |
+          cd /tmp/site
+          aws s3 sync . s3://${{ vars.AWS_S3_BUCKET }} --delete \
+            --exclude "*" \
+            --include "assets/*" \
+            --include "docs/*" \
+            --include "dist/vendor/*" \
+            --cache-control "public,max-age=604800"
 
       - name: Invalidate CloudFront Cache
         run: |

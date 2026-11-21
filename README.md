@@ -53,13 +53,19 @@ robots.txt / sitemap.xml # SEO: indexación y mapa del sitio
 3. **Hero collage**: agrega/quita objetos dentro de `hero.floatingItems` (`image`, `alt`, `type: "dog" | "activity"`).
 4. **Estadísticas, aliados, testimonios y redes** también viven en `site-content.json`.
 5. **Equipo canino**: edita `content/dogs.json` (nombre, raza, foto, descripción, IG, etc.).
-6. **Imágenes nuevas**: súbelas en **WebP**, con nombre en minúsculas y guiones (`assets/dogs/nombre.webp`). Limita fotos a 800 px y logos de aliados a 400 px por lado. Usa `-resize 800 0` para imágenes horizontales y `-resize 0 800` para verticales; para logos aplica el mismo patrón con `400`. Si ambos lados ya están dentro del límite, omite `-resize` para no ampliar la imagen. Por ejemplo, con `cwebp`:
+6. **Imágenes nuevas**: súbelas en **WebP**, con nombre en minúsculas y guiones (`assets/dogs/nombre.webp`). Limita fotos a 800 px y logos de aliados a 400 px por lado. Las fotos usadas en el hero necesitan variantes `-200.webp` y `-400.webp`; las fotos del equipo también llevan `-600.webp`. El logo central del hero usa `logo-440.webp`. Usa `-resize 800 0` para imágenes horizontales y `-resize 0 800` para verticales; para logos aplica el mismo patrón con `400`. Si ambos lados ya están dentro del límite, omite `-resize` para no ampliar la imagen. Por ejemplo, con `cwebp`:
 
    ```bash
    # Foto horizontal
    cwebp -q 80 -m 6 -resize 800 0 -metadata none foto.jpg -o assets/activities/actividad-AAAA-MM-DD.webp
    # Foto vertical: para logos horizontales usa -resize 400 0; para verticales, -resize 0 400
    cwebp -q 80 -m 6 -resize 0 800 -metadata none foto.jpg -o assets/activities/actividad-AAAA-MM-DD.webp
+   cwebp -q 82 -m 6 -resize 200 0 -metadata none assets/activities/actividad-AAAA-MM-DD.webp -o assets/activities/actividad-AAAA-MM-DD-200.webp
+   cwebp -q 82 -m 6 -resize 400 0 -metadata none assets/activities/actividad-AAAA-MM-DD.webp -o assets/activities/actividad-AAAA-MM-DD-400.webp
+   cwebp -q 82 -m 6 -resize 200 0 -metadata none assets/dogs/nombre.webp -o assets/dogs/nombre-200.webp
+   cwebp -q 82 -m 6 -resize 400 0 -metadata none assets/dogs/nombre.webp -o assets/dogs/nombre-400.webp
+   cwebp -q 82 -m 6 -resize 600 0 -metadata none assets/dogs/nombre.webp -o assets/dogs/nombre-600.webp
+   cwebp -q 82 -m 6 -resize 440 0 -metadata none assets/logo.webp -o assets/logo-440.webp
    ```
 
    El deploy no recodifica los WebP; solo optimiza los JPG/PNG que quedan (`logo.jpg` para JSON-LD, `og-image.jpg` para redes y `icono.jpg` como favicon).

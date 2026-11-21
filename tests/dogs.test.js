@@ -26,6 +26,19 @@ describe('createDogCard', () => {
     expect(onOpen).toHaveBeenCalledWith(dog);
   });
 
+  it('usa variantes responsivas en las tarjetas con imágenes WebP', () => {
+    const card = createDogCard(
+      { image: '/assets/dogs/brie.webp', name: 'Brie' },
+      () => {}
+    );
+    const img = card.querySelector('img');
+
+    expect(img.srcset).toBe(
+      `${globalThis.location.origin}/assets/dogs/brie-400.webp 400w, ${globalThis.location.origin}/assets/dogs/brie-600.webp 600w`
+    );
+    expect(img.sizes).toBe('300px');
+  });
+
   it('devuelve src vacío cuando no hay imagen disponible', () => {
     const card = createDogCard({ name: 'Brie', breed: 'Labrador' }, () => {});
 

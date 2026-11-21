@@ -44,6 +44,11 @@ function createDogCard(dog, onOpen = () => {}) {
   const normalizedSrc = normalizeUrl(dog?.image);
   if (normalizedSrc) {
     img.src = normalizedSrc;
+    if (dog.image.endsWith('.webp')) {
+      const path = normalizedSrc.slice(0, -5);
+      img.srcset = `${path}-400.webp 400w, ${path}-600.webp 600w`;
+      img.sizes = '300px';
+    }
   } else {
     img.removeAttribute('src');
   }

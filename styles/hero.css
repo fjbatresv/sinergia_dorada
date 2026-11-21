@@ -151,3 +151,32 @@
   color: var(--text-dark);
   /* Ensure subtitle color is dark */
 }
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-center-logo {
+    width: 250px;
+    height: 250px;
+  }
+
+  .floating-dog {
+    width: 80px;
+    height: 80px;
+  }
+
+  .floating-activity {
+    width: 70px;
+    height: 70px;
+  }
+}

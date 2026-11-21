@@ -101,6 +101,23 @@ describe('applyHeroFloatingItems y applyHeroContent', () => {
     expect(heroCollage.querySelectorAll('.floating-item').length).toBe(1);
     expect(heroCollage.querySelector('.floating-items')).toBe(existing);
   });
+
+  it('elige variantes responsivas para perros y actividades WebP', () => {
+    const heroCollage = document.createElement('div');
+    applyHeroFloatingItems(heroCollage, [
+      { image: 'assets/dogs/brie.webp', type: 'dog' },
+      { image: 'assets/activities/visita.webp', type: 'activity' }
+    ]);
+
+    const [dogImage, activityImage] = heroCollage.querySelectorAll('img');
+    expect(dogImage.srcset).toBe(
+      'assets/dogs/brie-200.webp 200w, assets/dogs/brie-400.webp 400w, assets/dogs/brie-600.webp 600w'
+    );
+    expect(dogImage.sizes).toBe('(max-width: 768px) 100px, 200px');
+    expect(activityImage.srcset).toBe(
+      'assets/activities/visita-200.webp 200w, assets/activities/visita-400.webp 400w'
+    );
+  });
 });
 
 describe('applySectionTexts', () => {

@@ -247,7 +247,22 @@ function applyHeroFloatingItems(heroCollage, items = []) {
     const typeClass = item.type ? ` floating-${item.type}` : '';
     const floatingItem = document.createElement('div');
     floatingItem.className = `floating-item floating-dog${typeClass} fade-in delay-${(index % 5) + 1}`;
-    floatingItem.innerHTML = `<img src="${item.image}" alt="${item.alt || ''}" loading="lazy" width="320" height="320" decoding="async">`;
+    const img = document.createElement('img');
+    img.src = item.image;
+    img.alt = item.alt || '';
+    img.loading = 'lazy';
+    img.width = 320;
+    img.height = 320;
+    img.decoding = 'async';
+    img.sizes = '(max-width: 768px) 100px, 200px';
+    if (item.image?.endsWith('.webp')) {
+      const path = item.image.slice(0, -5);
+      img.srcset =
+        item.type === 'dog'
+          ? `${path}-200.webp 200w, ${path}-400.webp 400w, ${path}-600.webp 600w`
+          : `${path}-200.webp 200w, ${path}-400.webp 400w`;
+    }
+    floatingItem.appendChild(img);
     container.appendChild(floatingItem);
   });
 

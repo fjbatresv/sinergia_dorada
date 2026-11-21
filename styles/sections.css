@@ -266,30 +266,6 @@
 }
 
 /* Animations */
-.fade-in-left {
-  opacity: 0;
-  transform: translateX(-30px);
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s ease;
-}
-
-.fade-in-right {
-  opacity: 0;
-  transform: translateX(30px);
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s ease;
-}
-
-.fade-up {
-  opacity: 0;
-  transform: translateY(30px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
-}
-
 /* Join Us Section */
 .join-us {
   /* --primary-gold-darker y no -dark: el patrón blanco al 10 % de ::before

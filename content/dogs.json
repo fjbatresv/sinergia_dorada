@@ -1,7 +1,7 @@
 [
   {
     "name": "Brie",
-    "image": "assets/dogs/brie.png",
+    "image": "assets/dogs/brie.webp",
     "breed": "Golden Retriever",
     "color": "Dorado",
     "description": [
@@ -28,7 +28,7 @@
   },
   {
     "name": "Duke",
-    "image": "assets/dogs/duke.png",
+    "image": "assets/dogs/duke.webp",
     "breed": "Doberman",
     "color": "Cafe y Negro",
     "description": [
@@ -42,7 +42,7 @@
   },
   {
     "name": "Fontina",
-    "image": "assets/dogs/fontina.png",
+    "image": "assets/dogs/fontina.webp",
     "breed": "Golden Retriever",
     "color": "Dorado",
     "description": [
@@ -55,7 +55,7 @@
   },
   {
     "name": "Gaia",
-    "image": "assets/dogs/gaia.png",
+    "image": "assets/dogs/gaia.webp",
     "breed": "Terra Nova",
     "color": "Negro",
     "birthdate": "28/06/2023",
@@ -68,7 +68,7 @@
   },
   {
     "name": "Ginger",
-    "image": "assets/dogs/ginger.png",
+    "image": "assets/dogs/ginger.webp",
     "breed": "Golden Retriever",
     "color": "Dorado",
     "description": [
@@ -80,7 +80,7 @@
   },
   {
     "name": "Lena",
-    "image": "assets/dogs/lena.png",
+    "image": "assets/dogs/lena.webp",
     "breed": "Doberman",
     "color": "Cafe",
     "description": [
@@ -93,7 +93,7 @@
   },
   {
     "name": "Mohana",
-    "image": "assets/dogs/mohana.png",
+    "image": "assets/dogs/mohana.webp",
     "breed": "Golden Retriever",
     "color": "Dorado",
     "description": [
@@ -106,7 +106,7 @@
   },
   {
     "name": "Piñata",
-    "image": "assets/dogs/pinata.png",
+    "image": "assets/dogs/pinata.webp",
     "breed": "Bulldog Frances",
     "color": "Negro y Blanco",
     "description": [

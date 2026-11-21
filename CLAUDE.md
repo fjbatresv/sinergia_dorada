@@ -28,7 +28,7 @@ Pre-commit (Husky + lint-staged) runs prettier, `eslint --fix`, and the full vit
 
 ## Architecture
 
-- **`index.html`** is the single page. All sections exist statically in the HTML; JS fills/toggles them. It loads `dist/ui.js`, `dist/content.js`, `dist/dogs.js`, `dist/sentry.js` (all `defer`), plus vendored Font Awesome and wordcloud2 from `dist/vendor/` (served locally to avoid third-party cookies). Google Analytics is loaded inline in `index.html`.
+- **`index.html`** is the single page. All sections exist statically in the HTML; JS fills/toggles them. It loads `dist/ui.js`, `dist/content.js`, `dist/dogs.js`, `dist/sentry.js` (all `defer`), plus vendored Font Awesome, wordcloud2 and the Nunito variable font (latin subset, `@fontsource-variable/nunito`) from `dist/vendor/` (served locally to avoid third-party cookies; no Google Fonts). The `@font-face` lives in `styles/base.css` and `index.html`/`404.html` preload the same woff2 URL — keep them in sync. Google Analytics is loaded inline in `index.html`.
 - **`scripts/*.js` are ES module sources; `dist/` is the build output** (gitignored). Each source is bundled independently by esbuild as an IIFE — there is no shared runtime between bundles; they communicate only through the DOM.
 - **Content is data-driven**: `content/site-content.json` (section on/off flags in `sections`, navigation, hero collage `floatingItems`, statistics, partners, testimonials, section texts) and `content/dogs.json` (dog carousel + modal). Prefer editing JSON over HTML for content changes.
   - `content.js` / `dogs.js` `import` the JSON as a bundled fallback, render it immediately, then fetch the live JSON over the network (`content.js` falls back to XHR) and re-render. So JSON edits work both bundled and fetched.

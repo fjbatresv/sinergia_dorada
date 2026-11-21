@@ -1,5 +1,3 @@
-/* eslint-env node */
-/* global process */
 import { cpSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -36,9 +34,34 @@ function copyWordCloud() {
   cpSync(src, join(destDir, 'wordcloud2.js'));
 }
 
+function copyNunito() {
+  const src = join(
+    projectRoot,
+    'node_modules',
+    '@fontsource-variable',
+    'nunito',
+    'files',
+    'nunito-latin-wght-normal.woff2'
+  );
+  const destDir = join(distVendor, 'nunito');
+  mkdirSync(destDir, { recursive: true });
+  cpSync(src, join(destDir, 'nunito-latin-wght-normal.woff2'));
+  cpSync(
+    join(
+      projectRoot,
+      'node_modules',
+      '@fontsource-variable',
+      'nunito',
+      'LICENSE'
+    ),
+    join(destDir, 'LICENSE')
+  );
+}
+
 try {
   copyFontAwesome();
   copyWordCloud();
+  copyNunito();
   console.log('Vendor assets copied to dist/vendor');
 } catch (err) {
   console.error('Error copying vendor assets', err);

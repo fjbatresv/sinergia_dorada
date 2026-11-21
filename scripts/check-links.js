@@ -1,5 +1,3 @@
-/* eslint-env node */
-/* global process */
 import fs from 'fs/promises';
 import path from 'path';
 import { JSDOM } from 'jsdom';

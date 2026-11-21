@@ -29,14 +29,23 @@ function shouldSkipLink(value) {
 }
 
 // Páginas publicadas cuyos enlaces locales se verifican
-const PAGES = ['index.html', '404.html'];
+const PAGES = [
+  'index.html',
+  '404.html',
+  'portfolio/index.html',
+  'portfolio/es/index.html',
+  'portfolio/404.html'
+];
 
 function resolvePath(baseHtml, urlValue) {
   try {
     // Las rutas absolutas ("/styles/base.css") se resuelven contra la raíz del
     // sitio, no contra la raíz del sistema de archivos
     const isRootRelative = urlValue.startsWith('/');
-    const base = new URL(`file://${isRootRelative ? `${ROOT}/` : baseHtml}`);
+    const siteRoot = baseHtml.includes(`${path.sep}portfolio${path.sep}`)
+      ? `${ROOT}/portfolio/`
+      : `${ROOT}/`;
+    const base = new URL(`file://${isRootRelative ? siteRoot : baseHtml}`);
     const resolved = new URL(isRootRelative ? `.${urlValue}` : urlValue, base);
     if (resolved.protocol !== 'file:') {
       return null;

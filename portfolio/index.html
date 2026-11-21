@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0F1A17">
+  <title>Sinergia Dorada — Nonprofit site case study | Portfolio</title>
+  <meta name="description" content="How a volunteer-editable nonprofit website became fast, accessible infrastructure for dog-assisted therapy in Guatemala.">
+  <link rel="canonical" href="https://sinergia.fjbatresv.com/">
+  <link rel="alternate" hreflang="en" href="https://sinergia.fjbatresv.com/">
+  <link rel="alternate" hreflang="es" href="https://sinergia.fjbatresv.com/es/">
+  <link rel="alternate" hreflang="x-default" href="https://sinergia.fjbatresv.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sinergia.fjbatresv.com/">
+  <meta property="og:title" content="Sinergia Dorada — Nonprofit site case study">
+  <meta property="og:description" content="A technical report on building an accessible, volunteer-editable nonprofit website.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_GT">
+  <meta property="og:image" content="https://sinergia.fjbatresv.com/assets/og-en.jpg">
+  <meta property="og:image:alt" content="Technical Report Vol. 03 — Sinergia Dorada case study">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sinergia Dorada — Nonprofit site case study">
+  <meta name="twitter:description" content="A technical report on building an accessible, volunteer-editable nonprofit website.">
+  <meta name="twitter:image" content="https://sinergia.fjbatresv.com/assets/og-en.jpg">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/schibsted-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://fjbatresv.com/#person","name":"Javier Batres","url":"https://fjbatresv.com/","sameAs":["https://github.com/fjbatresv"]},{"@type":"WebSite","@id":"https://sinergia.fjbatresv.com/#website","url":"https://sinergia.fjbatresv.com/","name":"Sinergia Dorada — Technical Report"},{"@type":"WebPage","@id":"https://sinergia.fjbatresv.com/#webpage","url":"https://sinergia.fjbatresv.com/","name":"Sinergia Dorada — Nonprofit site case study","isPartOf":{"@id":"https://sinergia.fjbatresv.com/#website"},"inLanguage":"en"},{"@type":"TechArticle","headline":"A nonprofit website, built like infrastructure.","author":{"@id":"https://fjbatresv.com/#person"},"about":{"@type":"NGO","name":"Sinergia Dorada","url":"https://sinergiadoradagt.com/"},"inLanguage":"en"}]}
+  </script>
+  <script defer src="reveal.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><nav class="wrap nav" aria-label="Main navigation">
+  <a class="brand" href="#top">Sinergia Dorada <span aria-hidden="true">—</span> Technical Report</a>
+  <div class="navlinks"><a href="#architecture">Architecture</a><a href="#decisions">Decisions</a><a href="#quality">Quality</a><a href="#contact">Contact</a><a class="lang" href="/es/" lang="es">ES</a><a href="https://fjbatresv.com/">fjbatresv.com ↗</a></div>
+</nav></header>
+<main id="main">
+  <section class="hero" id="top"><div class="wrap hero-grid">
+    <div class="hero-copy"><p class="folio">Technical Report · Vol. 03 · 2026</p><h1>A nonprofit website, built like infrastructure.</h1><p class="lede">Sinergia Dorada brings dog-assisted therapy to communities across Guatemala. Its team can update the site without a developer, with no server to maintain.</p><div class="actions"><a class="button primary" href="mailto:fjbatresv@gmail.com?subject=Project%20inquiry%20%E2%80%94%20via%20Sinergia%20case%20study">Build something like this</a><a class="button" href="https://sinergiadoradagt.com/">See the live site ↗</a><a class="button" href="https://github.com/fjbatresv/sinergia_dorada">Source ↗</a></div></div>
+    <figure class="hero-photo"><img src="assets/brie.webp" width="600" height="600" alt="Brie, a therapy dog with Sinergia Dorada" fetchpriority="high"></figure>
+  </div></section>
+  <section class="reveal" id="brief"><div class="wrap"><div class="section-heading"><span class="number">01</span><div><p class="eyebrow">The brief</p><h2>More care. Less upkeep.</h2><p class="section-copy">The nonprofit needed volunteers to publish updates, near-zero hosting cost, a quick experience on mobile networks, accessible content, and no third-party tracking cookies.</p></div></div>
+    <div class="metrics" role="group" aria-label="Measured project results"><div class="metric"><strong>68</strong><span>Automated checks</span></div><div class="metric"><strong>93%</strong><span>Statement coverage</span></div><div class="metric"><strong>30</strong><span>Merged pull requests</span></div><div class="metric"><strong>104 KB</strong><span>JavaScript gzip</span></div><div class="metric"><strong>0</strong><span>Servers to maintain</span></div></div>
+  </div></section>
+  <section class="reveal" id="architecture"><div class="wrap"><div class="section-heading"><span class="number">02</span><div><p class="eyebrow">Architecture</p><h2>Small pieces. Clear boundaries.</h2><p class="section-copy">Static data becomes independent browser bundles. CI checks each change before files reach S3 and CloudFront; the browser receives a cacheable site without an application server.</p></div></div>
+    <div class="architecture"><svg class="diagram" viewBox="0 0 600 285" role="img" aria-labelledby="diagram-title diagram-desc"><title id="diagram-title">Sinergia Dorada delivery architecture</title><desc id="diagram-desc">JSON content flows through esbuild and GitHub Actions to S3 and CloudFront, then the browser. Sentry, SonarCloud, and CodeRabbit support monitoring and review.</desc><g class="line"><path d="M120 75h55m90 0h55m90 0h55m-300 0v130m90-130v130m90-130v130m90-130v130"/><path d="M120 205h145m90 0h110"/></g><g class="node"><rect x="15" y="48" width="105" height="54" rx="3"/><rect x="175" y="48" width="90" height="54" rx="3"/><rect x="320" y="48" width="90" height="54" rx="3"/><rect x="465" y="48" width="120" height="54" rx="3"/><rect x="15" y="180" width="105" height="50" rx="3"/><rect x="265" y="180" width="90" height="50" rx="3"/><rect x="445" y="180" width="140" height="50" rx="3"/></g><g text-anchor="middle"><text x="67" y="80">content/*.json</text><text x="220" y="80">esbuild</text><text x="365" y="80">GitHub Actions</text><text x="525" y="80">S3 → CloudFront</text><text x="67" y="210">Sentry</text><text x="310" y="210">SonarCloud</text><text x="515" y="210">CodeRabbit</text></g></svg>
+      <div><p class="eyebrow">Read the diagram as a list</p><ol class="read-list"><li>Volunteers update JSON content.</li><li>esbuild creates separate IIFE bundles.</li><li>GitHub Actions runs lint, format, HTML, links, coverage and accessibility checks.</li><li>S3 stores the static site; CloudFront serves it with HTTPS, HSTS and a www redirect.</li><li>Sentry receives errors and private sourcemaps; SonarCloud and CodeRabbit review quality.</li></ol></div>
+    </div>
+  </div></section>
+  <section class="reveal" id="how"><div class="wrap"><div class="section-heading"><span class="number">03</span><div><p class="eyebrow">How it works</p><h2>Content first, then the network.</h2><p class="section-copy">The JSON bundled with the page renders immediately as a fallback. The browser then fetches the editable live JSON and updates the page. Section flags decide what appears; independent bundles communicate through the DOM.</p></div></div>
+    <div class="screens"><img src="assets/site-desktop.webp" width="1000" height="625" alt="Sinergia Dorada website displayed on a desktop screen" loading="lazy"><img src="assets/site-mobile.webp" width="390" height="844" alt="Sinergia Dorada website displayed on a mobile screen" loading="lazy"></div>
+  </div></section>
+  <section class="decisions reveal" id="decisions"><div class="wrap"><div class="section-heading"><span class="number">04</span><div><p class="eyebrow">Decisions worth defending</p><h2>Trade-offs, in the open.</h2><p class="section-copy">Each choice solves a constraint and names its cost. The footnotes point to the source that implements it.</p></div></div>
+    <div class="decision-grid">
+      <article class="decision"><p class="mono">D—01 · Runtime</p><h3>Vanilla HTML, CSS and JS</h3><p>No framework runtime or build-time app platform. The trade-off: more care in DOM coordination as features grow.</p><a href="https://github.com/fjbatresv/sinergia_dorada/tree/main/scripts">Source note ↗</a></article>
+      <article class="decision"><p class="mono">D—02 · Content</p><h3>JSON instead of a CMS</h3><p>Structured files make volunteer updates reviewable in Git. The trade-off: editing still happens through a pull request.</p><a href="https://github.com/fjbatresv/sinergia_dorada/tree/main/content">Source note ↗</a></article>
+      <article class="decision"><p class="mono">D—03 · Delivery</p><h3>S3 plus CloudFront</h3><p>A custom domain, HTTPS and HSTS, with a redirect for www and cache behavior by asset type. The trade-off: deploy configuration lives in AWS.</p><a href="https://github.com/fjbatresv/sinergia_dorada/blob/main/.github/workflows/deploy.yml">Source note ↗</a></article>
+      <article class="decision"><p class="mono">D—04 · Caching</p><h3>Readable filenames, staged TTLs</h3><p>Without hashed filenames, HTML is cached for 60 seconds, code and content for 5 minutes, and static assets for 7 days. The trade-off: invalidation and cache policy need discipline.</p><a href="https://github.com/fjbatresv/sinergia_dorada/blob/main/.github/workflows/deploy.yml">Source note ↗</a></article>
+      <article class="decision"><p class="mono">D—05 · Privacy</p><h3>Fonts and icons served locally</h3><p>No Google Fonts or third-party font requests. The trade-off: local assets need their own updates.</p><a href="https://github.com/fjbatresv/sinergia_dorada/blob/main/scripts/copy-vendor.js">Source note ↗</a></article>
+      <article class="decision"><p class="mono">D—06 · Monitoring</p><h3>Sentry loads only when needed</h3><p>A deferred local SDK subset keeps error monitoring outside the initial page path. The trade-off: errors before it loads are not reported.</p><a href="https://github.com/fjbatresv/sinergia_dorada/tree/main/scripts">Source note ↗</a></article>
+      <article class="decision"><p class="mono">D—07 · Supply chain</p><h3>Actions pinned to full SHAs</h3><p>Workflow dependencies use immutable commit references, and main is protected. The trade-off: action updates require deliberate review.</p><a href="https://github.com/fjbatresv/sinergia_dorada/blob/main/.github/workflows/test.yml">Source note ↗</a></article>
+      <article class="decision"><p class="mono">D—08 · Images</p><h3>WebP at responsive sizes</h3><p>Pre-sized dog photos keep mobile downloads modest. The trade-off: source images need a maintained set of variants.</p><a href="https://github.com/fjbatresv/sinergia_dorada/tree/main/assets/dogs">Source note ↗</a></article>
+    </div>
+  </div></section>
+  <section class="reveal" id="quality"><div class="wrap"><div class="section-heading"><span class="number">05</span><div><p class="eyebrow">Quality &amp; security</p><h2>Every change clears a gate.</h2><p class="section-copy">The checks run before merge and protect the small, static architecture from quiet regressions.</p></div></div>
+    <div class="quality-grid"><ul class="checks"><li>ESLint and Prettier</li><li>HTML validation and local link checks</li><li>Vitest with coverage thresholds above 80%</li><li>axe accessibility smoke test</li><li>SonarCloud analysis</li><li>CodeRabbit review and Dependabot updates</li><li>Husky with lint-staged; SECURITY.md</li><li>HSTS, SPF/DMARC and www redirect</li></ul><div><p class="eyebrow">Recent chapters</p><div class="timeline"><p><strong>#83 · SEO foundation</strong><br>Canonical URLs, metadata and structured data.</p><p><strong>#84 · Useful 404</strong><br>A route for pages that are not found.</p><p><strong>#85 · AA contrast</strong><br>Color choices brought up to contrast requirements.</p><p><strong>#86–87 · Performance</strong><br>WebP image handling, local font preload and mobile rendering.</p></div></div></div>
+  </div></section>
+  <section class="reveal" id="principles"><div class="wrap"><div class="section-heading"><span class="number">06</span><div><p class="eyebrow">Principles</p><h2>Keep the work useful.</h2></div></div><div class="principles"><article><h3>Content before code</h3><p>Make the update path clear for the people who use it.</p></article><article><h3>Nothing to maintain without need</h3><p>Keep infrastructure small enough to explain.</p></article><article><h3>Accessible by default</h3><p>Make the experience work for more people.</p></article><article><h3>Every change has a gate</h3><p>Catch regressions before they reach visitors.</p></article></div></div></section>
+  <section class="contact reveal" id="contact"><div class="wrap"><div class="section-heading"><span class="number">07</span><div><p class="eyebrow">Contact</p><h2>Need a site like this for your organization?</h2><p class="section-copy">I build clear, resilient websites for teams doing work that matters.</p></div></div><div class="contact-cards"><article class="contact-card"><h3>Hire me</h3><p>Have a role or an ongoing need?</p><a class="button primary" href="mailto:fjbatresv@gmail.com?subject=Hiring%20%E2%80%94%20via%20Sinergia%20case%20study">Start a conversation ↗</a></article><article class="contact-card"><h3>Build something similar</h3><p>Tell me what your organization needs.</p><a class="button" href="mailto:fjbatresv@gmail.com?subject=Project%20inquiry%20%E2%80%94%20via%20Sinergia%20case%20study">Discuss a project ↗</a></article></div><p class="more-link"><a href="https://fjbatresv.com/">More about Javier at fjbatresv.com ↗</a></p></div></section>
+</main>
+<footer class="site-footer"><div class="wrap footer-row"><span>Built with plain HTML &amp; CSS, hosted on GitHub Pages.</span><span><a href="https://github.com/fjbatresv/sinergia_dorada">Source</a><a href="https://fjbatresv.com/">fjbatresv.com</a><a href="https://sdg19.fjbatresv.com/">SDG19 case study</a><a href="https://pettzi.fjbatresv.com/">Pettzi case study</a></span></div></footer>
+</body>
+</html>

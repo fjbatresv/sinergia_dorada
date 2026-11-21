@@ -53,7 +53,7 @@ robots.txt / sitemap.xml # SEO: indexación y mapa del sitio
 3. **Hero collage**: agrega/quita objetos dentro de `hero.floatingItems` (`image`, `alt`, `type: "dog" | "activity"`).
 4. **Estadísticas, aliados, testimonios y redes** también viven en `site-content.json`.
 5. **Equipo canino**: edita `content/dogs.json` (nombre, raza, foto, descripción, IG, etc.).
-6. **Imágenes nuevas**: súbelas en **WebP**, con nombre en minúsculas y guiones (`assets/dogs/nombre.webp`). Limita fotos a 800 px y logos de aliados a 400 px por lado. Las fotos usadas en el hero necesitan variantes `-200.webp` y `-400.webp`; las fotos del equipo también llevan `-600.webp`. El logo central del hero usa `logo-440.webp`. Usa `-resize 800 0` para imágenes horizontales y `-resize 0 800` para verticales; para logos aplica el mismo patrón con `400`. Si ambos lados ya están dentro del límite, omite `-resize` para no ampliar la imagen. Por ejemplo, con `cwebp`:
+6. **Imágenes nuevas**: súbelas en **WebP**, con nombre en minúsculas y guiones (`assets/dogs/nombre.webp`). Limita fotos a 800 px y logos de aliados a 400 px por lado. Las actividades del hero necesitan variantes `-200.webp` y `-400.webp`; los perros del hero necesitan `-200.webp`, `-400.webp` y `-600.webp`; los perros del equipo necesitan `-400.webp` y `-600.webp`. El logo central del hero usa `logo-440.webp`. Usa `-resize 800 0` para imágenes horizontales y `-resize 0 800` para verticales; para logos aplica el mismo patrón con `400`. Si ambos lados ya están dentro del límite, omite `-resize` para no ampliar la imagen. Por ejemplo, con `cwebp`:
 
    ```bash
    # Foto horizontal

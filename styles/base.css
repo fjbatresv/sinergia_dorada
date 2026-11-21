@@ -198,6 +198,22 @@ img {
   color: var(--text-dark);
 }
 
+.section-hidden {
+  display: none !important;
+}
+
+.fade-in.visible,
+.fade-in-left.visible,
+.fade-in-right.visible,
+.fade-up.visible {
+  opacity: 1;
+  transform: translate(0);
+}
+
+.modal {
+  display: none;
+}
+
 /* Privacy section and cookie banner */
 .section.privacy {
   background-color: var(--bg-light);
@@ -278,6 +294,32 @@ img {
 }
 
 @media (max-width: 768px) {
+  .nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    height: 100vh;
+    background-color: white;
+    padding: 4rem 2rem;
+    transition: 0.4s ease;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav.active {
+    right: 0;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+    z-index: 1001;
+  }
+
   .cookie-banner {
     border-radius: 1rem;
     bottom: 0.5rem;

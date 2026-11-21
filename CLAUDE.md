@@ -48,3 +48,9 @@ Vitest + jsdom + `@testing-library/jest-dom` (`tests/setup.js`). Tests build DOM
 - All actions are pinned by commit SHA with a `# vX.Y.Z` comment, and the repo enforces SHA pinning; keep that format when adding actions. Workflows default to `contents: read`.
 - `main` is protected by a ruleset: changes go through PRs and the `lint` and `test` checks must pass.
 - Never commit a real Sentry DSN; `index.html` must keep the `__SENTRY_DSN__` and `__SENTRY_RELEASE__` placeholders (deploy fails without them).
+
+## Portfolio landing
+
+- `portfolio/` is a separate static case-study landing (English at `/`, Spanish at `/es/`) deployed by `.github/workflows/portfolio.yml` to GitHub Pages. Keep the S3 deploy exclusion in `deploy.yml`.
+- Keep portfolio fonts self-hosted in `portfolio/fonts/`; `scripts/copy-portfolio-fonts.js` copies their latin WOFF2 files during `npm run build`.
+- Portfolio HTML is included in `validate:html`, `check:links` and the axe smoke tests.

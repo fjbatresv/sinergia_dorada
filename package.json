@@ -13,7 +13,8 @@
     "check:links": "node scripts/check-links.js",
     "validate:html": "html-validate index.html 404.html portfolio/index.html portfolio/es/index.html portfolio/404.html",
     "ci": "npm run test && npm run test:axe && npm run lint && npm run format:check && npm run validate:html && npm run build && npm run check:links",
-    "build": "node scripts/copy-vendor.js && node scripts/copy-portfolio-fonts.js && esbuild scripts/ui.js scripts/dogs.js scripts/content.js scripts/sentry.js scripts/sentry-sdk.js --bundle --format=iife --minify --sourcemap --outdir=dist",
+    "build": "node scripts/copy-vendor.js && esbuild scripts/ui.js scripts/dogs.js scripts/content.js scripts/sentry.js scripts/sentry-sdk.js --bundle --format=iife --minify --sourcemap --outdir=dist",
+    "fonts:portfolio": "node scripts/copy-portfolio-fonts.js",
     "prepare": "husky install"
   },
   "engines": {

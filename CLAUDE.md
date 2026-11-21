@@ -52,5 +52,5 @@ Vitest + jsdom + `@testing-library/jest-dom` (`tests/setup.js`). Tests build DOM
 ## Portfolio landing
 
 - `portfolio/` is a separate static case-study landing (English at `/`, Spanish at `/es/`) deployed by `.github/workflows/portfolio.yml` to GitHub Pages. Keep the S3 deploy exclusion in `deploy.yml`.
-- Keep portfolio fonts self-hosted in `portfolio/fonts/`; `scripts/copy-portfolio-fonts.js` copies their latin WOFF2 files during `npm run build`.
+- Keep portfolio fonts self-hosted and committed in `portfolio/fonts/`; refresh copies with `npm run fonts:portfolio`, never as part of the S3 build.
 - Portfolio HTML is included in `validate:html`, `check:links` and the axe smoke tests.

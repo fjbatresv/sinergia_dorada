@@ -2,8 +2,12 @@ import { copyFile, mkdir } from 'node:fs/promises';
 
 const fonts = [
   [
-    '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2',
+    '@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2',
     'fraunces-latin.woff2'
+  ],
+  [
+    '@fontsource-variable/fraunces/files/fraunces-latin-wght-italic.woff2',
+    'fraunces-latin-italic.woff2'
   ],
   [
     '@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2',

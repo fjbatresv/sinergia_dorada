@@ -125,7 +125,7 @@ El flujo de PR (`.github/workflows/test.yml`) corre lint, formato, validación d
 
 ## Portafolio
 
-La landing del caso de estudio está en `portfolio/`, con inglés en `/` y español en `/es/`. El workflow `.github/workflows/portfolio.yml` la publica en GitHub Pages; el deploy a S3 excluye esta carpeta para que no aparezca en el sitio principal. Los HTML del portafolio también pasan validación, chequeo de enlaces y axe en CI.
+La landing del caso de estudio está en `portfolio/`, con inglés en `/` y español en `/es/`. El workflow `.github/workflows/portfolio.yml` la publica en GitHub Pages; el deploy conserva esta carpeta para las comprobaciones; los syncs a S3 usan allowlists y nunca deben incluir `portfolio/`. Los HTML del portafolio también pasan validación, chequeo de enlaces y axe en CI.
 
 Todas las actions están fijadas por SHA (Dependabot las actualiza) y los workflows usan `GITHUB_TOKEN` de solo lectura salvo el deploy, que necesita `contents: write` para el release. SonarCloud se omite en PRs de Dependabot y de forks (no tienen acceso a `SONAR_TOKEN`).
 

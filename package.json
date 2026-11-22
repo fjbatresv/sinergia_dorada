@@ -11,9 +11,10 @@
     "format:check": "prettier --check \"**/*.{js,json,css,md,html}\"",
     "format": "prettier --write \"**/*.{js,json,css,md,html}\"",
     "check:links": "node scripts/check-links.js",
-    "validate:html": "html-validate index.html 404.html",
+    "validate:html": "html-validate index.html 404.html portfolio/index.html portfolio/es/index.html portfolio/404.html",
     "ci": "npm run test && npm run test:axe && npm run lint && npm run format:check && npm run validate:html && npm run build && npm run check:links",
     "build": "node scripts/copy-vendor.js && esbuild scripts/ui.js scripts/dogs.js scripts/content.js scripts/sentry.js scripts/sentry-sdk.js --bundle --format=iife --minify --sourcemap --outdir=dist",
+    "fonts:portfolio": "node scripts/copy-portfolio-fonts.js",
     "prepare": "husky install"
   },
   "engines": {
@@ -21,7 +22,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/nunito": "^5.3.0",
+    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fortawesome/fontawesome-free": "^7.1.0",
     "@sentry/browser": "^10.31.0",
     "@testing-library/dom": "^10.4.1",

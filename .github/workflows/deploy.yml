@@ -30,6 +30,7 @@ jobs:
       - name: Prepare temp workspace
         run: |
           mkdir -p /tmp/site
+          # Se conserva portfolio/ para las comprobaciones; los syncs allowlist nunca deben incluirla en S3.
           rsync -a --delete \
             --exclude '.git' \
             --exclude 'node_modules' \

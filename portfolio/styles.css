@@ -58,6 +58,9 @@ button:focus-visible {
   outline: 3px solid var(--gold);
   outline-offset: 4px;
 }
+.decisions a:focus-visible {
+  outline-color: var(--gold-deep);
+}
 .skip {
   position: absolute;
   top: -5rem;

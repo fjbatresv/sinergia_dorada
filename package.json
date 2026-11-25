@@ -29,7 +29,7 @@
     "@fortawesome/fontawesome-free": "^7.1.0",
     "@sentry/browser": "^10.31.0",
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/jest-dom": "^8.0.0",
     "@vitest/coverage-v8": "^5.1.1",
     "axe-core": "^4.9.1",
     "esbuild": "^0.28.2",
